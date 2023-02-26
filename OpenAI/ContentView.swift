@@ -7,15 +7,15 @@
 
 import SwiftUI
 import CoreData
-import Introspect
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Completion.createdAt, ascending: false)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \Completion.createdAt, ascending: true)],
         animation: .default)
     var completions: FetchedResults<Completion>
     @StateObject var viewModel: ViewModel
+    @FocusState var promptTextFieldIsActive: Bool
 
     var body: some View {
         NavigationView {
@@ -25,7 +25,7 @@ struct ContentView: View {
             }
             .navigationTitle("OpenAI")
             .toolbar {
-                NavigationLink(destination: SettingsView()) {
+                NavigationLink(destination: viewModel.settingsView()) {
                     Image(systemName: "gear")
                 }
             }
@@ -63,8 +63,17 @@ struct ContentView: View {
             }
             .onAppear {
                 scrollToBottom(scrollProxy: scrollProxy)
+                NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification, object: nil, queue: .main) { notification in
+                    scrollToBottom(scrollProxy: scrollProxy)
+                }
+            }
+            .onDisappear {
+                NotificationCenter.default.removeObserver(self)
             }
             .onChange(of: completions.last) { _ in
+                scrollToBottom(scrollProxy: scrollProxy)
+            }
+            .onChange(of: promptTextFieldIsActive) { _ in
                 scrollToBottom(scrollProxy: scrollProxy)
             }
         }
@@ -72,12 +81,16 @@ struct ContentView: View {
     
     var messageComposerView: some View {
         HStack {
-            TextField("Enter your prompt", text: $viewModel.input)
+            TextField("Enter your prompt", text: $viewModel.input, axis: .vertical)
                 .textFieldStyle(.automatic)
                 .padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 10))
                 .foregroundColor(.primary)
                 .lineLimit(5)
                 .multilineTextAlignment(.leading)
+                .focused($promptTextFieldIsActive)
+                .onSubmit {
+                    submitButtonTapped()
+                }
             Button(action: submitButtonTapped) {
                 Text("Submit")
                     .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 20))
@@ -86,8 +99,7 @@ struct ContentView: View {
             .invalidInputAlert(isPresented: $viewModel.showingAlert)
             .enterOpenAIKeyAlert(
                 isPresented: $viewModel.enterApiKey,
-                apiKey: $viewModel.apiKey,
-                updateApiKey: viewModel.updateApiKey)
+                apiKey: $viewModel.apiKey)
         }
     }
     
@@ -111,7 +123,7 @@ struct ContentView: View {
     func submitButtonTapped() {
         Task {
             do {
-                try await viewModel.submitButtonTapped {}
+                try await viewModel.submitButtonTapped()
             } catch {
                 // Show pop-up to enter username
                 viewModel.enterApiKey = true
@@ -125,15 +137,6 @@ extension View {
         return alert(Text("Invalid Input"), isPresented: isPresented, actions: {
             Button("OK", role: .cancel, action: {})
         }, message: { Text("Please enter a valid prompt") })
-    }
-    
-    func enterOpenAIKeyAlert(isPresented: Binding<Bool>, apiKey: Binding<String>, updateApiKey: @escaping () -> Void) -> some View {
-        return alert("Enter OpenAI API Key", isPresented: isPresented, actions: {
-            TextField("OpenAI API Key", text: apiKey)
-
-            Button("Save", action: updateApiKey)
-            Button("Cancel", role: .cancel, action: {})
-        }, message: { Text("Please enter your OpenAI API key.") })
     }
 }
 
@@ -149,12 +152,12 @@ extension ContentView {
             self.completionService = completionService
         }
         
-        func submitButtonTapped(completion: @escaping () -> Void) async throws {
+        func submitButtonTapped() async throws {
             guard !input.isEmpty else {
                 showingAlert = true
                 return
             }
-            try await completionService.getCompletion(for: input, completion: completion)
+            try await completionService.getCompletion(for: input)
             input = ""
         }
         
@@ -163,7 +166,14 @@ extension ContentView {
         }
         
         func updateApiKey() {
+            guard !apiKey.isEmpty else {
+                return
+            }
             completionService.updateApiKey(apiKey)
+        }
+
+        func settingsView() -> some View {
+            return SettingsView(viewModel: SettingsView.ViewModel())
         }
     }
 }

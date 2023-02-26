@@ -5,7 +5,7 @@
 //  Created by Reid Chatham on 2/13/23.
 //
 
-import Foundation
+import SwiftUI
 import OpenAISwift
 
 extension UserDefaults {
@@ -90,3 +90,15 @@ extension OpenAIModelType.Feature {
   }
 }
 
+extension View {
+    func enterOpenAIKeyAlert(isPresented: Binding<Bool>, apiKey: Binding<String>) -> some View {
+        return alert("Enter OpenAI API Key", isPresented: isPresented, actions: {
+            TextField("OpenAI API Key", text: apiKey)
+
+            Button("Save", action: {
+                PersistenceController.shared.completionService.updateApiKey(apiKey.wrappedValue)
+            })
+            Button("Cancel", role: .cancel, action: {})
+        }, message: { Text("Please enter your OpenAI API key.") })
+    }
+}

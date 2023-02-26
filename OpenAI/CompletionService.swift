@@ -16,20 +16,13 @@ class CompletionService {
         self.completionDB = completionDB
     }
     
-    func getCompletion(for prompt: String, completion: @escaping () -> Void) async throws {
+    func getCompletion(for prompt: String) async throws {
         try await networkClient.getCompletion(for: prompt) { prompt, response in
             DispatchQueue.main.async { [weak self] in
                 self?.completionDB.createCompletion(prompt: prompt, response: response)
-                completion()
             }
         }
     }
-
-//    func fetchCompletions(completion: @escaping (_ completions: [Completion]) -> ()) {
-//        completionDB.fetchCompletions { completions in
-//            completion(completions)
-//        }
-//    }
 
     func deleteCompletion(id: UUID) {
         completionDB.deleteCompletion(id: id)
