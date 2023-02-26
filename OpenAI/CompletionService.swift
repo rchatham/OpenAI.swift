@@ -32,7 +32,7 @@ class CompletionService {
         completionDB.updateCompletion(id: id, prompt: prompt, response: response)
     }
     
-    func updateApiKey(_ apiKey: String) {
-        networkClient.updateApiKey(apiKey)
+    func updateApiKey(_ apiKey: String) throws {
+        try networkClient.updateApiKey(apiKey)
     }
 }

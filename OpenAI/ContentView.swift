@@ -164,13 +164,6 @@ extension ContentView {
         func delete(id: UUID) {
             completionService.deleteCompletion(id: id)
         }
-        
-        func updateApiKey() {
-            guard !apiKey.isEmpty else {
-                return
-            }
-            completionService.updateApiKey(apiKey)
-        }
 
         func settingsView() -> some View {
             return SettingsView(viewModel: SettingsView.ViewModel())

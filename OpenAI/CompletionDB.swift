@@ -75,7 +75,7 @@ class CompletionDB {
 //        privateDatabase = CKContainer.default().privateCloudDatabase
 //    }
 
-    func createCompletion(prompt: String, response: String) { // -> Completion {
+    func createCompletion(prompt: String, response: String) {
         let context = container.viewContext
         let completion = Completion(context: context)
         completion.id = UUID()
@@ -99,20 +99,7 @@ class CompletionDB {
         } catch {
             print("Failed to insert completion: \(error)")
         }
-//        return completion
     }
-
-//    func fetchCompletions(completion: @escaping (_ completions: [Completion]) -> ()) {
-//        let context = container.newBackgroundContext()
-//        let request: NSFetchRequest<Completion> = Completion.fetchRequest()
-//        do {
-//            let completions = try context.fetch(request)
-//            completion(completions)
-//        } catch {
-//            print("Failed to fetch completions: \(error)")
-//            completion([])
-//        }
-//    }
 
     func deleteCompletion(id: UUID) {
         let context = container.newBackgroundContext()

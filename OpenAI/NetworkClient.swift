@@ -31,7 +31,10 @@ class NetworkClient {
         }
     }
     
-    func updateApiKey(_ apiKey: String) {
+    func updateApiKey(_ apiKey: String) throws {
+        guard !apiKey.isEmpty else {
+            throw NetworkError.emptyApiKey
+        }
         keychainService.saveApiKey(apiKey: apiKey)
         openAI = OpenAISwift(authToken: apiKey)
     }
@@ -40,5 +43,6 @@ class NetworkClient {
 extension NetworkClient {
     enum NetworkError: Error {
         case missingApiKey
+        case emptyApiKey
     }
 }

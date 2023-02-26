@@ -96,7 +96,18 @@ extension View {
             TextField("OpenAI API Key", text: apiKey)
 
             Button("Save", action: {
-                PersistenceController.shared.completionService.updateApiKey(apiKey.wrappedValue)
+                do {
+                    try PersistenceController.shared.completionService.updateApiKey(apiKey.wrappedValue)
+                } catch {
+                    guard let error = error as? NetworkClient.NetworkError else {
+                        return
+                    }
+                    switch error {
+                    case .emptyApiKey:
+                        print("Empty api key")
+                    default: return
+                    }
+                }
             })
             Button("Cancel", role: .cancel, action: {})
         }, message: { Text("Please enter your OpenAI API key.") })
