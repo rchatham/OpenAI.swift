@@ -12,7 +12,6 @@ import CoreData
 struct MessageComposerView: View {
     @ObservedObject var viewModel: ViewModel
     @FocusState private var promptTextFieldIsActive
-    let onSubmit: () -> Void
     
     var body: some View {
         HStack {
@@ -36,7 +35,7 @@ struct MessageComposerView: View {
     }
     
     func submitButtonTapped() {
-        onSubmit()
+        viewModel.sendMessage()
     }
 }
 
@@ -53,12 +52,12 @@ extension MessageComposerView {
             self.conversation = conversation
         }
         
-        func sendMessage() async {
+        func sendMessage() {
             guard !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
             
             // Send the message completion request
             do {
-                try await messageService.sendMessageCompletionRequest(message: input, for: conversation)
+                try messageService.sendMessageCompletionRequest(message: input, for: conversation)
             } catch {
                 print("Error sending message completion request: \(error)")
             }
@@ -71,6 +70,6 @@ extension MessageComposerView {
 
 struct MessageComposerView_Previews: PreviewProvider {
     static var previews: some View {
-        MessageComposerView(viewModel: MessageComposerView.ViewModel(messageService: MessageService(messageDB: MessageDB(persistence: PersistenceController.preview)), conversation: Conversation.example), onSubmit: {})
+        MessageComposerView(viewModel: MessageComposerView.ViewModel(messageService: MessageService(messageDB: MessageDB(persistence: PersistenceController.preview)), conversation: Conversation.example))
     }
 }

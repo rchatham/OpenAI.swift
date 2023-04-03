@@ -31,39 +31,58 @@ struct InboxView: View {
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(conversations) { conversation in
-                    NavigationLink(
-                        destination: ConversationView(
-                            viewModel: ConversationView.ViewModel(
-                                messageService:  conversationService.messageService(),
-                                conversation: conversation))) {
-                        Text(conversation.title ?? "")
-                    }
-                }
-                .onDelete(perform: { indexSet in
-                    indexSet.map { conversations[$0] }.forEach(viewContext.delete)
-                    saveContext()
+            conversationList
+                .navigationBarTitle("Inbox", displayMode: .large)
+                .navigationBarItems(trailing: Button(action: {
+                    showCreateConversationView = true
+                }) {
+                    Image(systemName: "plus")
                 })
-            }
-            .navigationBarTitle("Inbox", displayMode: .large)
-            .navigationBarItems(trailing: Button(action: {
-                showCreateConversationView = true
-            }) {
-                Image(systemName: "plus")
-            })
-            .sheet(isPresented: $showCreateConversationView) {
-                CreateConversationView(viewModel: CreateConversationView.ViewModel(conversationService: conversationService)) { createdConversation in
-    
-                    newConversationNavLink = NavigationLink("", destination: ConversationView(viewModel: ConversationView.ViewModel(messageService: conversationService.messageService(), conversationStore: newConversationStore)), isActive: self.shouldNavigateToNewConversation)
-                    
-                    newConversationStore.conversation = createdConversation
-                    showCreateConversationView = false
+                .sheet(isPresented: $showCreateConversationView) {
+                    createConversationView
                 }
-                .environment(\.managedObjectContext, viewContext)
-            }
-            .background(newConversationNavLink)
+                .background(newConversationNavLink)
         }
+    }
+    
+    var conversationList: some View {
+        List {
+            ForEach(conversations) { conversation in
+                NavigationLink(
+                    destination: conversationView(conversation)) {
+                    Text(conversation.title ?? "")
+                }
+            }
+            .onDelete(perform: { indexSet in
+                indexSet.map { conversations[$0] }.forEach(viewContext.delete)
+                saveContext()
+            })
+        }
+    }
+    
+    var createConversationView: some View {
+        CreateConversationView(viewModel: CreateConversationView.ViewModel(conversationService: conversationService)) { createdConversation in
+
+            newConversationNavLink = NavigationLink("", destination: conversationView(createdConversation), isActive: self.shouldNavigateToNewConversation)
+            
+            newConversationStore.conversation = createdConversation
+            showCreateConversationView = false
+        }
+        .environment(\.managedObjectContext, viewContext)
+    }
+    
+    func conversationView(_ conversation: Conversation) -> ConversationView {
+        return ConversationView(
+            viewModel: ConversationView.ViewModel(
+                messageService:  conversationService.messageService(),
+                conversation: conversation))
+    }
+    
+    func conversationView(_ conversationStore: ConversationStore) -> ConversationView {
+        return ConversationView(
+            viewModel: ConversationView.ViewModel(
+                messageService:  conversationService.messageService(),
+                conversationStore: conversationStore))
     }
     
     private func saveContext() {
