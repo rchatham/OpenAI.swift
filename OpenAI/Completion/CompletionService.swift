@@ -11,7 +11,7 @@ class CompletionService {
     let networkClient: NetworkClient
     let completionDB: CompletionDB
     
-    init(networkClient: NetworkClient = NetworkClient(), completionDB: CompletionDB = CompletionDB()) {
+    init(networkClient: NetworkClient = NetworkClient(), completionDB: CompletionDB) {
         self.networkClient = networkClient
         self.completionDB = completionDB
     }

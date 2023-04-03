@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  CompletionView.swift
 //  OpenAI
 //
 //  Created by Reid Chatham on 1/20/23.
@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
+struct CompletionView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Completion.createdAt, ascending: true)],
@@ -22,6 +22,10 @@ struct ContentView: View {
             VStack {
                 completionList
                 messageComposerView
+                    .invalidInputAlert(isPresented: $viewModel.showingAlert)
+                    .enterOpenAIKeyAlert(
+                        isPresented: $viewModel.enterApiKey,
+                        apiKey: $viewModel.apiKey)
             }
             .navigationTitle("OpenAI")
             .toolbar {
@@ -63,12 +67,16 @@ struct ContentView: View {
             }
             .onAppear {
                 scrollToBottom(scrollProxy: scrollProxy)
-                NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification, object: nil, queue: .main) { notification in
-                    scrollToBottom(scrollProxy: scrollProxy)
-                }
+                #if os(iOS)
+                    NotificationCenter.default.addObserver(forName: UIResponder.keyboardDidShowNotification, object: nil, queue: .main) { notification in
+                        scrollToBottom(scrollProxy: scrollProxy)
+                    }
+                #endif
             }
             .onDisappear {
-                NotificationCenter.default.removeObserver(self)
+                if #available(macOS 12.4, *) {} else {
+                    NotificationCenter.default.removeObserver(self)
+                }
             }
             .onChange(of: completions.last) { _ in
                 scrollToBottom(scrollProxy: scrollProxy)
@@ -96,10 +104,6 @@ struct ContentView: View {
                     .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 20))
                     .foregroundColor(.accentColor)
             }
-            .invalidInputAlert(isPresented: $viewModel.showingAlert)
-            .enterOpenAIKeyAlert(
-                isPresented: $viewModel.enterApiKey,
-                apiKey: $viewModel.apiKey)
         }
     }
     
@@ -132,15 +136,7 @@ struct ContentView: View {
     }
 }
 
-extension View {
-    func invalidInputAlert(isPresented: Binding<Bool>) -> some View {
-        return alert(Text("Invalid Input"), isPresented: isPresented, actions: {
-            Button("OK", role: .cancel, action: {})
-        }, message: { Text("Please enter a valid prompt") })
-    }
-}
-
-extension ContentView {
+extension CompletionView {
     @MainActor class ViewModel: ObservableObject {
         @Published var apiKey = ""
         @Published var input = ""
@@ -171,8 +167,8 @@ extension ContentView {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct CompletionView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(viewModel: ContentView.ViewModel(completionService: PersistenceController.preview.completionService)).environment(\.managedObjectContext, PersistenceController.preview.completionService.completionDB.container.viewContext)
+        CompletionView(viewModel: CompletionView.ViewModel(completionService: PersistenceController.preview.completionService)).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

@@ -11,11 +11,13 @@ import OpenAISwift
 class NetworkClient {
     private let keychainService = KeychainService()
     private var openAI: OpenAISwift?
+    private var openAIChat: OpenAIChatAPI?
     private let userDefaults = UserDefaults.standard
     
     init() {
         if let apiKey = keychainService.getApiKey() {
-            openAI = OpenAISwift(authToken: apiKey)
+            openAI = OpenAISwift(authToken: apiKey, promoptsHistoryEnable: true)
+            openAIChat = OpenAIChatAPI(apiKey: apiKey)
         }
     }
 
@@ -31,12 +33,26 @@ class NetworkClient {
         }
     }
     
+    func sendChatCompletionRequest(messages: [ChatCompletionRequest.Message], model: Model = .gpt35Turbo0301, completion: @escaping (Result<ChatCompletionResponse, APIError>) -> Void) throws {
+        guard let openAIChat = openAIChat else { throw NetworkError.missingApiKey }
+        openAIChat.sendChatCompletionRequest(model: model, messages: messages) { (result: Result<ChatCompletionResponse, APIError>) in
+            switch result {
+            case .success(let response):
+                print(response.choices.first?.message.content ?? "NOPE")
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+            completion(result)
+        }
+    }
+    
     func updateApiKey(_ apiKey: String) throws {
         guard !apiKey.isEmpty else {
             throw NetworkError.emptyApiKey
         }
         keychainService.saveApiKey(apiKey: apiKey)
-        openAI = OpenAISwift(authToken: apiKey)
+        openAI = OpenAISwift(authToken: apiKey, promoptsHistoryEnable: true)
+        openAIChat = OpenAIChatAPI(apiKey: apiKey)
     }
 }
 

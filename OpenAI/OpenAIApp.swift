@@ -13,8 +13,8 @@ struct OpenAIApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(viewModel: ContentView.ViewModel(completionService: persistenceController.completionService))
-                .environment(\.managedObjectContext, persistenceController.completionService.completionDB.container.viewContext)
+            InboxView(conversationService: persistenceController.conversationService)
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
 }

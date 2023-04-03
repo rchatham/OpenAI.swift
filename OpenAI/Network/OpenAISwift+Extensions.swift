@@ -89,27 +89,3 @@ extension OpenAIModelType.Feature {
     [.davinci]
   }
 }
-
-extension View {
-    func enterOpenAIKeyAlert(isPresented: Binding<Bool>, apiKey: Binding<String>) -> some View {
-        return alert("Enter OpenAI API Key", isPresented: isPresented, actions: {
-            TextField("OpenAI API Key", text: apiKey)
-
-            Button("Save", action: {
-                do {
-                    try PersistenceController.shared.completionService.updateApiKey(apiKey.wrappedValue)
-                } catch {
-                    guard let error = error as? NetworkClient.NetworkError else {
-                        return
-                    }
-                    switch error {
-                    case .emptyApiKey:
-                        print("Empty api key")
-                    default: return
-                    }
-                }
-            })
-            Button("Cancel", role: .cancel, action: {})
-        }, message: { Text("Please enter your OpenAI API key.") })
-    }
-}
