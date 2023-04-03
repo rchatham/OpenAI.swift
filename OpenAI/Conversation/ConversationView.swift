@@ -56,35 +56,7 @@ struct ConversationView: View {
         } else {
             Spacer()
         }
-//        HStack {
-//            TextField("Enter your prompt", text: $viewModel.input, axis: .vertical)
-//                .textFieldStyle(.automatic)
-//                .padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 10))
-//                .foregroundColor(.primary)
-//                .lineLimit(5)
-//                .multilineTextAlignment(.leading)
-//                .focused($promptTextFieldIsActive)
-//                .onSubmit {
-//                    submitButtonTapped()
-//                }
-//            Button(action: submitButtonTapped) {
-//                Text("Submit")
-//                    .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 20))
-//                    .foregroundColor(.accentColor)
-//            }
-//        }
     }
-    
-//    func submitButtonTapped() {
-//        Task {
-//            do {
-//                try viewModel.submitButtonTapped()
-//            } catch {
-//                // Show pop-up to enter username
-//                viewModel.enterApiKey = true
-//            }
-//        }
-//    }
 }
 
 extension ConversationView {

@@ -63,7 +63,7 @@ struct InboxView: View {
     var createConversationView: some View {
         CreateConversationView(viewModel: CreateConversationView.ViewModel(conversationService: conversationService)) { createdConversation in
 
-            newConversationNavLink = NavigationLink("", destination: conversationView(createdConversation), isActive: self.shouldNavigateToNewConversation)
+            newConversationNavLink = NavigationLink("", destination: conversationView(newConversationStore), isActive: self.shouldNavigateToNewConversation)
             
             newConversationStore.conversation = createdConversation
             showCreateConversationView = false
