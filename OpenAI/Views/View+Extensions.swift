@@ -36,3 +36,13 @@ extension View {
         }, message: { Text("Please enter your OpenAI API key.") })
     }
 }
+
+struct EmptyLabel: View {
+    var body: some View {
+        Label {
+            Text("")
+        } icon: {
+            Image(systemName: "")
+        }
+    }
+}

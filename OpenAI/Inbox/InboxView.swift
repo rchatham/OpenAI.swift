@@ -7,16 +7,6 @@
 
 import SwiftUI
 
-struct EmptyLabel: View {
-    var body: some View {
-        Label {
-            Text("")
-        } icon: {
-            Image(systemName: "")
-        }
-    }
-}
-
 struct InboxView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Conversation.createdAt, ascending: false)], animation: .default)
