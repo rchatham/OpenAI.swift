@@ -43,6 +43,9 @@ struct InboxView: View {
                 }
                 .background(newConversationNavLink)
         }
+        .onAppear {
+            OpenAIApp.requestPushNotificationPermission()
+        }
     }
     
     var conversationList: some View {
