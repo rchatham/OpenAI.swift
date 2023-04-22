@@ -13,7 +13,7 @@ extension Conversation {
         let systemMessageString = self.systemMessage ?? "You are a friendly chatbot designed to be helpful. Always be nice, but if you don't have a clear understanding of what should come next, try to indicate that."
         let systemMessage = ChatCompletionRequest.Message(role: .system, content: systemMessageString)
         guard let messages = self.messages else { return [systemMessage] }
-        return [systemMessage] + messages.compactMap { ($0 as? Message)?.toNetworkMessage() }
+        return [systemMessage] + messages.sorted(by: { ($0 as? Message)?.createdAt ?? Date() < ($1 as? Message)?.createdAt ?? Date() }).compactMap { ($0 as? Message)?.toNetworkMessage() }
     }
 }
 
