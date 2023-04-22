@@ -32,9 +32,11 @@ struct ConversationView: View {
         }
         .navigationTitle("ChatGPT")
         .toolbar {
+            #if DEBUG
             NavigationLink(destination: viewModel.settingsView()) {
                 Image(systemName: "gear")
             }
+            #endif
         }
     }
 
