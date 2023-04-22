@@ -32,7 +32,6 @@ class PersistenceController {
         return result
     }()
 
-    lazy private(set) var completionService: CompletionService = CompletionService(networkClient: NetworkClient(), completionDB: CompletionDB(persistence: self))
     lazy private(set) var  conversationService: ConversationService = ConversationService(conversationDB: ConversationDB(persistence: self))
     
     init(inMemory: Bool = false) {
