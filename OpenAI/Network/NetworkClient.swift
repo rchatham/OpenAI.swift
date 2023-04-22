@@ -24,15 +24,7 @@ class NetworkClient: NSObject, URLSessionWebSocketDelegate {
 
     func sendChatCompletionRequest(messages: [ChatCompletionRequest.Message], model: Model = .gpt4, stream: Bool = false, completion: @escaping (Result<ChatCompletionResponse, Error>) -> Void) throws {
         guard let openAIChat = openAIChat else { throw NetworkError.missingApiKey }
-        openAIChat.sendChatCompletionRequest(model: model, messages: messages, stream: stream) { (result: Result<ChatCompletionResponse, Error>) in
-            switch result {
-            case .success(let response):
-                print(response.choices.first?.message?.content ?? response.choices.first?.delta?.content ?? "NOPE")
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-            completion(result)
-        }
+        openAIChat.sendChatCompletionRequest(model: model, messages: messages, stream: stream, completion: completion)
     }
     
     func updateApiKey(_ apiKey: String) throws {
