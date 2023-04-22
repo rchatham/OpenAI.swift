@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import OpenAISwift
 
 class NetworkClient: NSObject, URLSessionWebSocketDelegate {
     static let shared = NetworkClient()

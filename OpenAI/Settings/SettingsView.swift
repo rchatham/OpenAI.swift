@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import OpenAISwift
 
 struct SettingsView: View {
     @StateObject var viewModel: ViewModel
@@ -14,29 +13,19 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Picker(selection: $viewModel.model, label: Text("AI Model")) {
-                Section(header: Text("GPT3").bold()) {
-                    ForEach(OpenAIModelType.GPT3.cases, id: \.self) { model in
-                        Text(model.rawValue).tag(OpenAIModelType.gpt3(model))
-                    }
-                }
-
-                Section(header: Text("Codex").bold()) {
-                    ForEach(OpenAIModelType.Codex.cases, id: \.self) { model in
-                        Text(model.rawValue).tag(OpenAIModelType.codex(model))
-                    }
-                }
-
-                Section(header: Text("Feature").bold()) {
-                    ForEach(OpenAIModelType.Feature.cases, id: \.self) { model in
-                        Text(model.rawValue).tag(OpenAIModelType.feature(model))
-                    }
+                ForEach(Model.cases, id: \.self) { model in
+                    Text(model.rawValue).tag(model)
                 }
             }
             .pickerStyle(.menu)
 
             Section(header: Text("Model Settings")) {
                 Stepper("Max Tokens: \(viewModel.maxTokens)", value: $viewModel.maxTokens, in: 1...1000)
-                Slider(value: $viewModel.temperature, in: 0...1, step: 0.01)
+                HStack {
+                    Text("Temperature:")
+                    Slider(value: $viewModel.temperature, in: 0...1, step: 0.01)
+                }
+
             }
 
             Button("Save Settings") {
@@ -64,7 +53,7 @@ extension SettingsView {
         @Published var apiKey = ""
         @Published var enterApiKey = false
 
-        @Published var model: OpenAIModelType = UserDefaults.standard.model
+        @Published var model: Model = UserDefaults.standard.model
         @Published var maxTokens = UserDefaults.standard.maxTokens
         @Published var temperature = UserDefaults.standard.temperature
 

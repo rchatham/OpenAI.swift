@@ -54,6 +54,14 @@ enum Model: String, Codable {
     case gpt4 = "gpt-4"
 }
 
+extension Model {
+    static var cases: [Model] = [
+        .gpt35Turbo,
+        .gpt35Turbo0301,
+        .gpt4
+    ]
+}
+
 enum Role: String, Codable {
     case system
     case user
