@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "keychainaccess",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
+      "state" : {
+        "branch" : "master",
+        "revision" : "6299daec1d74be12164fec090faf9ed14d0da9d6"
+      }
+    },
+    {
+      "identity" : "openaiswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/KittenYang/OpenAISwift",
+      "state" : {
+        "branch" : "main",
+        "revision" : "940207e1a987106b7f441e550ddaf4417a6aa694"
+      }
+    }
+  ],
+  "version" : 2
+}
