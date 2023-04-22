@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MessageView: View {
     @ObservedObject var message: Message
+    @Environment(\.colorScheme) var colorScheme // Get the current color scheme
     
     var body: some View {
         HStack {
@@ -18,9 +19,9 @@ struct MessageView: View {
             VStack(alignment: .leading) {
                 Text(message.content ?? "")
                     .font(.system(size: 18)) // Adjust the font size if necessary
-                    .foregroundColor(message.role == "user" ? .black : .white)
+                    .foregroundColor(message.role == "user" ? (colorScheme == .dark ? .white : .black) : .white)
                     .padding(10) // Add padding around the text
-                    .background(message.role == "user" ? Color.gray.opacity(0.2) : Color.blue) // Set background color for message bubble
+                    .background(message.role == "user" ? (colorScheme == .dark ? Color.gray.opacity(0.5) : Color.gray.opacity(0.2)) : Color.blue) // Set background color for message bubble
                     .cornerRadius(10) // Add rounded corners to the message bubble
             }
             if message.role != "user" {
