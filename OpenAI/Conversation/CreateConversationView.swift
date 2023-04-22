@@ -75,7 +75,7 @@ extension CreateConversationView {
                 try conversationService.getTitleForConversation(withSystemMessage: systemMessage) { result in
                     switch result {
                     case .success(let response):
-                        if let title = response.choices.first?.message.content {
+                        if let title = response.choices.first?.message?.content {
                             let conversation = self.conversationService.createConversation(title: title, systemMessage: self.systemMessage)
                             DispatchQueue.main.async {
                                 completion(conversation)

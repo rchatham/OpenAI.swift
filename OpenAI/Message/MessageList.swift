@@ -44,7 +44,7 @@ struct MessageList: View {
                     NotificationCenter.default.removeObserver(self)
                 #endif
             }
-            .onChange(of: messages.last) { _ in
+            .onChange(of: messages.last?.content) { _ in
                 scrollToBottom(scrollProxy: scrollProxy)
             }
         }
@@ -53,7 +53,7 @@ struct MessageList: View {
     func scrollToBottom(scrollProxy proxy: ScrollViewProxy) {
         guard let last = messages.last else { return }
         withAnimation {
-            proxy.scrollTo(last)
+            proxy.scrollTo(last, anchor: UnitPoint(x: UnitPoint.bottom.x, y: 0.95))
         }
     }
 }

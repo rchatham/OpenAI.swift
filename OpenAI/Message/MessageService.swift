@@ -16,24 +16,50 @@ class MessageService {
         self.messageDB = messageDB
     }
     
-    func sendMessageCompletionRequest(message: String, for conversation: Conversation) throws {
-        messageDB.createMessage(for: conversation, from: message)
+    func sendMessageCompletionRequest(message: String, for conversation: Conversation, stream: Bool = false) throws {
+        messageDB.createMessage(for: conversation, with: message)
         let messages = conversation.toNetworkMessages()
-        try networkClient.sendChatCompletionRequest(messages: messages) { [conversation] result in
+
+        class NewMessageInfo {
+            var id: UUID
+            var content = ""
+            private let messageDB: MessageDB
+            init(for conversation: Conversation, using messageDB: MessageDB) {
+                id = messageDB.createMessage(for: conversation, with: "", asUser: false).id!
+                self.messageDB = messageDB
+            }
+            func append(chunk: String) {
+                content = content + chunk
+                messageDB.updateMessage(id: id, content: content)
+            }
+        }
+        var newMessageInfo: NewMessageInfo?
+
+        try networkClient.sendChatCompletionRequest(messages: messages, stream: stream) { [conversation] result in
             switch result {
             case .success(let response):
-                DispatchQueue.main.async { [weak self] in
-                    guard let strongSelf = self, let message = response.choices.first?.message else { return }
-                    strongSelf.messageDB.createMessage(for: conversation, from: message)
+                if let message = response.choices.first?.message {
+                    DispatchQueue.main.async { [weak self] in
+                        guard let strongSelf = self else { return }
+                        strongSelf.messageDB.createMessage(for: conversation, from: message)
+                    }
                 }
+                if let delta = response.choices.first?.delta {
+                    DispatchQueue.main.async { [weak self] in
+                        guard let strongSelf = self else { return }
+                        if delta.role == .assistant {
+                            newMessageInfo = NewMessageInfo(for: conversation, using: strongSelf.messageDB)
+                        }
+                        if let newMessageInfo = newMessageInfo, let chunk = delta.content {
+                            newMessageInfo.append(chunk: chunk)
+                        }
+                    }
+                }
+
             case .failure(let error):
                 print(error.localizedDescription)
             }
         }
-    }
-    
-    func updateMessage(id: UUID, role: String, content: String) {
-        messageDB.updateMessage(id: id, role: role, content: content)
     }
 
     func deleteMessage(id: UUID) {

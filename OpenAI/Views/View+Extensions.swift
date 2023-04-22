@@ -20,7 +20,7 @@ extension View {
 
             Button("Save", action: {
                 do {
-                    try PersistenceController.shared.completionService.updateApiKey(apiKey.wrappedValue)
+                    try NetworkClient.shared.updateApiKey(apiKey.wrappedValue)
                 } catch {
                     guard let error = error as? NetworkClient.NetworkError else {
                         return

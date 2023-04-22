@@ -57,7 +57,7 @@ extension MessageComposerView {
             
             // Send the message completion request
             do {
-                try messageService.sendMessageCompletionRequest(message: input, for: conversation)
+                try messageService.sendMessageCompletionRequest(message: input, for: conversation, stream: true)
             } catch {
                 print("Error sending message completion request: \(error)")
             }
