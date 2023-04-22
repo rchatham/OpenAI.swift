@@ -17,13 +17,17 @@ struct MessageView: View {
             }
             VStack(alignment: .leading) {
                 Text(message.content ?? "")
-                    .font(.headline)
-                    .foregroundColor(message.role == "user" ? .blue : .green)
+                    .font(.system(size: 18)) // Adjust the font size if necessary
+                    .foregroundColor(message.role == "user" ? .black : .white)
+                    .padding(10) // Add padding around the text
+                    .background(message.role == "user" ? Color.gray.opacity(0.2) : Color.blue) // Set background color for message bubble
+                    .cornerRadius(10) // Add rounded corners to the message bubble
             }
             if message.role != "user" {
                 Spacer()
             }
         }
+        .padding(.horizontal, 10) // Add horizontal padding to HStack
     }
 }
 
