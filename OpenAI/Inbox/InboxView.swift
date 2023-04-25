@@ -11,15 +11,20 @@ struct InboxView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Conversation.createdAt, ascending: false)], animation: .default)
     private var conversations: FetchedResults<Conversation>
-    
+
     @State private var showCreateConversationView = false
     @State private var newConversationStore: ConversationStore = ConversationStore()
 
     let conversationService: ConversationService
-    
+
     @State var newConversationNavLink: NavigationLink<Text, ConversationView>?
 
+#if canImport(AppKit)
+    @State var navVisibility: NavigationSplitViewVisibility = .automatic
+#endif
+
     var body: some View {
+#if canImport(UIKit)
         NavigationView {
             conversationList
                 .navigationBarTitle("Inbox", displayMode: .large)
@@ -34,10 +39,30 @@ struct InboxView: View {
                 .background(newConversationNavLink)
         }
         .onAppear {
-            OpenAIApp.requestPushNotificationPermission()
+            NotificationManager.shared.requestPushNotificationPermission()
         }
+#elseif canImport(AppKit)
+        NavigationSplitView(columnVisibility: $navVisibility) {
+            conversationList
+                .navigationTitle("Inbox")
+                .toolbar {
+                    Button(action: {
+                        showCreateConversationView = true
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                }
+                .sheet(isPresented: $showCreateConversationView) {
+                    createConversationView
+                }
+        } content: {
+            conversationView(newConversationStore)
+        } detail: {
+            SettingsView(viewModel: SettingsView.ViewModel())
+        }
+#endif
     }
-    
+
     var conversationList: some View {
         List {
             ForEach(conversations) { conversation in
@@ -52,32 +77,32 @@ struct InboxView: View {
             })
         }
     }
-    
+
     var createConversationView: some View {
         CreateConversationView(viewModel: CreateConversationView.ViewModel(conversationService: conversationService)) { createdConversation in
 
             newConversationNavLink = NavigationLink("", destination: conversationView(newConversationStore), isActive: self.shouldNavigateToNewConversation)
-            
+
             newConversationStore.conversation = createdConversation
             showCreateConversationView = false
         }
         .environment(\.managedObjectContext, viewContext)
     }
-    
+
     func conversationView(_ conversation: Conversation) -> ConversationView {
         return ConversationView(
             viewModel: ConversationView.ViewModel(
                 messageService:  conversationService.messageService(),
                 conversation: conversation))
     }
-    
+
     func conversationView(_ conversationStore: ConversationStore) -> ConversationView {
         return ConversationView(
             viewModel: ConversationView.ViewModel(
                 messageService:  conversationService.messageService(),
                 conversationStore: conversationStore))
     }
-    
+
     private func saveContext() {
         do {
             try viewContext.save()
@@ -86,7 +111,7 @@ struct InboxView: View {
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
-    
+
     private var addButton: some View {
         Button(action: {
             showCreateConversationView = true
@@ -94,7 +119,7 @@ struct InboxView: View {
             Image(systemName: "plus")
         }
     }
-    
+
     private func deleteConversations(offsets: IndexSet) {
         withAnimation {
             offsets.map { conversations[$0] }.forEach { conversation in
@@ -110,7 +135,7 @@ struct InboxView: View {
             }
         }
     }
-    
+
     var shouldNavigateToNewConversation: Binding<Bool> {
         Binding<Bool>(
             get: { newConversationStore.conversation != nil },

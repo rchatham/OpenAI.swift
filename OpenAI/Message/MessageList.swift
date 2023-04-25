@@ -27,7 +27,6 @@ struct MessageList: View {
                     ForEach(messages, id: \.self) { message in
                         MessageView(message: message)
                     }
-                    // ... (rest of the code)
                 }
                 .padding(16)
             }

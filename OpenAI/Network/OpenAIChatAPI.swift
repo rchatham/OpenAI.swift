@@ -182,13 +182,13 @@ class OpenAIChatAPI {
             return completion(.failure(APIError.invalidData))
         }
 
-        guard !stream else {
+        if stream {
             handler.onEventReceived = completion
             handler.onComplete = {}
             handler.connect(with: request)
-            return
+        } else {
+            makeRequest(request: request, completion: completion)
         }
-        makeRequest(request: request, completion: completion)
     }
 
     private func makeRequest(request: URLRequest, completion: @escaping (Result<ChatCompletionResponse, Error>) -> Void) {
