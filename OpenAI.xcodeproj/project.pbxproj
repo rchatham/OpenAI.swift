@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		B1373966299FE12B00DF4BB9 /* OpenAI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B1373964299FE12B00DF4BB9 /* OpenAI.xcdatamodeld */; };
 		B137396C29A35D7E00DF4BB9 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = B137396B29A35D7E00DF4BB9 /* KeychainAccess */; };
+		B156718D2B1716E0000D8949 /* CoreData+Examples.swift in Sources */ = {isa = PBXBuildFile; fileRef = B156718C2B1716E0000D8949 /* CoreData+Examples.swift */; };
 		B15D8286299AF54C00BDD19C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15D8285299AF54C00BDD19C /* SettingsView.swift */; };
 		B15D828A299AF95800BDD19C /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15D8289299AF95800BDD19C /* UserDefaults+Extensions.swift */; };
-		B1B29B1129F44D52002390E3 /* ServerSentEventsHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B29B1029F44D52002390E3 /* ServerSentEventsHandler.swift */; };
 		B1BD2B8A29DAAA7A002C638C /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BD2B8929DAAA7A002C638C /* MessageView.swift */; };
 		B1BD2B8C29DAAA94002C638C /* MessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BD2B8B29DAAA94002C638C /* MessageList.swift */; };
 		B1BD2B8E29DAB0B1002C638C /* MessageComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BD2B8D29DAB0B1002C638C /* MessageComposerView.swift */; };
@@ -73,7 +73,6 @@
 		B15D8285299AF54C00BDD19C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B15D8289299AF95800BDD19C /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
 		B19BE6B5298CE15A00A342ED /* OpenAI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenAI.entitlements; sourceTree = "<group>"; };
-		B1B29B1029F44D52002390E3 /* ServerSentEventsHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerSentEventsHandler.swift; sourceTree = "<group>"; };
 		B1BD2B8929DAAA7A002C638C /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		B1BD2B8B29DAAA94002C638C /* MessageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageList.swift; sourceTree = "<group>"; };
 		B1BD2B8D29DAB0B1002C638C /* MessageComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageComposerView.swift; sourceTree = "<group>"; };
@@ -225,7 +224,6 @@
 		B1EC645B29D80A2A00CD4FBB /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				B1B29B1029F44D52002390E3 /* ServerSentEventsHandler.swift */,
 				B1D30DA5297B58CE00B6D330 /* NetworkClient.swift */,
 				B1D30DA7297B590400B6D330 /* KeychainService.swift */,
 				B15D8289299AF95800BDD19C /* UserDefaults+Extensions.swift */,
@@ -432,7 +430,6 @@
 				B1EC645A29D808C900CD4FBB /* CoreData+Extensions.swift in Sources */,
 				B1EC643829D672C200CD4FBB /* ConversationView.swift in Sources */,
 				B1BD2B8A29DAAA7A002C638C /* MessageView.swift in Sources */,
-				B1B29B1129F44D52002390E3 /* ServerSentEventsHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

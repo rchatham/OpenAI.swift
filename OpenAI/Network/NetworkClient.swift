@@ -7,13 +7,17 @@
 
 import Foundation
 
+typealias Model = OpenAIChatAPI.Model
+typealias Role = OpenAIChatAPI.Role
+
+
 class NetworkClient: NSObject, URLSessionWebSocketDelegate {
     static let shared = NetworkClient()
 
     private let keychainService = KeychainService()
     private var openAIChat: OpenAIChatAPI?
     private let userDefaults = UserDefaults.standard
-    private var streamCompletion: ((Result<String, APIError>) -> Void)?
+    private var streamCompletion: ((Result<String, OpenAIChatAPI.APIError>) -> Void)?
 
     override init() {
         super.init()
@@ -22,7 +26,7 @@ class NetworkClient: NSObject, URLSessionWebSocketDelegate {
         }
     }
 
-    func sendChatCompletionRequest(messages: [ChatCompletionRequest.Message], model: Model = .gpt4, stream: Bool = false, completion: @escaping (Result<ChatCompletionResponse, Error>) -> Void) throws {
+    func sendChatCompletionRequest(messages: [OpenAIChatAPI.Message], model: Model = .gpt4, stream: Bool = false, completion: @escaping (Result<OpenAIChatAPI.ChatCompletionResponse, Error>) -> Void) throws {
         guard let openAIChat = openAIChat else { throw NetworkError.missingApiKey }
         openAIChat.sendChatCompletionRequest(model: model, messages: messages, stream: stream, completion: completion)
     }
