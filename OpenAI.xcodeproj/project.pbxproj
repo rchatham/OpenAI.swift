@@ -66,10 +66,21 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B1B29B2229F87749002390E3 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		B1373965299FE12B00DF4BB9 /* OpenAI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OpenAI.xcdatamodel; sourceTree = "<group>"; };
+		B156718C2B1716E0000D8949 /* CoreData+Examples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreData+Examples.swift"; sourceTree = "<group>"; };
 		B15D8285299AF54C00BDD19C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B15D8289299AF95800BDD19C /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
 		B19BE6B5298CE15A00A342ED /* OpenAI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenAI.entitlements; sourceTree = "<group>"; };
@@ -236,6 +247,7 @@
 			isa = PBXGroup;
 			children = (
 				B1EC645929D808C900CD4FBB /* CoreData+Extensions.swift */,
+				B156718C2B1716E0000D8949 /* CoreData+Examples.swift */,
 				B1D30D7C297A921500B6D330 /* Persistence.swift */,
 				B1373964299FE12B00DF4BB9 /* OpenAI.xcdatamodeld */,
 			);
@@ -282,6 +294,7 @@
 				B1D30D6D297A921200B6D330 /* Frameworks */,
 				B1D30D6E297A921200B6D330 /* Resources */,
 				B137397729A69D2300DF4BB9 /* Embed Frameworks */,
+				B1B29B2229F87749002390E3 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -338,7 +351,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1410;
+				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1410;
 				TargetAttributes = {
 					B1D30D6F297A921200B6D330 = {
@@ -415,6 +428,7 @@
 				B1EC646929D8296C00CD4FBB /* CreateConversationView.swift in Sources */,
 				B1EC645629D806FF00CD4FBB /* MessageDB.swift in Sources */,
 				B1D30D7D297A921500B6D330 /* Persistence.swift in Sources */,
+				B156718D2B1716E0000D8949 /* CoreData+Examples.swift in Sources */,
 				B15D8286299AF54C00BDD19C /* SettingsView.swift in Sources */,
 				B1BD2B8C29DAAA94002C638C /* MessageList.swift in Sources */,
 				B1EC646229D81C0E00CD4FBB /* InboxView.swift in Sources */,

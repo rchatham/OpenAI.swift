@@ -25,26 +25,21 @@ struct SettingsView: View {
                     Text("Temperature:")
                     Slider(value: $viewModel.temperature, in: 0...1, step: 0.01)
                 }
-
             }
-
-            Button("Save Settings") {
-                viewModel.saveSettings()
+            if let deviceToken = $viewModel.deviceToken.wrappedValue {
+                Text("Device Token: " + deviceToken)
+            } else {
+                Button("Register for notifications") {
+                    NotificationManager.shared.requestPushNotificationPermission()
+                }
             }
-
-            Button("Update API Key") {
-                viewModel.enterApiKey = true
-            }
+            Button("Save Settings") { viewModel.saveSettings()}
+            Button("Update API Key") { viewModel.enterApiKey = true}
         }
         .navigationTitle("Settings")
-        .onAppear {
-            viewModel.loadSettings()
-        }
-        .onDisappear {
-            viewModel.saveSettings()
-        }
-        .enterOpenAIKeyAlert(isPresented: $viewModel.enterApiKey,
-                             apiKey: $viewModel.apiKey)
+        .onAppear { viewModel.loadSettings()}
+        .onDisappear { viewModel.saveSettings()}
+        .enterOpenAIKeyAlert(isPresented: $viewModel.enterApiKey, apiKey: $viewModel.apiKey)
     }
 }
 
@@ -53,22 +48,21 @@ extension SettingsView {
         @Published var apiKey = ""
         @Published var enterApiKey = false
 
-        @Published var model: Model = UserDefaults.standard.model
-        @Published var maxTokens = UserDefaults.standard.maxTokens
-        @Published var temperature = UserDefaults.standard.temperature
-
-        let userDefaults = UserDefaults.standard
+        @Published var model: Model = UserDefaults.model
+        @Published var maxTokens = UserDefaults.maxTokens
+        @Published var temperature = UserDefaults.temperature
+        @Published var deviceToken = UserDefaults.deviceToken
 
         func loadSettings() {
-            model = userDefaults.model
-            maxTokens = userDefaults.maxTokens
-            temperature = userDefaults.temperature
+            model = UserDefaults.model
+            maxTokens = UserDefaults.maxTokens
+            temperature = UserDefaults.temperature
         }
 
         func saveSettings() {
-            userDefaults.model = model
-            userDefaults.maxTokens = maxTokens
-            userDefaults.temperature = temperature
+            UserDefaults.model = model
+            UserDefaults.maxTokens = maxTokens
+            UserDefaults.temperature = temperature
         }
     }
 }

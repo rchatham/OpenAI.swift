@@ -8,5 +8,8 @@
 import Foundation
 
 extension Conversation {
+    func messagesArray() -> [Message] {
+        return (self.messages?.allObjects as? [Message]) ?? []
+    }
 }
 

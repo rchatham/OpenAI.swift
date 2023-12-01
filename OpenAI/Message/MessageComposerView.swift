@@ -15,7 +15,7 @@ struct MessageComposerView: View {
     
     var body: some View {
         HStack {
-            TextField("Enter your prompt", text: $viewModel.input)
+            TextField("Enter your prompt", text: $viewModel.input, axis: .vertical)
                 .textFieldStyle(.automatic)
                 .padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 10))
                 .foregroundColor(.primary)
@@ -23,9 +23,7 @@ struct MessageComposerView: View {
                 .multilineTextAlignment(.leading)
                 .focused($promptTextFieldIsActive)
                 .submitLabel(.done)
-                .onSubmit {
-                    submitButtonTapped()
-                }
+                .onSubmit(submitButtonTapped)
             Button(action: submitButtonTapped) {
                 Text("Submit")
                     .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 20))
@@ -54,14 +52,9 @@ extension MessageComposerView {
         
         func sendMessage() {
             guard !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
-            
             // Send the message completion request
-            do {
-                try messageService.sendMessageCompletionRequest(message: input, for: conversation, stream: true)
-            } catch {
-                print("Error sending message completion request: \(error)")
-            }
-            
+            do { try messageService.sendMessageCompletionRequest(message: input, for: conversation, stream: true) }
+            catch { print("Error sending message completion request: \(error)") }
             // Clear the input field
             input = ""
         }

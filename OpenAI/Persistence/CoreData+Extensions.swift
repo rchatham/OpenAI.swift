@@ -7,72 +7,53 @@
 
 import Foundation
 
+
+extension Message {
+    func toNetworkMessage() -> OpenAIChatAPI.Message? {
+        guard let content = content, let role = role else { return nil }
+        return OpenAIChatAPI.Message(role: role, content: content)
+    }
+}
+
 // Conversion functions for Conversation and Message Core Data models
 extension Conversation {
-    func toNetworkMessages() -> [ChatCompletionRequest.Message] {
+    func toNetworkMessages() -> [OpenAIChatAPI.Message] {
         let systemMessageString = self.systemMessage ?? "You are a friendly chatbot designed to be helpful. Always be nice, but if you don't have a clear understanding of what should come next, try to indicate that."
-        let systemMessage = ChatCompletionRequest.Message(role: .system, content: systemMessageString)
+        let systemMessage = OpenAIChatAPI.Message(role: .system, content: systemMessageString)
         guard let messages = self.messages else { return [systemMessage] }
         return [systemMessage] + messages.sorted(by: { ($0 as? Message)?.createdAt ?? Date() < ($1 as? Message)?.createdAt ?? Date() }).compactMap { ($0 as? Message)?.toNetworkMessage() }
     }
 }
 
-extension Message {
-    func toNetworkMessage() -> ChatCompletionRequest.Message? {
-        guard let roleString = role, let content = content, let role = Role(rawValue: roleString) else { return nil }
-        return ChatCompletionRequest.Message(role: role, content: content)
-    }
-}
 
-extension Conversation {
-    func messagesArray() -> [Message] {
-        return (self.messages?.allObjects as? [Message]) ?? []
-    }
-}
+import CoreData
 
-extension Message {
-    static var example: Message {
-        let context = PersistenceController.preview.container.viewContext
-        
+// Conversion functions for OpenAIChatAPI.ChatCompletionRequest and OpenAIChatAPI.ChatCompletionResponse models
+extension OpenAIChatAPI.Message {
+    func toCoreDataMessage(in context: NSManagedObjectContext) -> Message {
         let message = Message(context: context)
-        message.id = UUID()
-        message.content = "This is a sample message."
-        message.role = "user"
+        message.roleString = role.rawValue
+        message.content = content
         message.createdAt = Date()
-        
-        // Save the context to store the message in the database
-        do {
-            try context.save()
-        } catch {
-            print("Error saving sample message: \(error)")
-        }
-        
+        message.id = UUID()
         return message
     }
-}
 
-extension Conversation {
-    static var example: Conversation {
-        let conversation = Conversation(context: PersistenceController.preview.container.viewContext)
-        conversation.title = "Sample Conversation"
-        conversation.id = UUID()
-        conversation.createdAt = Date()
+    func toDictionary() -> [String: Any] {
+        return [
+            "role": role.rawValue,
+            "content": content
+        ]
+    }
 
-        let message1 = Message(context: PersistenceController.preview.container.viewContext)
-        message1.role = "user"
-        message1.content = "Hello, how are you?"
-        message1.id = UUID()
-        message1.createdAt = Date()
-
-        let message2 = Message(context: PersistenceController.preview.container.viewContext)
-        message2.role = "ai"
-        message2.content = "I'm doing well, thank you. How can I help you today?"
-        message2.id = UUID()
-        message2.createdAt = Date().addingTimeInterval(5)
-
-        conversation.addToMessages(message1)
-        conversation.addToMessages(message2)
-
-        return conversation
+    func toCoreDataMessage(in context: NSManagedObjectContext, for conversation: Conversation) -> Message {
+        let message = Message(context: context)
+        message.roleString = role.rawValue
+        message.content = content
+        message.createdAt = Date()
+        message.id = UUID()
+        message.conversation = conversation
+        conversation.addToMessages(message)
+        return message
     }
 }

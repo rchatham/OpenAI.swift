@@ -40,24 +40,18 @@ class MessageService {
             case .success(let response):
                 if let message = response.choices.first?.message {
                     DispatchQueue.main.async { [weak self] in
-                        guard let strongSelf = self else { return }
-                        strongSelf.messageDB.createMessage(for: conversation, from: message)
+                        self?.messageDB.createMessage(for: conversation, from: message)
                     }
                 }
                 if let delta = response.choices.first?.delta {
                     DispatchQueue.main.async { [weak self] in
-                        guard let strongSelf = self else { return }
-                        if delta.role == .assistant {
-                            newMessageInfo = NewMessageInfo(for: conversation, using: strongSelf.messageDB)
-                        }
-                        if let newMessageInfo = newMessageInfo, let chunk = delta.content {
-                            newMessageInfo.append(chunk: chunk)
-                        }
+                        if delta.role == .assistant, let messageDB = self?.messageDB
+                        { newMessageInfo = NewMessageInfo(for: conversation, using: messageDB)}
+                        if let chunk = delta.content { newMessageInfo?.append(chunk: chunk)}
                     }
                 }
 
-            case .failure(let error):
-                print(error.localizedDescription)
+            case .failure(let error): print(error.localizedDescription)
             }
         }
     }

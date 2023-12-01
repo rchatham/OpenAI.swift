@@ -32,7 +32,7 @@ struct OpenAIApp: App {
     }
 
     init() {
-        notificationManager.requestPushNotificationPermission()
+//        notificationManager.requestPushNotificationPermission()
     }
 }
 
@@ -51,17 +51,16 @@ class NotificationManager {
             return
         }
 
-        if granted {
-            print("Permission granted for push notifications")
-            DispatchQueue.main.async {
-                #if canImport(UIKit)
-                UIApplication.shared.registerForRemoteNotifications()
-                #elseif canImport(AppKit)
-                NSApplication.shared.registerForRemoteNotifications()
-                #endif
-            }
-        } else {
-            print("Permission denied for push notifications")
+        guard granted else {
+            return print("Permission denied for push notifications")
+        }
+        print("Permission granted for push notifications")
+        DispatchQueue.main.async {
+            #if canImport(UIKit)
+            UIApplication.shared.registerForRemoteNotifications()
+            #elseif canImport(AppKit)
+            NSApplication.shared.registerForRemoteNotifications()
+            #endif
         }
     }
 }
@@ -100,6 +99,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 func handleDeviceToken(_ deviceToken: Data) {
     let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
     let token = tokenParts.joined()
+    UserDefaults.deviceToken = token
     print("Device Token: \(token)")
 }
 

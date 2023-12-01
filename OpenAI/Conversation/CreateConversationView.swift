@@ -77,9 +77,7 @@ extension CreateConversationView {
                     case .success(let response):
                         if let title = response.choices.first?.message?.content {
                             let conversation = self.conversationService.createConversation(title: title, systemMessage: self.systemMessage)
-                            DispatchQueue.main.async {
-                                completion(conversation)
-                            }
+                            DispatchQueue.main.async { completion(conversation)}
                         } else {
                             self.errorMessage = "Failed to generate a title."
                             self.showAlert = true
@@ -94,7 +92,6 @@ extension CreateConversationView {
                 self.errorMessage = "Failed to send a chat completion request."
                 self.showAlert = true
                 self.isGeneratingTitle = false
-                
                 // Show pop-up to enter API key
                 self.enterApiKey = true
             }

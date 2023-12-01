@@ -21,14 +21,8 @@ class PersistenceController {
             completion.prompt = "prompt \(int)"
             completion.response = "response \(int)"
         }
-        do {
-            try viewContext.save()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
+        do { try viewContext.save()}
+        catch { print("Unresolved error \(error), \(error.localizedDescription)")}
         return result
     }()
 
@@ -41,13 +35,9 @@ class PersistenceController {
     // MARK: - Private
     lazy private(set) var container: NSPersistentCloudKitContainer = {
         let container = NSPersistentCloudKitContainer(name: "OpenAI")
-        if inMemory {
-            container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
-        }
+        if inMemory { container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")}
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
+            if let error = error { print("Unresolved error \(error), \(error.localizedDescription)")}
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
         return container
@@ -55,13 +45,8 @@ class PersistenceController {
     let ckContainer = CKContainer(identifier: "iCloud.com.reidchatham.openai")
     lazy var privateDatabase: CKDatabase = {
         ckContainer.requestApplicationPermission(.userDiscoverability) { (status, error) in
-            if let error = error {
-                print("Error: \(error.localizedDescription)")
-                return
-            }
-            if status == .granted {
-                print("User granted permission to access CloudKit")
-            }
+            if let error = error { return print("Error: \(error.localizedDescription)")}
+            if status == .granted { print("User granted permission to access CloudKit")}
         }
         return ckContainer.privateCloudDatabase
     }()

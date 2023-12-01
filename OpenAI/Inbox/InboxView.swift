@@ -28,53 +28,26 @@ struct InboxView: View {
         NavigationView {
             conversationList
                 .navigationBarTitle("Inbox", displayMode: .large)
-                .navigationBarItems(trailing: Button(action: {
-                    showCreateConversationView = true
-                }) {
-                    Image(systemName: "plus")
-                })
-                .sheet(isPresented: $showCreateConversationView) {
-                    createConversationView
-                }
+                .navigationBarItems(trailing: addButton)
+                .sheet(isPresented: $showCreateConversationView) { createConversationView }
                 .background(newConversationNavLink)
         }
-        .onAppear {
-            NotificationManager.shared.requestPushNotificationPermission()
-        }
+        .onAppear { NotificationManager.shared.requestPushNotificationPermission()}
 #elseif canImport(AppKit)
         NavigationSplitView(columnVisibility: $navVisibility) {
             conversationList
                 .navigationTitle("Inbox")
-                .toolbar {
-                    Button(action: {
-                        showCreateConversationView = true
-                    }) {
-                        Image(systemName: "plus")
-                    }
-                }
-                .sheet(isPresented: $showCreateConversationView) {
-                    createConversationView
-                }
-        } content: {
-            conversationView(newConversationStore)
-        } detail: {
-            SettingsView(viewModel: SettingsView.ViewModel())
-        }
+                .toolbar { addButton }
+                .sheet(isPresented: $showCreateConversationView) { createConversationView }
+        } detail: { NavigationStack { conversationView(newConversationStore)}}
 #endif
     }
 
     var conversationList: some View {
         List {
             ForEach(conversations) { conversation in
-                NavigationLink(
-                    destination: conversationView(conversation)) {
-                    Text(conversation.title ?? "")
-                }
-            }
-            .onDelete(perform: { indexSet in
-                indexSet.map { conversations[$0] }.forEach(viewContext.delete)
-                saveContext()
-            })
+                NavigationLink(destination: conversationView(conversation)) { Text(conversation.title ?? "") }}
+                .onDelete(perform: { $0.map { conversations[$0] }.forEach(viewContext.delete); saveContext()})
         }
     }
 
@@ -104,20 +77,12 @@ struct InboxView: View {
     }
 
     private func saveContext() {
-        do {
-            try viewContext.save()
-        } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
+        do { try viewContext.save()}
+        catch { fatalError("Unresolved error \(error), \(error.localizedDescription)")}
     }
 
     private var addButton: some View {
-        Button(action: {
-            showCreateConversationView = true
-        }) {
-            Image(systemName: "plus")
-        }
+        Button(action: { showCreateConversationView = true }, label: { Image(systemName: "plus") })
     }
 
     private func deleteConversations(offsets: IndexSet) {
@@ -127,23 +92,15 @@ struct InboxView: View {
                 viewContext.delete(conversation)
             }
 
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+            do { try viewContext.save()}
+            catch { fatalError("Unresolved error \(error), \(error.localizedDescription)")}
         }
     }
 
     var shouldNavigateToNewConversation: Binding<Bool> {
         Binding<Bool>(
             get: { newConversationStore.conversation != nil },
-            set: { active in
-                if !active {
-                    newConversationStore.conversation = nil
-                }
-            }
+            set: { if !$0 { newConversationStore.conversation = nil }}
         )
     }
 }

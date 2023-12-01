@@ -8,34 +8,28 @@
 import SwiftUI
 
 extension UserDefaults {
-    var model: Model {
-        get {
-            if let modelName = string(forKey: "model"), let model = Model(rawValue: modelName) {
-                return model
-            } else {
-                return .gpt35Turbo
-            }
-        }
-        set {
-            set(newValue.rawValue, forKey: "model")
-        }
+    static var model: Model {
+        get { standard.string(forKey: "model").flatMap(Model.init) ?? .gpt35Turbo }
+        set { standard.set(newValue.rawValue, forKey: "model") }
     }
     
-    var maxTokens: Int {
-        get {
-            return integer(forKey: "max_tokens")
-        }
-        set {
-            set(newValue, forKey: "max_tokens")
-        }
+    static var maxTokens: Int {
+        get { standard.integer(forKey: "max_tokens")}
+        set { standard.set(newValue, forKey: "max_tokens")}
     }
     
-    var temperature: Double {
-        get {
-            return double(forKey: "temperature")
-        }
-        set {
-            set(newValue, forKey: "temperature")
-        }
+    static var temperature: Double {
+        get { return standard.double(forKey: "temperature")}
+        set { standard.set(newValue, forKey: "temperature")}
+    }
+}
+
+// UserDefaults extension for setting and getting the device token
+extension UserDefaults {
+    private static let deviceTokenKey = "kdeviceToken"
+
+    static var deviceToken: String? {
+        get { standard.string(forKey: deviceTokenKey)}
+        set { standard.setValue(newValue, forKey: deviceTokenKey)}
     }
 }

@@ -17,20 +17,9 @@ extension View {
     func enterOpenAIKeyAlert(isPresented: Binding<Bool>, apiKey: Binding<String>) -> some View {
         return alert("Enter OpenAI API Key", isPresented: isPresented, actions: {
             TextField("OpenAI API Key", text: apiKey)
-
             Button("Save", action: {
-                do {
-                    try NetworkClient.shared.updateApiKey(apiKey.wrappedValue)
-                } catch {
-                    guard let error = error as? NetworkClient.NetworkError else {
-                        return
-                    }
-                    switch error {
-                    case .emptyApiKey:
-                        print("Empty api key")
-                    default: return
-                    }
-                }
+                do { try NetworkClient.shared.updateApiKey(apiKey.wrappedValue)}
+                catch { if case .emptyApiKey = error as? NetworkClient.NetworkError { print("Empty api key") }}
             })
             Button("Cancel", role: .cancel, action: {})
         }, message: { Text("Please enter your OpenAI API key.") })
@@ -39,10 +28,6 @@ extension View {
 
 struct EmptyLabel: View {
     var body: some View {
-        Label {
-            Text("")
-        } icon: {
-            Image(systemName: "")
-        }
+        Label(title: { Text("") }, icon: {Image(systemName: "")})
     }
 }

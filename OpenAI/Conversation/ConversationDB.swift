@@ -24,12 +24,8 @@ class ConversationDB {
         conversation.createdAt = Date()
         conversation.title = title
         conversation.systemMessage = systemMessage
-        
-        do {
-            try context.save()
-        } catch {
-            print("Failed to insert conversation: \(error)")
-        }
+        do { try context.save() }
+        catch { print("Failed to insert conversation: \(error)") }
         return conversation
     }
 
@@ -37,44 +33,24 @@ class ConversationDB {
         let context = persistence.container.newBackgroundContext()
         let request: NSFetchRequest<Conversation> = Conversation.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        do {
-            let conversation = try context.fetch(request).first
-            if let conversation = conversation {
-                context.delete(conversation)
-                try context.save()
-            }
-        } catch {
-            print("Failed to delete conversation: \(error)")
-        }
+        do { try context.fetch(request).first.flatMap { context.delete($0); try context.save() }}
+        catch { print("Failed to delete conversation: \(error)")}
     }
     
     func updateConversation(id: UUID, title: String) {
         let context = persistence.container.newBackgroundContext()
         let request: NSFetchRequest<Conversation> = Conversation.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-        do {
-            let conversation = try context.fetch(request).first
-            conversation?.title = title
-            try context.save()
-        } catch {
-            print("Failed to update conversation: \(error)")
-        }
+        do { try context.fetch(request).first?.title = title; try context.save()}
+        catch { print("Failed to update conversation: \(error)")}
     }
 
-    func fetchConversation(by id: UUID) -> Conversation {
+    func fetchConversation(by id: UUID) -> Conversation? {
         let context = persistence.container.viewContext
         let request: NSFetchRequest<Conversation> = Conversation.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
-
-        do {
-            let conversations = try context.fetch(request)
-            guard let conversation = conversations.first else {
-                fatalError("Conversation not found for the given id")
-            }
-            return conversation
-        } catch {
-            fatalError("Failed to fetch conversation: \(error)")
-        }
+        do { return try context.fetch(request).first }
+        catch { print("Failed to fetch conversation: \(error)"); return nil }
     }
 }
 
