@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import CloudKit
+import openai_swift
 
 class MessageDB {
     
@@ -33,7 +34,7 @@ class MessageDB {
     }
     
     @discardableResult
-    func createMessage(for conversation: Conversation, from networkMessage: OpenAIChatAPI.Message) -> Message {
+    func createMessage(for conversation: Conversation, from networkMessage: OpenAI.Message) -> Message {
         let message = networkMessage.toCoreDataMessage(in: persistence.container.viewContext)
         do { try persistence.container.viewContext.save() }
         catch { print("Failed to insert message: \(error)") }

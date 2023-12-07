@@ -6,29 +6,30 @@
 //
 
 import Foundation
+import openai_swift
 
-typealias Model = OpenAIChatAPI.Model
-typealias Role = OpenAIChatAPI.Role
+typealias Model = OpenAI.Model
+typealias Role = OpenAI.Role
 
 
 class NetworkClient: NSObject, URLSessionWebSocketDelegate {
     static let shared = NetworkClient()
 
     private let keychainService = KeychainService()
-    private var openAIChat: OpenAIChatAPI?
+    private var openAIChat: OpenAI?
     private let userDefaults = UserDefaults.standard
-    private var streamCompletion: ((Result<String, OpenAIChatAPI.APIError>) -> Void)?
+    private var streamCompletion: ((Result<String, OpenAI.APIError>) -> Void)?
 
     override init() {
         super.init()
         if let apiKey = keychainService.getApiKey() {
-            openAIChat = OpenAIChatAPI(apiKey: apiKey)
+            openAIChat = OpenAI(apiKey: apiKey)
         }
     }
 
-    func sendChatCompletionRequest(messages: [OpenAIChatAPI.Message], model: Model = .gpt4, stream: Bool = false, completion: @escaping (Result<OpenAIChatAPI.ChatCompletionResponse, Error>) -> Void) throws {
+    func sendChatCompletionRequest(messages: [OpenAI.Message], model: Model = .gpt4, stream: Bool = false, completion: @escaping (Result<OpenAI.ChatCompletionResponse, Error>) -> Void) throws {
         guard let openAIChat = openAIChat else { throw NetworkError.missingApiKey }
-        openAIChat.sendChatCompletionRequest(model: model, messages: messages, stream: stream, completion: completion)
+        openAIChat.performChatCompletionRequest(messages: messages, model: model, stream: stream, completion: completion)
     }
     
     func updateApiKey(_ apiKey: String) throws {
@@ -36,7 +37,7 @@ class NetworkClient: NSObject, URLSessionWebSocketDelegate {
             throw NetworkError.emptyApiKey
         }
         keychainService.saveApiKey(apiKey: apiKey)
-        openAIChat = OpenAIChatAPI(apiKey: apiKey)
+        openAIChat = OpenAI(apiKey: apiKey)
     }
 }
 
