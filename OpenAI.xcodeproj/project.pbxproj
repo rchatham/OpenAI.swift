@@ -19,6 +19,7 @@
 		B184E8812B21887F009AF69D /* openai_swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B184E86C2B21887E009AF69D /* openai_swift.framework */; };
 		B184E8822B21887F009AF69D /* openai_swift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B184E86C2B21887E009AF69D /* openai_swift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B184E8892B21888B009AF69D /* OpenAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C1C1D129BB16060011602E /* OpenAI.swift */; };
+		B184E88B2B22C046009AF69D /* OpenAI+ChatCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B184E88A2B22C046009AF69D /* OpenAI+ChatCompletion.swift */; };
 		B1BD2B8A29DAAA7A002C638C /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BD2B8929DAAA7A002C638C /* MessageView.swift */; };
 		B1BD2B8C29DAAA94002C638C /* MessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BD2B8B29DAAA94002C638C /* MessageList.swift */; };
 		B1BD2B8E29DAB0B1002C638C /* MessageComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BD2B8D29DAB0B1002C638C /* MessageComposerView.swift */; };
@@ -116,6 +117,7 @@
 		B184E86F2B21887E009AF69D /* openai_swift.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = openai_swift.docc; sourceTree = "<group>"; };
 		B184E8752B21887F009AF69D /* openai-swiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "openai-swiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B184E87C2B21887F009AF69D /* openai_swiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openai_swiftTests.swift; sourceTree = "<group>"; };
+		B184E88A2B22C046009AF69D /* OpenAI+ChatCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OpenAI+ChatCompletion.swift"; sourceTree = "<group>"; };
 		B19BE6B5298CE15A00A342ED /* OpenAI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenAI.entitlements; sourceTree = "<group>"; };
 		B1BD2B8929DAAA7A002C638C /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		B1BD2B8B29DAAA94002C638C /* MessageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageList.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				B1C1C1D129BB16060011602E /* OpenAI.swift */,
+				B184E88A2B22C046009AF69D /* OpenAI+ChatCompletion.swift */,
 				B184E86E2B21887E009AF69D /* openai_swift.h */,
 				B184E86F2B21887E009AF69D /* openai_swift.docc */,
 			);
@@ -565,6 +568,7 @@
 			files = (
 				B184E8892B21888B009AF69D /* OpenAI.swift in Sources */,
 				B184E8702B21887E009AF69D /* openai_swift.docc in Sources */,
+				B184E88B2B22C046009AF69D /* OpenAI+ChatCompletion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
