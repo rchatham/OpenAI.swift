@@ -67,8 +67,7 @@ public class OpenAI {
             let lines = eventString.split(separator: "\n")
             for line in lines where line.hasPrefix("data:") {
                 guard line != "data: [DONE]" else { return didCompleteStream?(nil) ?? () }
-                if let data = String(line.dropFirst(5)).data(using: .utf8) { didReceiveEvent?(data) }
-                else { didCompleteStream?(OpenAIError.streamParsingFailure) }
+                didReceiveEvent?(Data(String(line.dropFirst(5)).utf8))
             }
         }
 
