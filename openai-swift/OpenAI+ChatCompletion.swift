@@ -8,9 +8,9 @@
 import Foundation
 
 
-extension OpenAI {
-    public func performChatCompletionRequest(messages: [Message], model: Model = .gpt35Turbo, stream: Bool = false, completion: @escaping (Result<ChatCompletionResponse, Error>) -> Void, didCompleteStreaming: @escaping (Error?) -> Void = {_ in}) {
-        perform(request: ChatCompletionRequest(model: model, messages: messages, stream: stream), completion: completion, didCompleteStreaming: didCompleteStreaming)
+public extension OpenAI {
+    func performChatCompletionRequest(messages: [Message], model: Model = .gpt35Turbo, stream: Bool = false, completion: @escaping (Result<OpenAI.ChatCompletionResponse, OpenAIError>) -> Void, didCompleteStreaming: ((Error?) -> Void)? = nil) {
+        perform(request: OpenAI.ChatCompletionRequest(model: model, messages: messages, stream: stream), completion: completion, didCompleteStreaming: didCompleteStreaming)
     }
 }
 
@@ -45,8 +45,10 @@ public extension OpenAI {
         let user: String?
         let response_format: ResponseFormat?
         let seed: Int?
+        let tools: [Tool]?
+        let tool_choice: ToolChoice?
 
-        public init(model: Model, messages: [Message], temperature: Double? = nil, top_p: Double? = nil, n: Int? = nil, stream: Bool? = nil, stop: Stop? = nil, max_tokens: Int? = nil, presence_penalty: Double? = nil, frequency_penalty: Double? = nil, logit_bias: [String: Double]? = nil, user: String? = nil, response_type: ResponseType? = nil, seed: Int? = nil) {
+        public init(model: Model, messages: [Message], temperature: Double? = nil, top_p: Double? = nil, n: Int? = nil, stream: Bool? = nil, stop: Stop? = nil, max_tokens: Int? = nil, presence_penalty: Double? = nil, frequency_penalty: Double? = nil, logit_bias: [String: Double]? = nil, user: String? = nil, response_type: ResponseType? = nil, seed: Int? = nil, tools: [Tool]? = nil, tool_choice: ToolChoice? = nil) {
             self.model = model
             self.messages = messages
             self.temperature = temperature
@@ -61,6 +63,8 @@ public extension OpenAI {
             self.user = user
             self.response_format = response_type.flatMap { ResponseFormat(type: $0) }
             self.seed = seed
+            self.tools = tools
+            self.tool_choice = tool_choice
         }
 
         public enum Stop: Codable {
@@ -94,6 +98,125 @@ public extension OpenAI {
             case text
             case json_object
         }
+
+        public enum Tool: Codable {
+            case function(FunctionDetails)
+
+            public struct FunctionDetails: Codable {
+                var description: String?
+                var name: String
+                var parameters: JSONSchema // JSON Schema object can be represented as [String: String]
+                public init(description: String, name: String, parameters: JSONSchema) {
+                    self.description = description
+                    self.name = name
+                    self.parameters = parameters
+                }
+
+                public struct JSONSchema: Codable {
+                    var type: String = "object"
+                    var properties: [String: String]
+                    public init(properties: [String : String]) {
+                        self.properties = properties
+                    }
+                }
+            }
+
+            enum CodingKeys: String, CodingKey {
+                case type
+                case function
+            }
+
+            public init(from decoder: Decoder) throws {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                let type = try container.decode(String.self, forKey: .type)
+
+                switch type {
+                case "function":
+                    let functionDetails = try container.decode(FunctionDetails.self, forKey: .function)
+                    self = .function(functionDetails)
+                default:
+                    throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Invalid type value")
+                }
+            }
+
+            public func encode(to encoder: Encoder) throws {
+                var container = encoder.container(keyedBy: CodingKeys.self)
+
+                switch self {
+                case .function(let functionDetails):
+                    try container.encode("function", forKey: .type)
+                    try container.encode(functionDetails, forKey: .function)
+                }
+            }
+        }
+
+        public enum ToolChoice: Codable {
+            case none
+            case auto
+            case tool(ToolWrapper)
+
+            public enum ToolWrapper: Codable {
+                case function(String)
+
+                public struct FunctionDetails: Codable {
+                    var name: String
+                    public init(name: String) { self.name = name }
+                }
+
+                public init(from decoder: Decoder) throws {
+                    let container = try decoder.container(keyedBy: CodingKeys.self)
+                    let type = try container.decode(String.self, forKey: .type)
+
+                    switch type {
+                    case "function":
+                        let functionDetails = try container.decode(FunctionDetails.self, forKey: .function)
+                        self = .function(functionDetails.name)
+                    default: throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Invalid type value")
+                    }
+                }
+
+                public func encode(to encoder: Encoder) throws {
+                    var container = encoder.container(keyedBy: CodingKeys.self)
+                    switch self {
+                    case .function(let name):
+                        try container.encode("function", forKey: .type)
+                        try container.encode(FunctionDetails(name: name), forKey: .function)
+                    }
+                }
+
+                enum CodingKeys: String, CodingKey {
+                    case type
+                    case function
+                }
+            }
+
+            public init(from decoder: Decoder) throws {
+                let container = try decoder.singleValueContainer()
+                if let stringValue = try? container.decode(String.self) {
+                    switch stringValue {
+                    case "none": self = .none
+                    case "auto": self = .auto
+                    default: throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid string value")
+                    }
+                } else {
+                    let toolWrapper = try ToolWrapper(from: decoder)
+                    self = .tool(toolWrapper)
+                }
+            }
+
+            public func encode(to encoder: Encoder) throws {
+                switch self {
+                case .none:
+                    var container = encoder.singleValueContainer()
+                    try container.encode("none")
+                case .auto:
+                    var container = encoder.singleValueContainer()
+                    try container.encode("auto")
+                case .tool(let toolWrapper):
+                    try toolWrapper.encode(to: encoder)
+                }
+            }
+        }
     }
 
     struct ChatCompletionResponse: Codable {
@@ -103,6 +226,7 @@ public extension OpenAI {
         public let choices: [Choice]
         public let usage: Usage?
         public let model: String?
+        public let system_fingerprint: String?
 
         public struct Choice: Codable {
             public let index: Int

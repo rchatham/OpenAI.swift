@@ -43,13 +43,6 @@ class ConversationService {
             OpenAI.Message(role: .system, content: "You are a bot that will take a system message for another bot from the user and generate a short title for the conversation that the user will have with the bot that this system message is for. Make the title short, less that 100 characters, and don't add any additional response before or after the title. Do not include quotation marks."),
             OpenAI.Message(role: .user, content: systemMessage)
         ]
-        try networkClient.sendChatCompletionRequest(messages: messages, model: .gpt35Turbo0301) { (result: Result<OpenAI.ChatCompletionResponse, Error>) in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let response): completion(.success(response))
-                case .failure(let error): completion(.failure(error))
-                }
-            }
-        }
+        try networkClient.sendChatCompletionRequest(messages: messages, model: .gpt35Turbo0301, completion: completion)
     }
 }

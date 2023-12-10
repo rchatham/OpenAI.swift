@@ -18,7 +18,7 @@ class NetworkClient: NSObject, URLSessionWebSocketDelegate {
     private let keychainService = KeychainService()
     private var openAIChat: OpenAI?
     private let userDefaults = UserDefaults.standard
-    private var streamCompletion: ((Result<String, OpenAI.APIError>) -> Void)?
+    private var streamCompletion: ((Result<String, OpenAIError>) -> Void)?
 
     override init() {
         super.init()
@@ -29,7 +29,14 @@ class NetworkClient: NSObject, URLSessionWebSocketDelegate {
 
     func sendChatCompletionRequest(messages: [OpenAI.Message], model: Model = .gpt4, stream: Bool = false, completion: @escaping (Result<OpenAI.ChatCompletionResponse, Error>) -> Void) throws {
         guard let openAIChat = openAIChat else { throw NetworkError.missingApiKey }
-        openAIChat.performChatCompletionRequest(messages: messages, model: model, stream: stream, completion: completion)
+        openAIChat.performChatCompletionRequest(messages: messages, model: model, stream: stream) { (result: Result<OpenAI.ChatCompletionResponse, OpenAIError>) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response): completion(.success(response))
+                case .failure(let error): completion(.failure(error))
+                }
+            }
+        }
     }
     
     func updateApiKey(_ apiKey: String) throws {

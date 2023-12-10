@@ -19,21 +19,21 @@ public class OpenAI {
         self.apiKey = apiKey
     }
     
-    public func perform<Request: OpenAIRequest>(request: Request, completion: @escaping (Result<Request.Response, Error>) -> Void, didCompleteStreaming: ((Error?) -> Void)? = nil) {
+    public func perform<Request: OpenAIRequest>(request: Request, completion: @escaping (Result<Request.Response, OpenAIError>) -> Void, didCompleteStreaming: ((Error?) -> Void)? = nil) {
         var httpRequest = prepareRequest(path: Request.path)
         do { httpRequest.httpBody = try JSONEncoder().encode(request) }
-        catch { return completion(.failure(APIError.invalidData)) }
+        catch { return completion(.failure(.invalidData)) }
         if request.stream { streamManager.stream(task: session.dataTask(with: httpRequest), eventHandler: completion, didCompleteStream: didCompleteStreaming) }
         else { perform(request: httpRequest, completion: completion) }
     }
 
-    private func perform<Response: Decodable>(request: URLRequest, completion: @escaping (Result<Response, Error>) -> Void) {
+    private func perform<Response: Decodable>(request: URLRequest, completion: @escaping (Result<Response, OpenAIError>) -> Void) {
         session.dataTask(with: request) { data, response, error in
-            guard let httpResponse = response as? HTTPURLResponse else { return completion(.failure(APIError.requestFailed)) }
-            guard httpResponse.statusCode == 200 else { return completion(.failure(APIError.responseUnsuccessful(statusCode: httpResponse.statusCode))) }
-            guard let data = data else { return completion(.failure(APIError.invalidData)) }
-            do { completion(.success(try JSONDecoder().decode(Response.self, from: data))) }
-            catch { completion(.failure(APIError.jsonParsingFailure)) }
+            guard let httpResponse = response as? HTTPURLResponse else { return completion(.failure(.requestFailed)) }
+            guard httpResponse.statusCode == 200 else { return completion(.failure(.responseUnsuccessful(statusCode: httpResponse.statusCode))) }
+            guard let data = data else { return completion(.failure(.invalidData)) }
+            let d = JSONDecoder(); do { completion(.success(try d.decode(Response.self, from: data))) }
+            catch { completion(.failure((try? d.decode(OpenAIError.ErrorResponse.self, from: data)).flatMap{.apiError($0)} ?? OpenAIError.jsonParsingFailure)) }
         }.resume()
     }
 
@@ -50,21 +50,25 @@ public class OpenAI {
         var didCompleteStream: ((Error?) -> Void)?
         private var task: URLSessionDataTask?
         
-        func stream<Response: Decodable>(task: URLSessionDataTask, eventHandler: @escaping (Result<Response, Error>) -> Void, didCompleteStream: ((Error?) -> Void)? = nil) {
+        func stream<Response: Decodable>(task: URLSessionDataTask, eventHandler: @escaping (Result<Response, OpenAIError>) -> Void, didCompleteStream: ((Error?) -> Void)? = nil) {
             didReceiveEvent = { data in
                 do { eventHandler(.success(try JSONDecoder().decode(Response.self, from: data))) }
-                catch { eventHandler(.failure(error)) }
+                catch { eventHandler(.failure(.jsonParsingFailure)) }
             }
-            self.didCompleteStream = didCompleteStream
+            self.didCompleteStream = { [unowned self] error in
+                self.task?.cancel(); (self.task, self.didReceiveEvent, self.didCompleteStream) = (nil, nil, nil)
+                didCompleteStream?(error)
+            }
             self.task = task; task.resume()
         }
         
         public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
             guard let eventString = String(data: data, encoding: .utf8) else { return }
             let lines = eventString.split(separator: "\n")
-            for line in lines where line.hasPrefix("data:") && line != "data: [DONE]" {
+            for line in lines where line.hasPrefix("data:") {
+                guard line != "data: [DONE]" else { return didCompleteStream?(nil) ?? () }
                 if let data = String(line.dropFirst(5)).data(using: .utf8) { didReceiveEvent?(data) }
-                else { task?.cancel(); task = nil; didReceiveEvent = nil; didCompleteStream = nil }
+                else { didCompleteStream?(OpenAIError.streamParsingFailure) }
             }
         }
 
@@ -86,15 +90,24 @@ extension OpenAIRequest {
     }
 }
 
-public extension OpenAI {
-    enum APIError: Error {
-        case requestFailed
-        case invalidData
-        case responseUnsuccessful(statusCode: Int)
-        case jsonParsingFailure
-        case invalidURL
+public enum OpenAIError: Error {
+    case requestFailed, invalidData, jsonParsingFailure, streamParsingFailure, invalidURL
+    case responseUnsuccessful(statusCode: Int)
+    case apiError(ErrorResponse)
+
+    public struct ErrorResponse: Error, Codable {
+        public let error: APIError
     }
-    
+
+    public struct APIError: Error, Codable {
+        public let message: String
+        public let type: String
+        public let param: String?
+        public let code: String?
+    }
+}
+
+public extension OpenAI {
     enum Model: String, Codable {
         case gpt35Turbo = "gpt-3.5-turbo"
         case gpt35Turbo0301 = "gpt-3.5-turbo-0301"
