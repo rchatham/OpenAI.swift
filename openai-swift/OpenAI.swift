@@ -32,8 +32,7 @@ public class OpenAI {
             guard let httpResponse = response as? HTTPURLResponse else { return completion(.failure(.requestFailed)) }
             guard httpResponse.statusCode == 200 else { return completion(.failure(.responseUnsuccessful(statusCode: httpResponse.statusCode))) }
             guard let data = data else { return completion(.failure(.invalidData)) }
-            let d = JSONDecoder(); do { completion(.success(try d.decode(Response.self, from: data))) }
-            catch { completion(.failure((try? d.decode(OpenAIError.ErrorResponse.self, from: data)).flatMap{.apiError($0)} ?? OpenAIError.jsonParsingFailure)) }
+            decode(completion: completion)(data)
         }.resume()
     }
 
@@ -51,10 +50,7 @@ public class OpenAI {
         private var task: URLSessionDataTask?
         
         func stream<Response: Decodable>(task: URLSessionDataTask, eventHandler: @escaping (Result<Response, OpenAIError>) -> Void, didCompleteStream: ((Error?) -> Void)? = nil) {
-            didReceiveEvent = { data in
-                do { eventHandler(.success(try JSONDecoder().decode(Response.self, from: data))) }
-                catch { eventHandler(.failure(.jsonParsingFailure)) }
-            }
+            didReceiveEvent = decode(completion: eventHandler)
             self.didCompleteStream = { [unowned self] error in
                 self.task?.cancel(); (self.task, self.didReceiveEvent, self.didCompleteStream) = (nil, nil, nil)
                 didCompleteStream?(error)
@@ -90,7 +86,8 @@ extension OpenAIRequest {
 }
 
 public enum OpenAIError: Error {
-    case requestFailed, invalidData, jsonParsingFailure, streamParsingFailure, invalidURL
+    case requestFailed, invalidData, streamParsingFailure, invalidURL
+    case jsonParsingFailure(Error)
     case responseUnsuccessful(statusCode: Int)
     case apiError(ErrorResponse)
 
@@ -112,5 +109,18 @@ public extension OpenAI {
         case gpt35Turbo0301 = "gpt-3.5-turbo-0301"
         case gpt4 = "gpt-4"
         public static var cases: [Model] = [.gpt35Turbo, .gpt35Turbo0301, .gpt4]
+    }
+}
+
+// Helpers
+
+private func decode<Response: Decodable>(completion: @escaping (Result<Response, OpenAIError>) -> Void) -> (Data) -> Void {
+    return { data in
+        let d = JSONDecoder()
+        do { completion(.success(try d.decode(Response.self, from: data))) }
+        catch {
+            let apiError = try? d.decode(OpenAIError.ErrorResponse.self, from: data)
+            completion(.failure(apiError != nil ? .apiError(apiError!) : .jsonParsingFailure(error)))
+        }
     }
 }
