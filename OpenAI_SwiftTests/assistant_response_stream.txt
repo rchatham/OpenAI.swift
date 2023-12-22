@@ -1,0 +1,35 @@
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":"Sure"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":","},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":" I"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":" can"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":" help"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":" with"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":" that"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":"."},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":" Could"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":" you"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":" please"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":" specify"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":" the"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":" location"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":"?"},"logprobs":null,"finish_reason":null}]}
+
+data: {"id":"chatcmpl-8XfGiMsHpYeCv0ZNQAPGSd2xHE77m","object":"chat.completion.chunk","created":1703034152,"model":"gpt-4-0613","system_fingerprint":null,"choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
+
+data: [DONE]

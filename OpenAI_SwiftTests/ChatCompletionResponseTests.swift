@@ -1,14 +1,13 @@
 //
-//  openai_swiftTests.swift
+//  ChatCompletionResponseTests.swift
 //  openai-swiftTests
 //
-//  Created by Reid Chatham on 12/6/23.
+//  Created by Reid Chatham on 12/15/23.
 //
 
 import XCTest
-@testable import openai_swift
 
-class openai_swiftTests: XCTestCase {
+final class ChatCompletionResponseTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -32,5 +31,4 @@ class openai_swiftTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
-
 }

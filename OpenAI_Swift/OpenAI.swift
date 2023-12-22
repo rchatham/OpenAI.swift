@@ -29,10 +29,11 @@ public class OpenAI {
 
     private func perform<Response: Decodable>(request: URLRequest, completion: @escaping (Result<Response, OpenAIError>) -> Void) {
         session.dataTask(with: request) { data, response, error in
-            guard let httpResponse = response as? HTTPURLResponse else { return completion(.failure(.requestFailed)) }
+            guard let httpResponse = response as? HTTPURLResponse else { return completion(.failure(.requestFailed(error))) }
             guard httpResponse.statusCode == 200 else { return completion(.failure(.responseUnsuccessful(statusCode: httpResponse.statusCode))) }
             guard let data = data else { return completion(.failure(.invalidData)) }
-            decode(completion: completion)(data)
+//            print(String(data: data, encoding: .utf8) ?? "Could not convert data to string....")
+            OpenAI.decode(completion: completion)(data)
         }.resume()
     }
 
@@ -45,29 +46,33 @@ public class OpenAI {
     }
 
     class StreamSessionManager: NSObject, URLSessionDataDelegate {
-        var didReceiveEvent: ((Data) -> Void)?
-        var didCompleteStream: ((Error?) -> Void)?
+        private var didReceiveEvent: ((Data) -> Void)?
+        private var didCompleteStream: ((Error?) -> Void)?
         private var task: URLSessionDataTask?
         
         func stream<Response: Decodable>(task: URLSessionDataTask, eventHandler: @escaping (Result<Response, OpenAIError>) -> Void, didCompleteStream: ((Error?) -> Void)? = nil) {
             didReceiveEvent = decode(completion: eventHandler)
             self.didCompleteStream = { [unowned self] error in
-                self.task?.cancel(); (self.task, self.didReceiveEvent, self.didCompleteStream) = (nil, nil, nil)
-                didCompleteStream?(error)
+                didCompleteStream?(error); (self.task, self.didReceiveEvent, self.didCompleteStream) = (nil, nil, nil)
             }
             self.task = task; task.resume()
         }
         
         public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-            guard let eventString = String(data: data, encoding: .utf8) else { return }
-            let lines = eventString.split(separator: "\n")
+            if let error = OpenAI.decodeError(data: data) { return didCompleteStream?(error) ?? () }
+            guard let lines = String(data: data, encoding: .utf8)?.split(separator: "\n") else { return }
+            var i = 0;
             for line in lines where line.hasPrefix("data:") {
-                guard line != "data: [DONE]" else { return didCompleteStream?(nil) ?? () }
+                guard line != "data: [DONE]" else {
+                    return //didCompleteStream?(nil) ?? ()
+                } // Handle stream ending gracefully, do something with finish reason?
+//                print("\(i):" + String(line.dropFirst(5))); i += 1
                 didReceiveEvent?(Data(String(line.dropFirst(5)).utf8))
             }
         }
 
         public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+//            print("task: " + (task.response?.description ?? "") + "error: " + (error?.localizedDescription ?? ""))
             didCompleteStream?(error)
         }
     }
@@ -80,13 +85,13 @@ public protocol OpenAIRequest: Encodable {
 
 extension OpenAIRequest {
     var stream: Bool {
-        if let chat = self as? OpenAI.ChatCompletionRequest { return chat.stream ?? false }
-        return false
+        return (self as? OpenAI.ChatCompletionRequest)?.stream ?? false
     }
 }
 
 public enum OpenAIError: Error {
-    case requestFailed, invalidData, streamParsingFailure, invalidURL
+    case invalidData, streamParsingFailure, invalidURL
+    case requestFailed(Error?)
     case jsonParsingFailure(Error)
     case responseUnsuccessful(statusCode: Int)
     case apiError(ErrorResponse)
@@ -104,23 +109,33 @@ public enum OpenAIError: Error {
 }
 
 public extension OpenAI {
-    enum Model: String, Codable {
+    enum Model: String, Codable, CaseIterable {
         case gpt35Turbo = "gpt-3.5-turbo"
-        case gpt35Turbo0301 = "gpt-3.5-turbo-0301"
+        case gpt35Turbo_0301 = "gpt-3.5-turbo-0301"
+        case gpt35Turbo_1106 = "gpt-3.5-turbo-1106"
+        case gpt35Turbo_16k = "gpt-3.5-turbo-16k"
+        case gpt35Turbo_Instruct = "gpt-3.5-turbo-instruct"
         case gpt4 = "gpt-4"
-        public static var cases: [Model] = [.gpt35Turbo, .gpt35Turbo0301, .gpt4]
+        case gpt4_0613 = "gpt-4-0613"
+        case gpt4Turbo_1106Preview = "gpt-4-1106-preview"
+        case gpt4_VisionPreview = "gpt-4-vision-preview"
+        case gpt4_32k = "gpt-4-32k"
+        case gpt4_32k_0613 = "gpt-4-32k-0613"
     }
 }
 
 // Helpers
+public extension OpenAI {
+    static func decode<Response: Decodable>(completion: @escaping (Result<Response, OpenAIError>) -> Void) -> (Data) -> Void {
+        return { completion(decode(data: $0)) }
+    }
 
-private func decode<Response: Decodable>(completion: @escaping (Result<Response, OpenAIError>) -> Void) -> (Data) -> Void {
-    return { data in
-        let d = JSONDecoder()
-        do { completion(.success(try d.decode(Response.self, from: data))) }
-        catch {
-            let apiError = try? d.decode(OpenAIError.ErrorResponse.self, from: data)
-            completion(.failure(apiError != nil ? .apiError(apiError!) : .jsonParsingFailure(error)))
-        }
+    static func decode<Response: Decodable>(data: Data) -> Result<Response, OpenAIError> {
+        let d = JSONDecoder(); do { return .success(try d.decode(Response.self, from: data)) }
+        catch { return .failure((try? d.decode(OpenAIError.ErrorResponse.self, from: data)).flatMap { OpenAIError.apiError($0) } ?? .jsonParsingFailure(error)) }
+    }
+
+    static func decodeError(data: Data, decoder: JSONDecoder = JSONDecoder()) -> OpenAIError? {
+        return (try? decoder.decode(OpenAIError.ErrorResponse.self, from: data)).flatMap { .apiError($0) }
     }
 }

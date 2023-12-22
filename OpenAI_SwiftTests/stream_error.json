@@ -1,0 +1,1 @@
+"{\n  \"error\": {\n    \"message\": \"Invalid parameter: messages with role \'tool\' must be a response to a preceeding message with \'tool_calls\'.\",\n    \"type\": \"invalid_request_error\",\n    \"param\": \"messages.[29].role\",\n    \"code\": null\n  }\n}\n"
