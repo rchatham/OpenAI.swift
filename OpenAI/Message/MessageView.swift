@@ -15,7 +15,7 @@ struct MessageView: View {
         HStack {
             if message.isUser { Spacer()}
             VStack(alignment: .leading) {
-                Text(message.content ?? "")
+                Text(message.contentText ?? "")
                     .font(.system(size: 18)) // Adjust the font size if necessary
                     .foregroundColor(message.isUser ? (colorScheme == .dark ? .white : .black) : .white)
                     .padding(10) // Add padding around the text
@@ -30,6 +30,6 @@ struct MessageView: View {
 
 struct MessageView_Previews: PreviewProvider {
     static var previews: some View {
-        MessageView(message: Message.example)
+        MessageView(message: Message.example())
     }
 }

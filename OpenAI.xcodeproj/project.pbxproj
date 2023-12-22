@@ -7,19 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B12D6EBC2B2CC7BE003810E5 /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12D6EBB2B2CC7BD003810E5 /* MessageTests.swift */; };
+		B12D6EBE2B2CC852003810E5 /* chat_completion_request.json in Resources */ = {isa = PBXBuildFile; fileRef = B12D6EBD2B2CC852003810E5 /* chat_completion_request.json */; };
+		B12D6EC02B2CC92E003810E5 /* chat_completion_response.json in Resources */ = {isa = PBXBuildFile; fileRef = B12D6EBF2B2CC92E003810E5 /* chat_completion_response.json */; };
+		B12D6EC22B2CC963003810E5 /* ChatCompletionRequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12D6EC12B2CC963003810E5 /* ChatCompletionRequestTests.swift */; };
+		B12D6EC42B2CC98D003810E5 /* ChatCompletionResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12D6EC32B2CC98D003810E5 /* ChatCompletionResponseTests.swift */; };
+		B12D6EC62B2CC9B2003810E5 /* system_message.json in Resources */ = {isa = PBXBuildFile; fileRef = B12D6EC52B2CC9B2003810E5 /* system_message.json */; };
+		B12D6EC82B2CC9C7003810E5 /* user_message.json in Resources */ = {isa = PBXBuildFile; fileRef = B12D6EC72B2CC9C7003810E5 /* user_message.json */; };
+		B12D6ED12B2D998B003810E5 /* assistant_message.json in Resources */ = {isa = PBXBuildFile; fileRef = B12D6ED02B2D998B003810E5 /* assistant_message.json */; };
+		B12D6ED32B2D99EF003810E5 /* user_message_with_image.json in Resources */ = {isa = PBXBuildFile; fileRef = B12D6ED22B2D99EF003810E5 /* user_message_with_image.json */; };
+		B12D6ED52B2E2463003810E5 /* JSONSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12D6ED42B2E2463003810E5 /* JSONSchema.swift */; };
+		B12D6ED82B2F8A67003810E5 /* chat_completion_request_with_functions.json in Resources */ = {isa = PBXBuildFile; fileRef = B12D6ED72B2F8A67003810E5 /* chat_completion_request_with_functions.json */; };
+		B12D6EDA2B2F9174003810E5 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12D6ED92B2F9174003810E5 /* Utilities.swift */; };
+		B12D6EDD2B32922A003810E5 /* assistant_response_stream.txt in Resources */ = {isa = PBXBuildFile; fileRef = B12D6EDC2B32922A003810E5 /* assistant_response_stream.txt */; };
+		B12D6EDF2B32932A003810E5 /* tool_call_stream.txt in Resources */ = {isa = PBXBuildFile; fileRef = B12D6EDE2B32932A003810E5 /* tool_call_stream.txt */; };
 		B1373966299FE12B00DF4BB9 /* OpenAI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B1373964299FE12B00DF4BB9 /* OpenAI.xcdatamodeld */; };
-		B137396C29A35D7E00DF4BB9 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = B137396B29A35D7E00DF4BB9 /* KeychainAccess */; };
 		B156718D2B1716E0000D8949 /* CoreData+Examples.swift in Sources */ = {isa = PBXBuildFile; fileRef = B156718C2B1716E0000D8949 /* CoreData+Examples.swift */; };
+		B157986C2B335E2F00C4CF1D /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = B157986B2B335E2F00C4CF1D /* SwiftyJSON */; };
+		B157986F2B335E4C00C4CF1D /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = B157986E2B335E4C00C4CF1D /* KeychainAccess */; };
+		B15798712B335FDE00C4CF1D /* CoreDataModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15798702B335FDE00C4CF1D /* CoreDataModelTests.swift */; };
+		B15798732B33BED300C4CF1D /* stream_error.json in Resources */ = {isa = PBXBuildFile; fileRef = B15798722B33BED300C4CF1D /* stream_error.json */; };
 		B15D8286299AF54C00BDD19C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15D8285299AF54C00BDD19C /* SettingsView.swift */; };
 		B15D828A299AF95800BDD19C /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15D8289299AF95800BDD19C /* UserDefaults+Extensions.swift */; };
 		B184E8702B21887E009AF69D /* openai_swift.docc in Sources */ = {isa = PBXBuildFile; fileRef = B184E86F2B21887E009AF69D /* openai_swift.docc */; };
-		B184E8762B21887F009AF69D /* openai_swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B184E86C2B21887E009AF69D /* openai_swift.framework */; };
-		B184E87D2B21887F009AF69D /* openai_swiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B184E87C2B21887F009AF69D /* openai_swiftTests.swift */; };
+		B184E8762B21887F009AF69D /* OpenAI_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B184E86C2B21887E009AF69D /* OpenAI_Swift.framework */; };
+		B184E87D2B21887F009AF69D /* OpenAI_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B184E87C2B21887F009AF69D /* OpenAI_SwiftTests.swift */; };
 		B184E87E2B21887F009AF69D /* openai_swift.h in Headers */ = {isa = PBXBuildFile; fileRef = B184E86E2B21887E009AF69D /* openai_swift.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B184E8812B21887F009AF69D /* openai_swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B184E86C2B21887E009AF69D /* openai_swift.framework */; };
-		B184E8822B21887F009AF69D /* openai_swift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B184E86C2B21887E009AF69D /* openai_swift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B184E8812B21887F009AF69D /* OpenAI_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B184E86C2B21887E009AF69D /* OpenAI_Swift.framework */; };
+		B184E8822B21887F009AF69D /* OpenAI_Swift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B184E86C2B21887E009AF69D /* OpenAI_Swift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B184E8892B21888B009AF69D /* OpenAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C1C1D129BB16060011602E /* OpenAI.swift */; };
 		B184E88B2B22C046009AF69D /* OpenAI+ChatCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B184E88A2B22C046009AF69D /* OpenAI+ChatCompletion.swift */; };
+		B184E88D2B23918A009AF69D /* OpenAI+Assistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B184E88C2B23918A009AF69D /* OpenAI+Assistant.swift */; };
 		B1BD2B8A29DAAA7A002C638C /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BD2B8929DAAA7A002C638C /* MessageView.swift */; };
 		B1BD2B8C29DAAA94002C638C /* MessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BD2B8B29DAAA94002C638C /* MessageList.swift */; };
 		B1BD2B8E29DAB0B1002C638C /* MessageComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BD2B8D29DAB0B1002C638C /* MessageComposerView.swift */; };
@@ -90,7 +108,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				B184E8822B21887F009AF69D /* openai_swift.framework in Embed Frameworks */,
+				B184E8822B21887F009AF69D /* OpenAI_Swift.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -108,16 +126,37 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B12D6EB92B26F6B5003810E5 /* OpenAIv1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OpenAIv1.1.xcdatamodel; sourceTree = "<group>"; };
+		B12D6EBA2B26F71E003810E5 /* OpenAIv1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OpenAIv1.2.xcdatamodel; sourceTree = "<group>"; };
+		B12D6EBB2B2CC7BD003810E5 /* MessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTests.swift; sourceTree = "<group>"; };
+		B12D6EBD2B2CC852003810E5 /* chat_completion_request.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = chat_completion_request.json; sourceTree = "<group>"; };
+		B12D6EBF2B2CC92E003810E5 /* chat_completion_response.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = chat_completion_response.json; sourceTree = "<group>"; };
+		B12D6EC12B2CC963003810E5 /* ChatCompletionRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCompletionRequestTests.swift; sourceTree = "<group>"; };
+		B12D6EC32B2CC98D003810E5 /* ChatCompletionResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCompletionResponseTests.swift; sourceTree = "<group>"; };
+		B12D6EC52B2CC9B2003810E5 /* system_message.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = system_message.json; sourceTree = "<group>"; };
+		B12D6EC72B2CC9C7003810E5 /* user_message.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = user_message.json; sourceTree = "<group>"; };
+		B12D6ED02B2D998B003810E5 /* assistant_message.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = assistant_message.json; sourceTree = "<group>"; };
+		B12D6ED22B2D99EF003810E5 /* user_message_with_image.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = user_message_with_image.json; sourceTree = "<group>"; };
+		B12D6ED42B2E2463003810E5 /* JSONSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchema.swift; sourceTree = "<group>"; };
+		B12D6ED72B2F8A67003810E5 /* chat_completion_request_with_functions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = chat_completion_request_with_functions.json; sourceTree = "<group>"; };
+		B12D6ED92B2F9174003810E5 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		B12D6EDB2B3251A7003810E5 /* OpenAIPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = OpenAIPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		B12D6EDC2B32922A003810E5 /* assistant_response_stream.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = assistant_response_stream.txt; sourceTree = "<group>"; };
+		B12D6EDE2B32932A003810E5 /* tool_call_stream.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = tool_call_stream.txt; sourceTree = "<group>"; };
+		B12D6EE02B32A2BC003810E5 /* OpenAIv1. 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "OpenAIv1. 3.xcdatamodel"; sourceTree = "<group>"; };
 		B1373965299FE12B00DF4BB9 /* OpenAI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OpenAI.xcdatamodel; sourceTree = "<group>"; };
 		B156718C2B1716E0000D8949 /* CoreData+Examples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreData+Examples.swift"; sourceTree = "<group>"; };
+		B15798702B335FDE00C4CF1D /* CoreDataModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModelTests.swift; sourceTree = "<group>"; };
+		B15798722B33BED300C4CF1D /* stream_error.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = stream_error.json; sourceTree = "<group>"; };
 		B15D8285299AF54C00BDD19C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B15D8289299AF95800BDD19C /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
-		B184E86C2B21887E009AF69D /* openai_swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = openai_swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B184E86C2B21887E009AF69D /* OpenAI_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenAI_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B184E86E2B21887E009AF69D /* openai_swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = openai_swift.h; sourceTree = "<group>"; };
 		B184E86F2B21887E009AF69D /* openai_swift.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = openai_swift.docc; sourceTree = "<group>"; };
-		B184E8752B21887F009AF69D /* openai-swiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "openai-swiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B184E87C2B21887F009AF69D /* openai_swiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = openai_swiftTests.swift; sourceTree = "<group>"; };
+		B184E8752B21887F009AF69D /* OpenAI-SwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OpenAI-SwiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B184E87C2B21887F009AF69D /* OpenAI_SwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAI_SwiftTests.swift; sourceTree = "<group>"; };
 		B184E88A2B22C046009AF69D /* OpenAI+ChatCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OpenAI+ChatCompletion.swift"; sourceTree = "<group>"; };
+		B184E88C2B23918A009AF69D /* OpenAI+Assistant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OpenAI+Assistant.swift"; sourceTree = "<group>"; };
 		B19BE6B5298CE15A00A342ED /* OpenAI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OpenAI.entitlements; sourceTree = "<group>"; };
 		B1BD2B8929DAAA7A002C638C /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		B1BD2B8B29DAAA94002C638C /* MessageList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageList.swift; sourceTree = "<group>"; };
@@ -161,7 +200,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B184E8762B21887F009AF69D /* openai_swift.framework in Frameworks */,
+				B184E8762B21887F009AF69D /* OpenAI_Swift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,8 +208,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B184E8812B21887F009AF69D /* openai_swift.framework in Frameworks */,
-				B137396C29A35D7E00DF4BB9 /* KeychainAccess in Frameworks */,
+				B157986C2B335E2F00C4CF1D /* SwiftyJSON in Frameworks */,
+				B184E8812B21887F009AF69D /* OpenAI_Swift.framework in Frameworks */,
+				B157986F2B335E4C00C4CF1D /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,33 +231,57 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B184E86D2B21887E009AF69D /* openai-swift */ = {
+		B12D6ED62B2E8157003810E5 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				B12D6ED42B2E2463003810E5 /* JSONSchema.swift */,
+				B12D6ED92B2F9174003810E5 /* Utilities.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		B184E86D2B21887E009AF69D /* OpenAI_Swift */ = {
 			isa = PBXGroup;
 			children = (
 				B1C1C1D129BB16060011602E /* OpenAI.swift */,
 				B184E88A2B22C046009AF69D /* OpenAI+ChatCompletion.swift */,
+				B184E88C2B23918A009AF69D /* OpenAI+Assistant.swift */,
 				B184E86E2B21887E009AF69D /* openai_swift.h */,
 				B184E86F2B21887E009AF69D /* openai_swift.docc */,
 			);
-			path = "openai-swift";
+			path = OpenAI_Swift;
 			sourceTree = "<group>";
 		};
-		B184E87B2B21887F009AF69D /* openai-swiftTests */ = {
+		B184E87B2B21887F009AF69D /* OpenAI_SwiftTests */ = {
 			isa = PBXGroup;
 			children = (
-				B184E87C2B21887F009AF69D /* openai_swiftTests.swift */,
+				B184E87C2B21887F009AF69D /* OpenAI_SwiftTests.swift */,
+				B12D6EC12B2CC963003810E5 /* ChatCompletionRequestTests.swift */,
+				B12D6EC32B2CC98D003810E5 /* ChatCompletionResponseTests.swift */,
+				B12D6EBB2B2CC7BD003810E5 /* MessageTests.swift */,
+				B12D6EBD2B2CC852003810E5 /* chat_completion_request.json */,
+				B12D6ED72B2F8A67003810E5 /* chat_completion_request_with_functions.json */,
+				B12D6EBF2B2CC92E003810E5 /* chat_completion_response.json */,
+				B12D6EC52B2CC9B2003810E5 /* system_message.json */,
+				B12D6EC72B2CC9C7003810E5 /* user_message.json */,
+				B12D6ED02B2D998B003810E5 /* assistant_message.json */,
+				B12D6ED22B2D99EF003810E5 /* user_message_with_image.json */,
+				B15798722B33BED300C4CF1D /* stream_error.json */,
+				B12D6EDC2B32922A003810E5 /* assistant_response_stream.txt */,
+				B12D6EDE2B32932A003810E5 /* tool_call_stream.txt */,
 			);
-			path = "openai-swiftTests";
+			path = OpenAI_SwiftTests;
 			sourceTree = "<group>";
 		};
 		B1D30D67297A921200B6D330 = {
 			isa = PBXGroup;
 			children = (
+				B12D6EDB2B3251A7003810E5 /* OpenAIPlayground.playground */,
 				B1D30D72297A921300B6D330 /* OpenAI */,
 				B1D30D89297A921500B6D330 /* OpenAITests */,
 				B1D30D93297A921500B6D330 /* OpenAIUITests */,
-				B184E86D2B21887E009AF69D /* openai-swift */,
-				B184E87B2B21887F009AF69D /* openai-swiftTests */,
+				B184E86D2B21887E009AF69D /* OpenAI_Swift */,
+				B184E87B2B21887F009AF69D /* OpenAI_SwiftTests */,
 				B1D30D71297A921300B6D330 /* Products */,
 				B1D30DBC297FC11F00B6D330 /* Frameworks */,
 			);
@@ -229,8 +293,8 @@
 				B1D30D70297A921300B6D330 /* OpenAI.app */,
 				B1D30D86297A921500B6D330 /* OpenAITests.xctest */,
 				B1D30D90297A921500B6D330 /* OpenAIUITests.xctest */,
-				B184E86C2B21887E009AF69D /* openai_swift.framework */,
-				B184E8752B21887F009AF69D /* openai-swiftTests.xctest */,
+				B184E86C2B21887E009AF69D /* OpenAI_Swift.framework */,
+				B184E8752B21887F009AF69D /* OpenAI-SwiftTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -247,6 +311,7 @@
 				B1EC646729D8293700CD4FBB /* Message */,
 				B1EC645B29D80A2A00CD4FBB /* Network */,
 				B1EC645C29D80A8200CD4FBB /* Persistence */,
+				B12D6ED62B2E8157003810E5 /* Utilities */,
 				B1D30D77297A921500B6D330 /* Assets.xcassets */,
 				B1D30D81297A921500B6D330 /* Info.plist */,
 				B1D30D79297A921500B6D330 /* Preview Content */,
@@ -266,6 +331,7 @@
 			isa = PBXGroup;
 			children = (
 				B1D30D8A297A921500B6D330 /* OpenAITests.swift */,
+				B15798702B335FDE00C4CF1D /* CoreDataModelTests.swift */,
 			);
 			path = OpenAITests;
 			sourceTree = "<group>";
@@ -297,7 +363,6 @@
 		B1EC643A29D7F43B00CD4FBB /* Conversation */ = {
 			isa = PBXGroup;
 			children = (
-				B1EC643529D66A7C00CD4FBB /* Conversation+Extensions.swift */,
 				B1EC643729D672C200CD4FBB /* ConversationView.swift */,
 				B1EC645329D806E900CD4FBB /* ConversationService.swift */,
 				B1EC645729D8071600CD4FBB /* ConversationDB.swift */,
@@ -319,6 +384,8 @@
 		B1EC645C29D80A8200CD4FBB /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				B1EC644329D7FAAD00CD4FBB /* Message+Extensions.swift */,
+				B1EC643529D66A7C00CD4FBB /* Conversation+Extensions.swift */,
 				B1EC645929D808C900CD4FBB /* CoreData+Extensions.swift */,
 				B156718C2B1716E0000D8949 /* CoreData+Examples.swift */,
 				B1D30D7C297A921500B6D330 /* Persistence.swift */,
@@ -346,7 +413,6 @@
 		B1EC646729D8293700CD4FBB /* Message */ = {
 			isa = PBXGroup;
 			children = (
-				B1EC644329D7FAAD00CD4FBB /* Message+Extensions.swift */,
 				B1EC645129D806C300CD4FBB /* MessageService.swift */,
 				B1EC645529D806FF00CD4FBB /* MessageDB.swift */,
 				B1BD2B8929DAAA7A002C638C /* MessageView.swift */,
@@ -370,9 +436,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		B184E86B2B21887E009AF69D /* openai-swift */ = {
+		B184E86B2B21887E009AF69D /* OpenAI-Swift */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B184E8872B21887F009AF69D /* Build configuration list for PBXNativeTarget "openai-swift" */;
+			buildConfigurationList = B184E8872B21887F009AF69D /* Build configuration list for PBXNativeTarget "OpenAI-Swift" */;
 			buildPhases = (
 				B184E8672B21887E009AF69D /* Headers */,
 				B184E8682B21887E009AF69D /* Sources */,
@@ -383,14 +449,14 @@
 			);
 			dependencies = (
 			);
-			name = "openai-swift";
+			name = "OpenAI-Swift";
 			productName = "openai-swift";
-			productReference = B184E86C2B21887E009AF69D /* openai_swift.framework */;
+			productReference = B184E86C2B21887E009AF69D /* OpenAI_Swift.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		B184E8742B21887F009AF69D /* openai-swiftTests */ = {
+		B184E8742B21887F009AF69D /* OpenAI-SwiftTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B184E8882B21887F009AF69D /* Build configuration list for PBXNativeTarget "openai-swiftTests" */;
+			buildConfigurationList = B184E8882B21887F009AF69D /* Build configuration list for PBXNativeTarget "OpenAI-SwiftTests" */;
 			buildPhases = (
 				B184E8712B21887F009AF69D /* Sources */,
 				B184E8722B21887F009AF69D /* Frameworks */,
@@ -402,9 +468,11 @@
 				B184E8782B21887F009AF69D /* PBXTargetDependency */,
 				B184E87A2B21887F009AF69D /* PBXTargetDependency */,
 			);
-			name = "openai-swiftTests";
+			name = "OpenAI-SwiftTests";
+			packageProductDependencies = (
+			);
 			productName = "openai-swiftTests";
-			productReference = B184E8752B21887F009AF69D /* openai-swiftTests.xctest */;
+			productReference = B184E8752B21887F009AF69D /* OpenAI-SwiftTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		B1D30D6F297A921200B6D330 /* OpenAI */ = {
@@ -420,11 +488,13 @@
 			buildRules = (
 			);
 			dependencies = (
+				B12D6EA72B23CA7D003810E5 /* PBXTargetDependency */,
 				B184E8802B21887F009AF69D /* PBXTargetDependency */,
 			);
 			name = OpenAI;
 			packageProductDependencies = (
-				B137396B29A35D7E00DF4BB9 /* KeychainAccess */,
+				B157986B2B335E2F00C4CF1D /* SwiftyJSON */,
+				B157986E2B335E4C00C4CF1D /* KeychainAccess */,
 			);
 			productName = ChatGPT;
 			productReference = B1D30D70297A921300B6D330 /* OpenAI.app */;
@@ -506,7 +576,8 @@
 			);
 			mainGroup = B1D30D67297A921200B6D330;
 			packageReferences = (
-				B137396A29A35CB500DF4BB9 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				B157986A2B335E2F00C4CF1D /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				B157986D2B335E4C00C4CF1D /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = B1D30D71297A921300B6D330 /* Products */;
 			projectDirPath = "";
@@ -515,8 +586,8 @@
 				B1D30D6F297A921200B6D330 /* OpenAI */,
 				B1D30D85297A921500B6D330 /* OpenAITests */,
 				B1D30D8F297A921500B6D330 /* OpenAIUITests */,
-				B184E86B2B21887E009AF69D /* openai-swift */,
-				B184E8742B21887F009AF69D /* openai-swiftTests */,
+				B184E86B2B21887E009AF69D /* OpenAI-Swift */,
+				B184E8742B21887F009AF69D /* OpenAI-SwiftTests */,
 			);
 		};
 /* End PBXProject section */
@@ -533,6 +604,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B12D6EC82B2CC9C7003810E5 /* user_message.json in Resources */,
+				B12D6EC02B2CC92E003810E5 /* chat_completion_response.json in Resources */,
+				B12D6ED82B2F8A67003810E5 /* chat_completion_request_with_functions.json in Resources */,
+				B12D6ED32B2D99EF003810E5 /* user_message_with_image.json in Resources */,
+				B15798732B33BED300C4CF1D /* stream_error.json in Resources */,
+				B12D6EC62B2CC9B2003810E5 /* system_message.json in Resources */,
+				B12D6EBE2B2CC852003810E5 /* chat_completion_request.json in Resources */,
+				B12D6EDF2B32932A003810E5 /* tool_call_stream.txt in Resources */,
+				B12D6EDD2B32922A003810E5 /* assistant_response_stream.txt in Resources */,
+				B12D6ED12B2D998B003810E5 /* assistant_message.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,7 +649,9 @@
 			files = (
 				B184E8892B21888B009AF69D /* OpenAI.swift in Sources */,
 				B184E8702B21887E009AF69D /* openai_swift.docc in Sources */,
+				B184E88D2B23918A009AF69D /* OpenAI+Assistant.swift in Sources */,
 				B184E88B2B22C046009AF69D /* OpenAI+ChatCompletion.swift in Sources */,
+				B12D6ED52B2E2463003810E5 /* JSONSchema.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,7 +659,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B184E87D2B21887F009AF69D /* openai_swiftTests.swift in Sources */,
+				B12D6EC42B2CC98D003810E5 /* ChatCompletionResponseTests.swift in Sources */,
+				B184E87D2B21887F009AF69D /* OpenAI_SwiftTests.swift in Sources */,
+				B12D6EC22B2CC963003810E5 /* ChatCompletionRequestTests.swift in Sources */,
+				B12D6EBC2B2CC7BE003810E5 /* MessageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -596,6 +682,7 @@
 				B1BD2B8C29DAAA94002C638C /* MessageList.swift in Sources */,
 				B1EC646229D81C0E00CD4FBB /* InboxView.swift in Sources */,
 				B1BD2B8E29DAB0B1002C638C /* MessageComposerView.swift in Sources */,
+				B12D6EDA2B2F9174003810E5 /* Utilities.swift in Sources */,
 				B1EC645F29D814F900CD4FBB /* View+Extensions.swift in Sources */,
 				B1D30D74297A921300B6D330 /* OpenAIApp.swift in Sources */,
 				B1373966299FE12B00DF4BB9 /* OpenAI.xcdatamodeld in Sources */,
@@ -613,6 +700,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B15798712B335FDE00C4CF1D /* CoreDataModelTests.swift in Sources */,
 				B1D30D8B297A921500B6D330 /* OpenAITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -629,9 +717,13 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B12D6EA72B23CA7D003810E5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = B12D6EA62B23CA7D003810E5 /* OpenAPIGenerator */;
+		};
 		B184E8782B21887F009AF69D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B184E86B2B21887E009AF69D /* openai-swift */;
+			target = B184E86B2B21887E009AF69D /* OpenAI-Swift */;
 			targetProxy = B184E8772B21887F009AF69D /* PBXContainerItemProxy */;
 		};
 		B184E87A2B21887F009AF69D /* PBXTargetDependency */ = {
@@ -641,7 +733,7 @@
 		};
 		B184E8802B21887F009AF69D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B184E86B2B21887E009AF69D /* openai-swift */;
+			target = B184E86B2B21887E009AF69D /* OpenAI-Swift */;
 			targetProxy = B184E87F2B21887F009AF69D /* PBXContainerItemProxy */;
 		};
 		B1D30D88297A921500B6D330 /* PBXTargetDependency */ = {
@@ -684,7 +776,7 @@
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.reidchatham.openai-swift";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.reidchatham.OpenAI-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
@@ -724,7 +816,7 @@
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.reidchatham.openai-swift";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.reidchatham.OpenAI-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
@@ -748,7 +840,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.reidchatham.openai-swiftTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.reidchatham.OpenAI-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -770,7 +862,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				MACOSX_DEPLOYMENT_TARGET = 13.3;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.reidchatham.openai-swiftTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.reidchatham.OpenAI-SwiftTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -1046,7 +1138,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B184E8872B21887F009AF69D /* Build configuration list for PBXNativeTarget "openai-swift" */ = {
+		B184E8872B21887F009AF69D /* Build configuration list for PBXNativeTarget "OpenAI-Swift" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B184E8832B21887F009AF69D /* Debug */,
@@ -1055,7 +1147,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B184E8882B21887F009AF69D /* Build configuration list for PBXNativeTarget "openai-swiftTests" */ = {
+		B184E8882B21887F009AF69D /* Build configuration list for PBXNativeTarget "OpenAI-SwiftTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B184E8852B21887F009AF69D /* Debug */,
@@ -1103,7 +1195,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B137396A29A35CB500DF4BB9 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+		B157986A2B335E2F00C4CF1D /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		B157986D2B335E4C00C4CF1D /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
 			requirement = {
@@ -1111,12 +1211,30 @@
 				kind = branch;
 			};
 		};
+		B184E88E2B23C14B009AF69D /* XCRemoteSwiftPackageReference "swift-openapi-generator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-openapi-generator";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.5;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B137396B29A35D7E00DF4BB9 /* KeychainAccess */ = {
+		B12D6EA62B23CA7D003810E5 /* OpenAPIGenerator */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B137396A29A35CB500DF4BB9 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			package = B184E88E2B23C14B009AF69D /* XCRemoteSwiftPackageReference "swift-openapi-generator" */;
+			productName = "plugin:OpenAPIGenerator";
+		};
+		B157986B2B335E2F00C4CF1D /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B157986A2B335E2F00C4CF1D /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+		B157986E2B335E4C00C4CF1D /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B157986D2B335E4C00C4CF1D /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
 		};
 /* End XCSwiftPackageProductDependency section */
@@ -1125,9 +1243,12 @@
 		B1373964299FE12B00DF4BB9 /* OpenAI.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				B12D6EE02B32A2BC003810E5 /* OpenAIv1. 3.xcdatamodel */,
+				B12D6EBA2B26F71E003810E5 /* OpenAIv1.2.xcdatamodel */,
+				B12D6EB92B26F6B5003810E5 /* OpenAIv1.1.xcdatamodel */,
 				B1373965299FE12B00DF4BB9 /* OpenAI.xcdatamodel */,
 			);
-			currentVersion = B1373965299FE12B00DF4BB9 /* OpenAI.xcdatamodel */;
+			currentVersion = B12D6EE02B32A2BC003810E5 /* OpenAIv1. 3.xcdatamodel */;
 			path = OpenAI.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -8,10 +8,6 @@
 import SwiftUI
 import CoreData
 
-class ConversationStore: ObservableObject {
-    @Published var conversation: Conversation?
-}
-
 struct ConversationView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject var viewModel: ViewModel
@@ -59,6 +55,10 @@ struct ConversationView: View {
             Spacer()
         }
     }
+}
+
+class ConversationStore: ObservableObject {
+    @Published var conversation: Conversation?
 }
 
 extension ConversationView {
@@ -109,6 +109,6 @@ extension ConversationView {
 
 struct ConversationView_Previews: PreviewProvider {
     static var previews: some View {
-        ConversationView(viewModel: ConversationView.ViewModel(messageService: PersistenceController.preview.conversationService.messageService(), conversation: Conversation.example)).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        ConversationView(viewModel: ConversationView.ViewModel(messageService: PersistenceController.preview.conversationService.messageService(), conversation: Conversation.example())).environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

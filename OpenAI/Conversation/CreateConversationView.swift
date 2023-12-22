@@ -14,8 +14,10 @@ struct CreateConversationView: View {
 
     var body: some View {
         VStack {
-            TextField("Enter system message", text: $viewModel.systemMessage)
+            TextField("Enter system message", text: $viewModel.systemMessage, axis: .vertical)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .multilineTextAlignment(.leading)
+                .lineLimit(20, reservesSpace: true)
                 .padding()
 
             Button(action: {
@@ -75,9 +77,9 @@ extension CreateConversationView {
                 try conversationService.getTitleForConversation(withSystemMessage: systemMessage) { result in
                     switch result {
                     case .success(let response):
-                        if let title = response.choices.first?.message?.content {
+                        if case .string(let title) = response.choices.first?.message?.content {
                             let conversation = self.conversationService.createConversation(title: title, systemMessage: self.systemMessage)
-                            DispatchQueue.main.async { completion(conversation)}
+                            completion(conversation)
                         } else {
                             self.errorMessage = "Failed to generate a title."
                             self.showAlert = true
@@ -96,6 +98,5 @@ extension CreateConversationView {
                 self.enterApiKey = true
             }
         }
-
     }
 }

@@ -63,6 +63,6 @@ extension MessageComposerView {
 
 struct MessageComposerView_Previews: PreviewProvider {
     static var previews: some View {
-        MessageComposerView(viewModel: MessageComposerView.ViewModel(messageService: MessageService(messageDB: MessageDB(persistence: PersistenceController.preview)), conversation: Conversation.example))
+        MessageComposerView(viewModel: MessageComposerView.ViewModel(messageService: MessageService(messageDB: MessageDB(persistence: PersistenceController.preview)), conversation: Conversation.example()))
     }
 }

@@ -25,7 +25,7 @@ struct MessageList: View {
             ScrollView {
                 LazyVStack(alignment: .leading) {
                     ForEach(messages, id: \.self) { message in
-                        MessageView(message: message)
+                        if !(message.contentText?.isEmpty ?? true), message.role != .tool { MessageView(message: message) }
                     }
                 }
                 .padding(16)
@@ -43,7 +43,7 @@ struct MessageList: View {
                     NotificationCenter.default.removeObserver(self)
                 #endif
             }
-            .onChange(of: messages.last?.content) { _ in
+            .onChange(of: messages.last?.contentText) { _ in
                 scrollToBottom(scrollProxy: scrollProxy)
             }
         }
@@ -59,6 +59,6 @@ struct MessageList: View {
 
 struct MessageList_Previews: PreviewProvider {
     static var previews: some View {
-        MessageList(conversation: Conversation.example)
+        MessageList(conversation: Conversation.example())
     }
 }

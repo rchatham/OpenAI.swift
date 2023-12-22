@@ -13,7 +13,7 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Picker(selection: $viewModel.model, label: Text("AI Model")) {
-                ForEach(Model.cases, id: \.self) { model in
+                ForEach(Model.allCases, id: \.self) { model in
                     Text(model.rawValue).tag(model)
                 }
             }
