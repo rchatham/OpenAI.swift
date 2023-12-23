@@ -29,10 +29,10 @@
 		B15798732B33BED300C4CF1D /* stream_error.json in Resources */ = {isa = PBXBuildFile; fileRef = B15798722B33BED300C4CF1D /* stream_error.json */; };
 		B15D8286299AF54C00BDD19C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15D8285299AF54C00BDD19C /* SettingsView.swift */; };
 		B15D828A299AF95800BDD19C /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15D8289299AF95800BDD19C /* UserDefaults+Extensions.swift */; };
-		B184E8702B21887E009AF69D /* openai_swift.docc in Sources */ = {isa = PBXBuildFile; fileRef = B184E86F2B21887E009AF69D /* openai_swift.docc */; };
+		B184E8702B21887E009AF69D /* OpenAI-Swift.docc in Sources */ = {isa = PBXBuildFile; fileRef = B184E86F2B21887E009AF69D /* OpenAI-Swift.docc */; };
 		B184E8762B21887F009AF69D /* OpenAI_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B184E86C2B21887E009AF69D /* OpenAI_Swift.framework */; };
 		B184E87D2B21887F009AF69D /* OpenAI_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B184E87C2B21887F009AF69D /* OpenAI_SwiftTests.swift */; };
-		B184E87E2B21887F009AF69D /* openai_swift.h in Headers */ = {isa = PBXBuildFile; fileRef = B184E86E2B21887E009AF69D /* openai_swift.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B184E87E2B21887F009AF69D /* OpenAI-Swift.h in Headers */ = {isa = PBXBuildFile; fileRef = B184E86E2B21887E009AF69D /* OpenAI-Swift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B184E8812B21887F009AF69D /* OpenAI_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B184E86C2B21887E009AF69D /* OpenAI_Swift.framework */; };
 		B184E8822B21887F009AF69D /* OpenAI_Swift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B184E86C2B21887E009AF69D /* OpenAI_Swift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B184E8892B21888B009AF69D /* OpenAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C1C1D129BB16060011602E /* OpenAI.swift */; };
@@ -151,8 +151,8 @@
 		B15D8285299AF54C00BDD19C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B15D8289299AF95800BDD19C /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
 		B184E86C2B21887E009AF69D /* OpenAI_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenAI_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B184E86E2B21887E009AF69D /* openai_swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = openai_swift.h; sourceTree = "<group>"; };
-		B184E86F2B21887E009AF69D /* openai_swift.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = openai_swift.docc; sourceTree = "<group>"; };
+		B184E86E2B21887E009AF69D /* OpenAI-Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OpenAI-Swift.h"; sourceTree = "<group>"; };
+		B184E86F2B21887E009AF69D /* OpenAI-Swift.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = "OpenAI-Swift.docc"; sourceTree = "<group>"; };
 		B184E8752B21887F009AF69D /* OpenAI-SwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "OpenAI-SwiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B184E87C2B21887F009AF69D /* OpenAI_SwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAI_SwiftTests.swift; sourceTree = "<group>"; };
 		B184E88A2B22C046009AF69D /* OpenAI+ChatCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OpenAI+ChatCompletion.swift"; sourceTree = "<group>"; };
@@ -240,19 +240,19 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
-		B184E86D2B21887E009AF69D /* OpenAI_Swift */ = {
+		B184E86D2B21887E009AF69D /* OpenAI-Swift */ = {
 			isa = PBXGroup;
 			children = (
 				B1C1C1D129BB16060011602E /* OpenAI.swift */,
 				B184E88A2B22C046009AF69D /* OpenAI+ChatCompletion.swift */,
 				B184E88C2B23918A009AF69D /* OpenAI+Assistant.swift */,
-				B184E86E2B21887E009AF69D /* openai_swift.h */,
-				B184E86F2B21887E009AF69D /* openai_swift.docc */,
+				B184E86E2B21887E009AF69D /* OpenAI-Swift.h */,
+				B184E86F2B21887E009AF69D /* OpenAI-Swift.docc */,
 			);
-			path = OpenAI_Swift;
+			path = "OpenAI-Swift";
 			sourceTree = "<group>";
 		};
-		B184E87B2B21887F009AF69D /* OpenAI_SwiftTests */ = {
+		B184E87B2B21887F009AF69D /* OpenAI-SwiftTests */ = {
 			isa = PBXGroup;
 			children = (
 				B184E87C2B21887F009AF69D /* OpenAI_SwiftTests.swift */,
@@ -270,7 +270,7 @@
 				B12D6EDC2B32922A003810E5 /* assistant_response_stream.txt */,
 				B12D6EDE2B32932A003810E5 /* tool_call_stream.txt */,
 			);
-			path = OpenAI_SwiftTests;
+			path = "OpenAI-SwiftTests";
 			sourceTree = "<group>";
 		};
 		B1D30D67297A921200B6D330 = {
@@ -280,8 +280,8 @@
 				B1D30D72297A921300B6D330 /* OpenAI */,
 				B1D30D89297A921500B6D330 /* OpenAITests */,
 				B1D30D93297A921500B6D330 /* OpenAIUITests */,
-				B184E86D2B21887E009AF69D /* OpenAI_Swift */,
-				B184E87B2B21887F009AF69D /* OpenAI_SwiftTests */,
+				B184E86D2B21887E009AF69D /* OpenAI-Swift */,
+				B184E87B2B21887F009AF69D /* OpenAI-SwiftTests */,
 				B1D30D71297A921300B6D330 /* Products */,
 				B1D30DBC297FC11F00B6D330 /* Frameworks */,
 			);
@@ -429,7 +429,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B184E87E2B21887F009AF69D /* openai_swift.h in Headers */,
+				B184E87E2B21887F009AF69D /* OpenAI-Swift.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,7 +648,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B184E8892B21888B009AF69D /* OpenAI.swift in Sources */,
-				B184E8702B21887E009AF69D /* openai_swift.docc in Sources */,
+				B184E8702B21887E009AF69D /* OpenAI-Swift.docc in Sources */,
 				B184E88D2B23918A009AF69D /* OpenAI+Assistant.swift in Sources */,
 				B184E88B2B22C046009AF69D /* OpenAI+ChatCompletion.swift in Sources */,
 				B12D6ED52B2E2463003810E5 /* JSONSchema.swift in Sources */,

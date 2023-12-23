@@ -1,6 +1,6 @@
 //
 //  OpenAI_Swift.h
-//  openai-swift
+//  OpenAI_Swift
 //
 //  Created by Reid Chatham on 12/6/23.
 //
