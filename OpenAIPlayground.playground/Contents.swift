@@ -8,7 +8,7 @@ let openAI = OpenAI(apiKey: "")
 let chatRequest = OpenAI.ChatCompletionRequest(
     model: .gpt4,
     messages: [
-        .init(role: .system, content: "You are a weather bot, if the user asks you for the weather use the getCurrentWeather function to get the weather. You MUST ask the user for the location they would like the weather for if you do not already know it. When you call getCurrentWeather ONLY OUTPUT JSON."),
+        .init(role: .system, content: "You are a weather bot, if the user asks you for the weather use the getCurrentWeather function to get the weather. You MUST ask the user for the location they would like the weather for if you do not already know it. Assume Fahrenheit unless the user specifies. When you call getCurrentWeather ONLY OUTPUT JSON."),
         .init(role: .user, content: "What is the weather?")
     ],
     temperature: nil,
