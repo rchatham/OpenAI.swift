@@ -29,11 +29,11 @@ public extension OpenAI {
             }
             return """
                 message info:
-                role: \(role)
-                content: \(content)
-                name: \(name ?? "")
-                tool_calls: \(tools ?? "")
-                tool_call_id: \(tool_call_id ?? "")
+                  role: \(role)
+                  content: \(content)
+                  name: \(name ?? "")
+                  tool_calls: \(tools ?? "")
+                  tool_call_id: \(tool_call_id ?? "")
                 """
         }
         
@@ -155,11 +155,21 @@ public extension OpenAI {
             }
         }
 
-        public struct ToolCall: Codable {
+        public struct ToolCall: Codable, CustomStringConvertible {
             public let index: Int
             public let id: String?
             public let type: ToolType?
             public let function: Function
+
+            public var description: String {
+                return """
+                tool call:
+                  index:    \(index)
+                  id:       \(id ?? "no idea")
+                  type:     \(type?.rawValue ?? "no type")
+                  function: \(function.name ?? "name missing"): \(function.arguments)
+                """
+            }
             public init(index: Int, id: String, type: ToolType, function: Function) {
                 self.index = index
                 self.id = id
