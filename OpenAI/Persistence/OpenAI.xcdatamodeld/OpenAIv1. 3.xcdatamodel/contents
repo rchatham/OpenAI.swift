@@ -26,7 +26,7 @@
         <relationship name="conversation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="messages" inverseEntity="Conversation"/>
         <relationship name="toolCalls" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ToolCall" inverseName="message" inverseEntity="ToolCall"/>
     </entity>
-    <entity name="ToolCall" representedClassName="ToolCall" syncable="YES" codeGenerationType="category">
+    <entity name="ToolCall" representedClassName="ToolCall" syncable="YES" codeGenerationType="class">
         <attribute name="arguments" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="index" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
