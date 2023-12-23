@@ -109,41 +109,31 @@ class MessageService {
                         }
                     }
                 }
-//                if let finishReason = response.choices.first?.finish_reason {
-//                    DispatchQueue.main.async { [weak self] in
-//                        switch finishReason {
-//                        case .tool_calls:
-//                            if let toolCalls = streamToolInfo?.tools {
-//                                streamMessageInfo?.add(toolCalls: toolCalls)
-//                                for tool in toolCalls {
-//                                    print("utilizing tool: \(tool)")
-//                                    if let toolText = self?.useTool(tool) {
-//                                        self?.messageDB.createToolMessage(for: conversation, content: toolText, toolCallId: tool.id!, name: tool.function.name!)
-//                                        self?.getChatCompletion(for: conversation, stream: stream)
-//                                    }
-//                                }
-//                            }
-//                        case .stop, .length, .content_filter: break
-//                        }
-//                    }
-
-            case .failure(let error): print(error.localizedDescription)
-            }
-        } streamCompletion: { [weak self] error in
-            DispatchQueue.main.async { [weak self] in
-                if let error = error {
-                    print("error: \(error)")
-                } else if let content = streamMessageInfo?.content, !content.isEmpty {
-                    print("message received: \(content)")
-                } else if let toolCalls = streamToolInfo?.tools {
-                    streamMessageInfo?.add(toolCalls: toolCalls)
-                    for tool in toolCalls {
-                        print("utilizing tool: \(tool)")
-                        if let toolText = self?.useTool(tool) {
-                            self?.messageDB.createToolMessage(for: conversation, content: toolText, toolCallId: tool.id!, name: tool.function.name!)
-                            self?.getChatCompletion(for: conversation, stream: stream)
+                if let finishReason = response.choices.first?.finish_reason {
+                    DispatchQueue.main.async { [weak self] in
+                        switch finishReason {
+                        case .tool_calls:
+                            guard let toolCalls = streamToolInfo?.tools else { return }
+                            streamMessageInfo?.add(toolCalls: toolCalls)
+                            for tool in toolCalls {
+                                print("utilizing tool: \(tool)")
+                                guard let toolText = self?.useTool(tool) else { return }
+                                self?.messageDB.createToolMessage(for: conversation, content: toolText, toolCallId: tool.id!, name: tool.function.name!)
+                                self?.getChatCompletion(for: conversation, stream: stream)
+                            }
+                        case .stop:
+                            guard let content = streamMessageInfo?.content, !content.isEmpty else { return }
+                            print("message received: \(content)")
+                        case .length, .content_filter: break
                         }
                     }
+                }
+            case .failure(let error): print(error.localizedDescription)
+            }
+        } streamCompletion: { error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("error: \(error)")
                 } else {
                     print(error ?? streamMessageInfo?.content ?? "No output")
                 }
