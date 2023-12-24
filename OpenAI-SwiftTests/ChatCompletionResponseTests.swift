@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import OpenAI_Swift
 
 final class ChatCompletionResponseTests: XCTestCase {
 

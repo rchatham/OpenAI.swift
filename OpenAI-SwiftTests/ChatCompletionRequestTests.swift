@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import OpenAI_Swift
+@testable import OpenAI_Swift
 import SwiftyJSON
 
 final class ChatCompletionRequestTests: OpenAI_SwiftTests {

@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import OpenAI_Swift
+@testable import OpenAI_Swift
 
 final class MessageTests: OpenAI_SwiftTests {
 
