@@ -11,56 +11,91 @@ import CloudKit
 class PersistenceController {
     static let shared = PersistenceController()
 
-    static var preview: PersistenceController = {
-        var result = PersistenceController(inMemory: true)
-//        let viewContext = result.container.viewContext
-//        for int in 0..<20 {
-//            let completion = Completion(context: viewContext)
-//            completion.createdAt = Date()
-//            completion.id = UUID()
-//            completion.prompt = "prompt \(int)"
-//            completion.response = "response \(int)"
-//        }
-//        do { try viewContext.save()}
-//        catch { print("Unresolved error \(error), \(error.localizedDescription)")}
-        return result
-    }()
+    #if DEBUG
+    static var preview = PersistenceController(inMemory: true)
+    #endif
 
-    lazy private(set) var  conversationService: ConversationService = ConversationService(conversationDB: ConversationDB(persistence: self))
+    lazy private(set) var conversationService = ConversationService(conversationDB: ConversationDB(persistence: self))
+    lazy private(set) var container: NSPersistentCloudKitContainer = createPersistentCloudKitContainer()
+
+    #if DEBUG
+    lazy var testManagedObjectContext: NSManagedObjectContext = createTestManagedObjectContext()
+    #endif
+
 
     // MARK: - Private
-    private let ckContainer = CKContainer(identifier: "iCloud.com.reidchatham.openai")
-    private lazy var privateDatabase: CKDatabase = {
-        ckContainer.requestApplicationPermission(.userDiscoverability) { (status, error) in
-            if let error = error { return print("Error: \(error.localizedDescription)")}
-            if status == .granted { print("User granted permission to access CloudKit")}
-        }
-        return ckContainer.privateCloudDatabase
-    }()
-    private(set) lazy var container: NSPersistentCloudKitContainer = {
-        let container = NSPersistentCloudKitContainer(name: "OpenAI")
-        if inMemory { container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")}
-
-        let storeDescription = container.persistentStoreDescriptions.first
-        storeDescription?.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: ckContainer.containerIdentifier!)
-        storeDescription?.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-
-        do { try container.viewContext.setQueryGenerationFrom(.current) }
-        catch { print(error.localizedDescription) }
-
-        container.loadPersistentStores { $1.map { print("Unresolved error \($0), \($0.localizedDescription)") } }
-
-        let options = [NSMigratePersistentStoresAutomaticallyOption: true, NSInferMappingModelAutomaticallyOption: true]
-        do { try container.persistentStoreCoordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeDescription?.url, options: options) }
-        catch { print(error.localizedDescription) }
-
-        container.viewContext.automaticallyMergesChangesFromParent = true
-        return container
-    }()
-
     private let inMemory: Bool
+    private let ckContainer = CKContainer(identifier: "iCloud.com.reidchatham.openai")
+    lazy private var privateDatabase: CKDatabase = createPrivateDatabase()
 
     init(inMemory: Bool = false) {
         self.inMemory = inMemory
     }
+
+    private func createPrivateDatabase() -> CKDatabase {
+        ckContainer.requestApplicationPermission(.userDiscoverability) { [weak self] (status, error) in
+            guard let self = self else { return }
+
+            if let error = error {
+                self.handlePermissionError(error)
+                return
+            }
+
+            if status == .granted {
+                print("User granted permission to access CloudKit")
+            }
+        }
+        return ckContainer.privateCloudDatabase
+    }
+
+    private func createPersistentCloudKitContainer() -> NSPersistentCloudKitContainer {
+        let container = NSPersistentCloudKitContainer(name: "OpenAI")
+        configurePersistentStore(for: container)
+        return container
+    }
+
+    private func configurePersistentStore(for container: NSPersistentCloudKitContainer) {
+        guard let storeDescription = container.persistentStoreDescriptions.first else { return }
+
+        if inMemory {
+            storeDescription.url = URL(fileURLWithPath: "/dev/null")
+        }
+
+        storeDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: ckContainer.containerIdentifier!)
+        storeDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+
+        do {
+            try container.viewContext.setQueryGenerationFrom(.current)
+        } catch {
+            print("Error setting query generation: \(error.localizedDescription)")
+        }
+
+        container.loadPersistentStores { _, error in
+            if let error = error {
+                print("Unresolved error \(error), \(error.localizedDescription)")
+            }
+        }
+
+        let options = [NSMigratePersistentStoresAutomaticallyOption: true, NSInferMappingModelAutomaticallyOption: true]
+        do {
+            try container.persistentStoreCoordinator.addPersistentStore(ofType: inMemory ? NSInMemoryStoreType : NSSQLiteStoreType, configurationName: nil, at: storeDescription.url, options: options)
+        } catch {
+            print("Error adding persistent store: \(error.localizedDescription)")
+        }
+
+        container.viewContext.automaticallyMergesChangesFromParent = true
+    }
+
+    private func handlePermissionError(_ error: Error) {
+        // Implement appropriate error handling
+        print("Error requesting application permission: \(error.localizedDescription)")
+    }
+
+    #if DEBUG
+    private func createTestManagedObjectContext() -> NSManagedObjectContext {
+        let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        context.persistentStoreCoordinator = self.container.persistentStoreCoordinator
+        return context
+    }
+    #endif
 }
