@@ -132,7 +132,7 @@ public extension OpenAI {
 
     static func decode<Response: Decodable>(data: Data) -> Result<Response, OpenAIError> {
         let d = JSONDecoder(); do { return .success(try d.decode(Response.self, from: data)) }
-        catch { return .failure((try? d.decode(OpenAIError.ErrorResponse.self, from: data)).flatMap { OpenAIError.apiError($0) } ?? .jsonParsingFailure(error)) }
+        catch { return .failure(decodeError(data: data, decoder: d) ?? .jsonParsingFailure(error)) }
     }
 
     static func decodeError(data: Data, decoder: JSONDecoder = JSONDecoder()) -> OpenAIError? {
