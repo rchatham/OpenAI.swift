@@ -29,13 +29,22 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B184E8742B21887F009AF69D"
-               BuildableName = "OpenAI-SwiftTests.xctest"
-               BlueprintName = "OpenAI-SwiftTests"
+               BlueprintIdentifier = "B1D30D85297A921500B6D330"
+               BuildableName = "OpenAITests.xctest"
+               BlueprintName = "OpenAITests"
+               ReferencedContainer = "container:OpenAI.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B1D30D8F297A921500B6D330"
+               BuildableName = "OpenAIUITests.xctest"
+               BlueprintName = "OpenAIUITests"
                ReferencedContainer = "container:OpenAI.xcodeproj">
             </BuildableReference>
          </TestableReference>

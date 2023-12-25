@@ -1,6 +1,6 @@
 //
-//  OpenAI_SwiftTests.swift
-//  openai-swiftTests
+//  OpenAI-SwiftTests.swift
+//  OpenAI-SwiftTests
 //
 //  Created by Reid Chatham on 12/6/23.
 //
