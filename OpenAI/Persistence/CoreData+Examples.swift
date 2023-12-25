@@ -6,10 +6,10 @@
 //
 
 import Foundation
+import CoreData
 
 extension Message {
-    static func example(text: String = "This is a sample message.", type: ContentType = .string, role: Role = .user) -> Message {
-        let context = PersistenceController.preview.container.viewContext
+    static func example(context: NSManagedObjectContext = PersistenceController.preview.container.viewContext, text: String = "This is a sample message.", type: ContentType = .string, role: Role = .user) -> Message {
         let message = Message(context: context)
         message.id = UUID()
         message.contentText = text
