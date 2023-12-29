@@ -13,6 +13,10 @@ import UIKit
 import AppKit
 #endif
 
+// TODO:
+//  - Migrate to Swift Data
+//  - Migrate to use async/await/actor
+
 @main
 struct OpenAIApp: App {
     let persistenceController = PersistenceController.shared
