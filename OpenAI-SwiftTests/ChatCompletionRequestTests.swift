@@ -37,7 +37,7 @@ final class ChatCompletionRequestTests: OpenAI_SwiftTests {
                 .init(role: .system, content: "You are a helpful assistant."),
                 .init(role: .user, content: "Hello!")
             ])
-        let data = try Data.encode(request)
+        let data = try request.data()
         let json = JSON(data)
         let testData = try getData(filename: "chat_completion_request")!
         let testJson = JSON(testData)
@@ -87,7 +87,7 @@ final class ChatCompletionRequestTests: OpenAI_SwiftTests {
                         ],
                         required: ["location", "format", "num_days"])))
             ])
-        let data = try Data.encode(request)
+        let data = try request.data()
         let json = JSON(data)
         let testData = try getData(filename: "chat_completion_request_with_functions")!
         let testJson = JSON(testData)

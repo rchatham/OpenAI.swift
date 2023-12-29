@@ -52,7 +52,7 @@ final class MessageTests: OpenAI_SwiftTests {
     
     func testSystemMessageEncodable() throws {
         let userMessage = OpenAI.Message(role: .system, content: "You are a helpful assistant.")
-        let json = try Data.encode(userMessage)
+        let json = try userMessage.data()
         let data = try getData(filename: "system_message")!
 //        print("encoded:\(json.string)\ndecoded:\(data.string)")
         XCTAssert(json.dictionary == data.dictionary, "system message not encoded correctly")
@@ -60,7 +60,7 @@ final class MessageTests: OpenAI_SwiftTests {
 
     func testUserMessageEncodable() throws {
         let userMessage = OpenAI.Message(role: .user, content: "Hello!")
-        let json = try Data.encode(userMessage)
+        let json = try userMessage.data()
         let data = try getData(filename: "user_message")!
 //        print("encoded:\(json.string)\ndecoded:\(data.string)")
         XCTAssert(json.dictionary == data.dictionary, "user message not encoded correctly")

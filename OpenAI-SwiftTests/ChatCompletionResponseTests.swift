@@ -44,7 +44,7 @@ final class ChatCompletionResponseTests: OpenAI_SwiftTests {
                 total_tokens: 21
             )
         )
-        let data = try Data.encode(response)
+        let data = try response.data()
         let json = JSON(data)
         let testData = try getData(filename: "chat_completion_response")!
         let testJson = JSON(testData)

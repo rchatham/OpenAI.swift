@@ -7,13 +7,11 @@
 
 import XCTest
 @testable import OpenAI
+@testable import OpenAI_Swift
 
 class OpenAITests: XCTestCase {
-    override func setUpWithError() throws {}
-    override func tearDownWithError() throws {}
-    func testPerformanceExample() throws { self.measure {} }
     func getData(filename: String) throws -> Data? {
-        return try Data.getData(filename: filename, bundle: Bundle(for: type(of: self)))
+        return try Data.getJsonData(filename: filename, bundle: Bundle(for: type(of: self)))
     }
 
     func decode<Response: Decodable>(completion: @escaping (Result<Response, Error>) -> Void) -> (Data) -> Void {

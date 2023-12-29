@@ -25,7 +25,7 @@ extension Data {
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         return try encoder.encode(encodable)
     }
-    static func getData(filename: String, bundle: Bundle) throws -> Data? {
+    static func getJsonData(filename: String, bundle: Bundle) throws -> Data? {
         if let path = bundle.url(forResource: filename, withExtension: "json") {
             return try Data(contentsOf: path)
         }
