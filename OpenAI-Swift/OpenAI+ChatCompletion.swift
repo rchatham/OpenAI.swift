@@ -400,11 +400,11 @@ public extension OpenAI {
 
     struct ChatCompletionResponse: Codable {
         public let id: String
-        public let choices: [Choice]
+        public let object: String // chat.completion or chat.completion.chunk
         public let created: Int
         public let model: String?
         public let system_fingerprint: String?
-        public let object: String // chat.completion or chat.completion.chunk
+        public let choices: [Choice]
         public let usage: Usage?
 
         public struct Choice: Codable {

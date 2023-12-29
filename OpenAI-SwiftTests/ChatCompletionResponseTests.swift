@@ -7,29 +7,47 @@
 
 import XCTest
 @testable import OpenAI_Swift
+import SwiftyJSON
 
-final class ChatCompletionResponseTests: XCTestCase {
+// TODO: make response return typed model response
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+final class ChatCompletionResponseTests: OpenAI_SwiftTests {
+
+    func testChatCompletionResponseDecodable() throws {
+        OpenAI.decode { (result: Result<OpenAI.ChatCompletionResponse, OpenAIError>) in
+            switch result {
+            case .success(_): break
+            case .failure(let error):
+                XCTFail("failed to decode data \(error.localizedDescription)")
+            }
+        }(try getData(filename: "chat_completion_response")!)
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    func testChatCompletionResponseEncodable() throws {
+        let response = OpenAI.ChatCompletionResponse(
+            id: "chatcmpl-123",
+            object: "chat.completion",
+            created: 1677652288,
+            model: "gpt-3.5-turbo-0613",
+            system_fingerprint: "fp_44709d6fcb",
+            choices: [.init(
+                index: 0,
+                message: .init(
+                    role: .assistant,
+                    content: "Hello there, how may I assist you today?"),
+                finish_reason: .stop,
+                delta: nil)
+            ],
+            usage: .init(
+                prompt_tokens: 9,
+                completion_tokens: 12,
+                total_tokens: 21
+            )
+        )
+        let data = try Data.encode(response)
+        let json = JSON(data)
+        let testData = try getData(filename: "chat_completion_response")!
+        let testJson = JSON(testData)
+        XCTAssert(json == testJson, "failed to correctly encode the data")
     }
 }
