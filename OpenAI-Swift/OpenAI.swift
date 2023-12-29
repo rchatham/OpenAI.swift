@@ -18,6 +18,11 @@ public class OpenAI {
     public init(apiKey: String) {
         self.apiKey = apiKey
     }
+
+    internal init(testURLSessionConfiguration: URLSessionConfiguration) {
+        self.apiKey = ""
+        session = URLSession(configuration: testURLSessionConfiguration, delegate: streamManager, delegateQueue: nil)
+    }
     
     public func perform<Request: OpenAIRequest>(request: Request, completion: @escaping (Result<Request.Response, OpenAIError>) -> Void, didCompleteStreaming: ((Error?) -> Void)? = nil) {
         var httpRequest = prepareRequest(path: Request.path)
