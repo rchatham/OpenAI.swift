@@ -26,7 +26,7 @@
 		B157986C2B335E2F00C4CF1D /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = B157986B2B335E2F00C4CF1D /* SwiftyJSON */; };
 		B157986F2B335E4C00C4CF1D /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = B157986E2B335E4C00C4CF1D /* KeychainAccess */; };
 		B15798712B335FDE00C4CF1D /* CoreDataModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15798702B335FDE00C4CF1D /* CoreDataModelTests.swift */; };
-		B15798732B33BED300C4CF1D /* stream_error.json in Resources */ = {isa = PBXBuildFile; fileRef = B15798722B33BED300C4CF1D /* stream_error.json */; };
+		B15798732B33BED300C4CF1D /* stream_error.txt in Resources */ = {isa = PBXBuildFile; fileRef = B15798722B33BED300C4CF1D /* stream_error.txt */; };
 		B15D8286299AF54C00BDD19C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15D8285299AF54C00BDD19C /* SettingsView.swift */; };
 		B15D828A299AF95800BDD19C /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15D8289299AF95800BDD19C /* UserDefaults+Extensions.swift */; };
 		B184E8702B21887E009AF69D /* OpenAI-Swift.docc in Sources */ = {isa = PBXBuildFile; fileRef = B184E86F2B21887E009AF69D /* OpenAI-Swift.docc */; };
@@ -147,7 +147,7 @@
 		B1373965299FE12B00DF4BB9 /* OpenAI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OpenAI.xcdatamodel; sourceTree = "<group>"; };
 		B156718C2B1716E0000D8949 /* CoreData+Examples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreData+Examples.swift"; sourceTree = "<group>"; };
 		B15798702B335FDE00C4CF1D /* CoreDataModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModelTests.swift; sourceTree = "<group>"; };
-		B15798722B33BED300C4CF1D /* stream_error.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = stream_error.json; sourceTree = "<group>"; };
+		B15798722B33BED300C4CF1D /* stream_error.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = stream_error.txt; sourceTree = "<group>"; };
 		B15D8285299AF54C00BDD19C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B15D8289299AF95800BDD19C /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
 		B184E86C2B21887E009AF69D /* OpenAI_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OpenAI_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -266,7 +266,7 @@
 				B12D6EC72B2CC9C7003810E5 /* user_message.json */,
 				B12D6ED02B2D998B003810E5 /* assistant_message.json */,
 				B12D6ED22B2D99EF003810E5 /* user_message_with_image.json */,
-				B15798722B33BED300C4CF1D /* stream_error.json */,
+				B15798722B33BED300C4CF1D /* stream_error.txt */,
 				B12D6EDC2B32922A003810E5 /* assistant_response_stream.txt */,
 				B12D6EDE2B32932A003810E5 /* tool_call_stream.txt */,
 			);
@@ -608,7 +608,7 @@
 				B12D6EC02B2CC92E003810E5 /* chat_completion_response.json in Resources */,
 				B12D6ED82B2F8A67003810E5 /* chat_completion_request_with_functions.json in Resources */,
 				B12D6ED32B2D99EF003810E5 /* user_message_with_image.json in Resources */,
-				B15798732B33BED300C4CF1D /* stream_error.json in Resources */,
+				B15798732B33BED300C4CF1D /* stream_error.txt in Resources */,
 				B12D6EC62B2CC9B2003810E5 /* system_message.json in Resources */,
 				B12D6EBE2B2CC852003810E5 /* chat_completion_request.json in Resources */,
 				B12D6EDF2B32932A003810E5 /* tool_call_stream.txt in Resources */,
