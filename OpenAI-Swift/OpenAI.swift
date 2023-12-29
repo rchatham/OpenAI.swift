@@ -49,7 +49,7 @@ public class OpenAI {
         return request
     }
 
-    class StreamSessionManager: NSObject, URLSessionDataDelegate {
+    internal class StreamSessionManager: NSObject, URLSessionDataDelegate {
         private var didReceiveEvent: ((Data) -> Void)?
         private var didCompleteStream: ((Error?) -> Void)?
         private var task: URLSessionDataTask?
@@ -62,16 +62,15 @@ public class OpenAI {
             self.task = task; task.resume()
         }
         
-        public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        internal func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
             if let error = OpenAI.decodeError(data: data) { return didCompleteStream?(error) ?? () }
             guard let lines = String(data: data, encoding: .utf8)?.split(separator: "\n") else { return }
             for line in lines where line.hasPrefix("data:") {
-                guard line != "data: [DONE]" else { return }
-                didReceiveEvent?(Data(String(line.dropFirst(5)).utf8))
+                if line != "data: [DONE]" { didReceiveEvent?(Data(String(line.dropFirst(5)).utf8)) }
             }
         }
 
-        public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        internal func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
             didCompleteStream?(error)
         }
     }
