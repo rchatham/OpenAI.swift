@@ -21,4 +21,14 @@ final class CoreDataModelTests: OpenAITests {
         }
     }
 
+    func testConvertConversationToOpenAIMessages() throws {
+        let exampleConversation = Conversation.example(context: PersistenceController.preview.testManagedObjectContext)
+        let messages = exampleConversation.toOpenAIMessages()
+        XCTAssertEqual(messages[0].content.text, "You are a friendly chatbot designed to be helpful. Always be nice, but if you don\'t have a clear understanding of what should come next, try to indicate that.")
+        XCTAssertEqual(messages[0].role, .system)
+        XCTAssertEqual(messages[1].content.text, "Hello, how are you?")
+        XCTAssertEqual(messages[1].role, .user)
+        XCTAssertEqual(messages[2].content.text, "I'm doing well, thank you. How can I help you today?")
+        XCTAssertEqual(messages[2].role, .assistant)
+    }
 }

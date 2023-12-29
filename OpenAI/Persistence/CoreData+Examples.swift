@@ -24,17 +24,16 @@ extension Message {
 }
 
 extension Conversation {
-    static func example() -> Conversation {
-        let context = PersistenceController.preview.container.viewContext
+    static func example(context: NSManagedObjectContext = PersistenceController.preview.container.viewContext) -> Conversation {
         let conversation = Conversation(context: context)
         conversation.title = "Sample Conversation"
         conversation.id = UUID()
         conversation.createdAt = Date()
-        conversation.addToMessages(Message.example(text: "Hello, how are you?"))
-        conversation.addToMessages(Message.example(text: "I'm doing well, thank you. How can I help you today?", role: .assistant))
+        conversation.addToMessages(Message.example(context: context, text: "Hello, how are you?"))
+        conversation.addToMessages(Message.example(context: context, text: "I'm doing well, thank you. How can I help you today?", role: .assistant))
 
         do { try context.save() }
-        catch { print("Error saving sample message: \(error)") }
+        catch { print("Error saving sample conversation: \(error)") }
         return conversation
     }
 }

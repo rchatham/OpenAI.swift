@@ -93,11 +93,4 @@ final class ChatCompletionRequestTests: OpenAI_SwiftTests {
         let testJson = JSON(testData)
         XCTAssert(json == testJson, "failed to correctly encode the data")
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
 }

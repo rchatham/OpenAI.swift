@@ -32,7 +32,6 @@ public class OpenAI {
             guard let httpResponse = response as? HTTPURLResponse else { return completion(.failure(.requestFailed(error))) }
             guard httpResponse.statusCode == 200 else { return completion(.failure(.responseUnsuccessful(statusCode: httpResponse.statusCode))) }
             guard let data = data else { return completion(.failure(.invalidData)) }
-//            print(String(data: data, encoding: .utf8) ?? "Could not convert data to string....")
             OpenAI.decode(completion: completion)(data)
         }.resume()
     }
@@ -61,18 +60,13 @@ public class OpenAI {
         public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
             if let error = OpenAI.decodeError(data: data) { return didCompleteStream?(error) ?? () }
             guard let lines = String(data: data, encoding: .utf8)?.split(separator: "\n") else { return }
-            var i = 0;
             for line in lines where line.hasPrefix("data:") {
-                guard line != "data: [DONE]" else {
-                    return //didCompleteStream?(nil) ?? ()
-                } // Handle stream ending gracefully, do something with finish reason?
-//                print("\(i):" + String(line.dropFirst(5))); i += 1
+                guard line != "data: [DONE]" else { return }
                 didReceiveEvent?(Data(String(line.dropFirst(5)).utf8))
             }
         }
 
         public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-//            print("task: " + (task.response?.description ?? "") + "error: " + (error?.localizedDescription ?? ""))
             didCompleteStream?(error)
         }
     }
