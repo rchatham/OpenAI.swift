@@ -67,4 +67,4 @@ Contributions are welcome. Please open an issue or submit a pull request with yo
 
 ## License
 
-This project is licensed under the [LICENSE](LICENSE).
+This project is f under the [LICENSE](LICENSE).
