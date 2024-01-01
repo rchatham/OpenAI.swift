@@ -2,7 +2,7 @@
 
 The smallest OpenAI API implementation written in Swift. 
 
-This package provides a simple Swift interface for interacting with OpenAI's Chat API, with full support for functions. Written in a highly compact manor, minimizing the number of lines of code, therby increasing readability, efficiency, maintainability, and extensability.
+This package provides a simple Swift interface for interacting with OpenAI's Chat API, with full support for functions. Written in a highly compact manor, minimizing the number of lines of code, keeping things light increasing readability, efficiency, maintainability, and extensibility.
 
 ## Features
 
@@ -56,6 +56,14 @@ openAI.perform(request: chatRequest) { result in
 ## Contributing
 
 Contributions are welcome. Please open an issue or submit a pull request with your changes.
+
+## TODO
+
+- [ ] Use async/await/actor
+- [ ] Pass closures to functions api
+- [ ] Optionally call OpenAI functions without returning intermediate tool message to dev
+- [ ] Implement Assistants endpoint
+- [ ] Implement other api endpoints
 
 ## License
 
