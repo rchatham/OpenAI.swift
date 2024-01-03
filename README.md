@@ -131,4 +131,4 @@ Contributions are welcome. Please open an issue or submit a pull request with yo
 
 ## License
 
-This project is f under the [LICENSE](LICENSE).
+This project is free to use under the [MIT LICENSE](LICENSE).
