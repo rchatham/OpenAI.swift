@@ -29,9 +29,9 @@ extension Data {
 }
 
 extension Encodable {
-    func data() throws -> Data {
+    func data(outputFormatting: JSONEncoder.OutputFormatting = [] /*[.prettyPrinted, .sortedKeys]*/) throws -> Data {
         let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        encoder.outputFormatting = outputFormatting
         return try encoder.encode(self)
     }
 }

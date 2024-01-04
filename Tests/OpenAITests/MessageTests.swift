@@ -8,8 +8,7 @@
 import XCTest
 @testable import OpenAI
 
-final class MessageTests: OpenAITests {
-
+final class MessageTests: XCTestCase {
     func testSystemMessageDecodable() throws {
         OpenAI.decode { (result: Result<OpenAI.Message, OpenAIError>) in
             switch result {

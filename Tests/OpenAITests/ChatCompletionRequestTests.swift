@@ -9,7 +9,7 @@ import XCTest
 @testable import OpenAI
 import SwiftyJSON
 
-final class ChatCompletionRequestTests: OpenAITests {
+final class ChatCompletionRequestTests: XCTestCase {
     func testChatCompletionRequestDecodable() throws {
         OpenAI.decode { (result: Result<OpenAI.ChatCompletionRequest, OpenAIError>) in
             switch result {

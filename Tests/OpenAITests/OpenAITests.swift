@@ -95,7 +95,7 @@ class OpenAITests: XCTestCase {
     }
 }
 
-extension OpenAITests {
+extension XCTestCase {
     func getData(filename: String) throws -> Data? {
         return try Data.getData(filename: filename, bundle: Bundle(for: type(of: self)))
     }
