@@ -18,7 +18,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B184E8742B21887F009AF69D"
+               BlueprintIdentifier = "B1FB64AA2B4649150082BB76"
                BuildableName = "OpenAITests.xctest"
                BlueprintName = "OpenAITests"
                ReferencedContainer = "container:OpenAI.xcodeproj">
