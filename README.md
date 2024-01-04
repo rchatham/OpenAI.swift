@@ -2,7 +2,7 @@
 
 The smallest OpenAI API implementation written in Swift. 
 
-This package provides a simple Swift interface for interacting with OpenAI's Chat API, with full support for functions. Written in a highly compact manor, minimizing the number of lines of code, keeping things light while increasing readability, efficiency, maintainability, and extensibility.
+This package provides a simple Swift interface for interacting with OpenAI's Chat API, with full support for functions.
 
 ## Features
 
