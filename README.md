@@ -1,4 +1,4 @@
-# OpenAI-Swift
+# OpenAI.swift
 
 The smallest OpenAI API implementation written in Swift. 
 
