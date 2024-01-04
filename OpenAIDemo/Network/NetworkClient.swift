@@ -16,20 +16,20 @@ class NetworkClient: NSObject, URLSessionWebSocketDelegate {
     static let shared = NetworkClient()
 
     private let keychainService = KeychainService()
-    private var openAIChat: OpenAI?
+    private var openAIClient: OpenAI?
     private let userDefaults = UserDefaults.standard
     private var streamCompletion: ((Result<String, OpenAIError>) -> Void)?
 
     override init() {
         super.init()
-        if let apiKey = keychainService.getApiKey() { openAIChat = OpenAI(apiKey: apiKey) }
+        if let apiKey = keychainService.getApiKey() { openAIClient = OpenAI(apiKey: apiKey) }
     }
 
-    func sendChatCompletionRequest(messages: [OpenAI.Message], model: Model = .gpt4, stream: Bool = false, tools: [OpenAI.ChatCompletionRequest.Tool]? = nil, toolChoice: OpenAI.ChatCompletionRequest.ToolChoice? = nil, completion: @escaping (Result<OpenAI.ChatCompletionResponse, Error>) -> Void, streamCompletion: @escaping (Error?) -> Void = {_ in}) {
+    func sendChatCompletionRequest(messages: [OpenAI.Message], model: Model = .gpt4, stream: Bool = false, tools: [OpenAI.ChatCompletionRequest.Tool]? = nil, toolChoice: OpenAI.ChatCompletionRequest.ToolChoice? = nil, completion: @escaping (Result<OpenAI.ChatCompletionResponse, Error>) -> Void, streamCompletion: @escaping (Error?) -> Void = {_ in}) throws {
 //        print("messages: \(messages)")
-        guard let openAIChat = openAIChat else { return completion(.failure(NetworkError.missingApiKey)) }
+        guard let openAIClient = openAIClient else { throw NetworkError.missingApiKey }
         let request = OpenAI.ChatCompletionRequest(model: model, messages: messages, stream: stream, tools: tools, tool_choice: toolChoice)
-        openAIChat.perform(request: request) {
+        openAIClient.perform(request: request) {
             completion($0.mapError{$0})
         } didCompleteStreaming: {
             print($0?.localizedDescription ?? "Stream completed")
@@ -40,7 +40,7 @@ class NetworkClient: NSObject, URLSessionWebSocketDelegate {
     func updateApiKey(_ apiKey: String) throws {
         guard !apiKey.isEmpty else { throw NetworkError.emptyApiKey }
         keychainService.saveApiKey(apiKey: apiKey)
-        openAIChat = OpenAI(apiKey: apiKey)
+        openAIClient = OpenAI(apiKey: apiKey)
     }
 }
 

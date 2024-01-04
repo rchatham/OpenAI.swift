@@ -40,12 +40,12 @@ class MessageService {
         ]
     }
     
-    func sendMessageCompletionRequest(message: String, for conversation: Conversation, stream: Bool = false) {
+    func sendMessageCompletionRequest(message: String, for conversation: Conversation, stream: Bool = false) throws {
         messageDB.createMessage(for: conversation, content: message)
-        getChatCompletion(for: conversation, stream: stream)
+        try getChatCompletion(for: conversation, stream: stream)
     }
 
-    func getChatCompletion(for conversation: Conversation, stream: Bool) {
+    func getChatCompletion(for conversation: Conversation, stream: Bool) throws {
         class StreamMessageInfo {
             var id: UUID
             var content = "" // Update to accept OpenAI.Message.Content
@@ -77,7 +77,7 @@ class MessageService {
         }
         var streamToolInfo: StreamToolInfo?
         let toolChoice = (tools?.isEmpty ?? true) ? nil : OpenAI.ChatCompletionRequest.ToolChoice.auto
-        networkClient.sendChatCompletionRequest(messages: conversation.toOpenAIMessages(), stream: stream, tools: tools, toolChoice: toolChoice) { [conversation] (result: Result<OpenAI.ChatCompletionResponse, Error>) in
+        try networkClient.sendChatCompletionRequest(messages: conversation.toOpenAIMessages(), stream: stream, tools: tools, toolChoice: toolChoice) { [conversation] (result: Result<OpenAI.ChatCompletionResponse, Error>) in
             switch result {
             case .success(let response):
                 if let message = response.choices.first?.message {
@@ -119,7 +119,8 @@ class MessageService {
                                 print("utilizing tool: \(tool)")
                                 guard let toolText = self?.useTool(tool) else { return }
                                 self?.messageDB.createToolMessage(for: conversation, content: toolText, toolCallId: tool.id!, name: tool.function.name!)
-                                self?.getChatCompletion(for: conversation, stream: stream)
+                                do { try self?.getChatCompletion(for: conversation, stream: stream) }
+                                catch { print("error calling chat completion: \(error.localizedDescription)") }
                             }
                         case .stop:
                             guard let content = streamMessageInfo?.content, !content.isEmpty else { return }

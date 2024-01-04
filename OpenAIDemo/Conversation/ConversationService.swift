@@ -13,7 +13,7 @@ class ConversationService {
     let conversationDB: ConversationDB
     @Published var  newMessageService: MessageService?
     
-    init(networkClient: NetworkClient = NetworkClient(), conversationDB: ConversationDB) {
+    init(networkClient: NetworkClient = NetworkClient.shared, conversationDB: ConversationDB) {
         self.networkClient = networkClient
         self.conversationDB = conversationDB
     }
