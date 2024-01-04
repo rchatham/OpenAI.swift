@@ -71,8 +71,7 @@ public class OpenAI {
             if let error = decodeError(data: data) { return didCompleteStream?(error) ?? () }
             guard let lines = String(data: data, encoding: .utf8)?.split(separator: "\n") else { return }
             for line in lines where line.hasPrefix("data:") {
-                if line.contains("[DONE]") { didCompleteStream?(nil) }
-                else { didReceiveEvent?(Data(String(line.dropFirst(5)).utf8)) }
+                if !line.contains("[DONE]") { didReceiveEvent?(Data(String(line.dropFirst(5)).utf8)) }
             }
         }
 
@@ -89,12 +88,12 @@ public protocol OpenAIRequest: Encodable {
 
 extension OpenAIRequest {
     var stream: Bool {
-        return (self as? OpenAI.ChatCompletionRequest)?.stream ?? false
+        return (self as? StreamableRequest)?.stream ?? false
     }
 }
 
 internal protocol StreamableRequest: Encodable {
-    var stream: Bool { get }
+    var stream: Bool? { get }
 }
 
 public enum OpenAIError: Error {
