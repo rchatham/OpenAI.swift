@@ -37,3 +37,18 @@ extension Conversation {
         return conversation
     }
 }
+
+extension ToolCall {
+    static func example(context: NSManagedObjectContext = PersistenceController.preview.container.viewContext) -> ToolCall {
+        let toolCall = ToolCall(context: context)
+        toolCall.id = "some-tool-call-id-string-o87sch8adc"
+        toolCall.index = 0
+        toolCall.name = "getAnswerToUniverse"
+        toolCall.arguments = "{}"
+        toolCall.typeString = "function"
+
+        do { try context.save() }
+        catch { print("Error saving sample tool call: \(error)") }
+        return toolCall
+    }
+}

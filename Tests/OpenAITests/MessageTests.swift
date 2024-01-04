@@ -6,9 +6,9 @@
 //
 
 import XCTest
-@testable import OpenAI_Swift
+@testable import OpenAI
 
-final class MessageTests: OpenAI_SwiftTests {
+final class MessageTests: OpenAITests {
 
     func testSystemMessageDecodable() throws {
         OpenAI.decode { (result: Result<OpenAI.Message, OpenAIError>) in

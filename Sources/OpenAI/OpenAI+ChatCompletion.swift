@@ -204,7 +204,7 @@ public extension OpenAI {
         case invalidContent
     }
 
-    struct ChatCompletionRequest: Codable, OpenAIRequest {
+    struct ChatCompletionRequest: Codable, OpenAIRequest, StreamableRequest {
         public typealias Response = ChatCompletionResponse
         public static var path: String { "chat/completions" }
         let model: Model
@@ -402,7 +402,7 @@ public extension OpenAI {
         public let id: String
         public let object: String // chat.completion or chat.completion.chunk
         public let created: Int
-        public let model: String?
+        public let model: String? // TODO: make response return typed model response
         public let system_fingerprint: String?
         public let choices: [Choice]
         public let usage: Usage?

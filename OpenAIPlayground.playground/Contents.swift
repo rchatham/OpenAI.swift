@@ -1,5 +1,5 @@
 import UIKit
-import OpenAI_Swift
+import OpenAI
 
 var greeting = "Hello, playground"
 

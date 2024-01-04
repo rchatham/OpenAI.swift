@@ -6,10 +6,10 @@
 //
 
 import XCTest
-@testable import OpenAI_Swift
+@testable import OpenAI
 import SwiftyJSON
 
-final class ChatCompletionRequestTests: OpenAI_SwiftTests {
+final class ChatCompletionRequestTests: OpenAITests {
     func testChatCompletionRequestDecodable() throws {
         OpenAI.decode { (result: Result<OpenAI.ChatCompletionRequest, OpenAIError>) in
             switch result {

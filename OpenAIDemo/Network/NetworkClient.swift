@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import OpenAI_Swift
+import OpenAI
 
 typealias Model = OpenAI.Model
 typealias Role = OpenAI.Message.Role

@@ -6,11 +6,11 @@
 //
 
 import XCTest
-@testable import OpenAI
-import OpenAI_Swift
+@testable import OpenAIDemo
+import OpenAI
 import SwiftyJSON
 
-final class CoreDataModelTests: OpenAITests {
+final class CoreDataModelTests: OpenAIDemoTests {
 
     func testConvertMessageToOpenAIAndBack() throws {
         if let exampleMessage = Message.example(context: PersistenceController.preview.testManagedObjectContext).toOpenAIMessage(),

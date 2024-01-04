@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import OpenAI_Swift
+import OpenAI
 
 extension Message {
     func toOpenAIMessage() -> OpenAI.Message? { // make throw instead of return nil

@@ -19,8 +19,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B184E8742B21887F009AF69D"
-               BuildableName = "OpenAI-SwiftTests.xctest"
-               BlueprintName = "OpenAI-SwiftTests"
+               BuildableName = "OpenAITests.xctest"
+               BlueprintName = "OpenAITests"
                ReferencedContainer = "container:OpenAI.xcodeproj">
             </BuildableReference>
          </TestableReference>

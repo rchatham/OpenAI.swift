@@ -1,15 +1,15 @@
 //
-//  OpenAITests.swift
-//  OpenAITests
+//  OpenAIDemoTests.swift
+//  OpenAIDemoTests
 //
 //  Created by Reid Chatham on 1/20/23.
 //
 
 import XCTest
-@testable import OpenAI
-@testable import OpenAI_Swift
+@testable import OpenAIDemo
+import OpenAI
 
-class OpenAITests: XCTestCase {
+class OpenAIDemoTests: XCTestCase {
     func getData(filename: String) throws -> Data? {
         return try Data.getJsonData(filename: filename, bundle: Bundle(for: type(of: self)))
     }

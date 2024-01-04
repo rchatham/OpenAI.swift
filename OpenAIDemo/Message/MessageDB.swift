@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 import CloudKit
-import OpenAI_Swift
+import OpenAI
 
 class MessageDB {
     

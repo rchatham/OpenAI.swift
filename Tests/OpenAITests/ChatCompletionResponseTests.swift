@@ -6,12 +6,11 @@
 //
 
 import XCTest
-@testable import OpenAI_Swift
+@testable import OpenAI
 import SwiftyJSON
 
-// TODO: make response return typed model response
 
-final class ChatCompletionResponseTests: OpenAI_SwiftTests {
+final class ChatCompletionResponseTests: OpenAITests {
 
     func testChatCompletionResponseDecodable() throws {
         OpenAI.decode { (result: Result<OpenAI.ChatCompletionResponse, OpenAIError>) in

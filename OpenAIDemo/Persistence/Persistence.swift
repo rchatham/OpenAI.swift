@@ -25,7 +25,7 @@ class PersistenceController {
 
     // MARK: - Private
     private let inMemory: Bool
-    private let ckContainer = CKContainer(identifier: "iCloud.com.reidchatham.openai")
+    private let ckContainer = CKContainer(identifier: "iCloud.com.reidchatham.openaidemo")
     lazy private var privateDatabase: CKDatabase = createPrivateDatabase()
 
     init(inMemory: Bool = false) {

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import OpenAI_Swift
+import OpenAI
 
 class MessageService {
     let networkClient: NetworkClient
