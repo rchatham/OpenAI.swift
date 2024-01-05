@@ -1,0 +1,33 @@
+{
+  "id": "chatcmpl-8dXfstBl5lm98Sao9Fz8CuBEQOEKC",
+  "object": "chat.completion",
+  "created": 1704434928,
+  "model": "gpt-4-0613",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": null,
+        "tool_calls": [
+          {
+            "id": "call_Ux6kaMc2GCyAOL8nijzKeOYN",
+            "type": "function",
+            "function": {
+              "name": "getCurrentWeather",
+              "arguments": "{\n  \"location\": \"Jackson City\",\n  \"format\": \"fahrenheit\"\n}"
+            }
+          }
+        ]
+      },
+      "logprobs": null,
+      "finish_reason": "tool_calls"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 329,
+    "completion_tokens": 24,
+    "total_tokens": 353
+  },
+  "system_fingerprint": null
+}
