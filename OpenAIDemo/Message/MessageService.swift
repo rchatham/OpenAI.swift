@@ -84,6 +84,10 @@ class MessageService {
                     DispatchQueue.main.async { [weak self] in
                         print("message received: \(message)")
                         self?.messageDB.createMessage(for: conversation, from: message)
+
+                        if let toolCalls = response.choices.first?.message?.tool_calls {
+                            self?.callTools(toolCalls, for: conversation)
+                        }
                     }
                 }
                 if let delta = response.choices.first?.delta {
@@ -93,19 +97,21 @@ class MessageService {
                         if let chunk = delta.content { streamMessageInfo?.append(chunk: .string(chunk))}
                     }
                 }
-                if let toolCalls = response.choices.first?.message?.tool_calls ?? response.choices.first?.delta?.tool_calls {
+
+                if let toolCalls = response.choices.first?.delta?.tool_calls {
                     DispatchQueue.main.async {
                         if streamToolInfo == nil { streamToolInfo = StreamToolInfo(toolCallCount: toolCalls.count) }
                         guard let toolInfo = streamToolInfo else { fatalError() }
                         for tool in toolCalls {
-                            toolInfo.tools[tool.index] = OpenAI.Message.ToolCall(
-                                index: tool.index,
-                                id: tool.id ?? toolInfo.tools[tool.index].id ?? "",
+                            guard let index = tool.index else { continue }
+                            toolInfo.tools[index] = OpenAI.Message.ToolCall(
+                                index: index,
+                                id: tool.id ?? toolInfo.tools[index].id ?? "",
                                 type: .function,
                                 function: OpenAI.Message.ToolCall.Function(
-                                    name: tool.function.name ?? toolInfo.tools[tool.index].function.name ?? "",
-                                    arguments: toolInfo.tools[tool.index].function.arguments + tool.function.arguments))
-                            print((toolInfo.tools[tool.index].function.name ?? "") + ": " + toolInfo.tools[tool.index].function.arguments)
+                                    name: tool.function.name ?? toolInfo.tools[index].function.name ?? "",
+                                    arguments: toolInfo.tools[index].function.arguments + tool.function.arguments))
+                            print((toolInfo.tools[index].function.name ?? "") + ": " + toolInfo.tools[index].function.arguments)
                         }
                     }
                 }
@@ -113,15 +119,12 @@ class MessageService {
                     DispatchQueue.main.async { [weak self] in
                         switch finishReason {
                         case .tool_calls:
-                            guard let toolCalls = streamToolInfo?.tools else { return }
-                            streamMessageInfo?.add(toolCalls: toolCalls)
-                            for tool in toolCalls {
-                                print("utilizing tool: \(tool)")
-                                guard let toolText = self?.useTool(tool) else { return }
-                                self?.messageDB.createToolMessage(for: conversation, content: toolText, toolCallId: tool.id!, name: tool.function.name!)
-                                do { try self?.getChatCompletion(for: conversation, stream: stream) }
-                                catch { print("error calling chat completion: \(error.localizedDescription)") }
+                            if let toolCalls = streamToolInfo?.tools {
+                                streamMessageInfo?.add(toolCalls: toolCalls)
+                                self?.callTools(toolCalls, for: conversation)
                             }
+                            do { try self?.getChatCompletion(for: conversation, stream: stream) }
+                            catch { print("error calling chat completion: \(error.localizedDescription)") }
                         case .stop:
                             guard let content = streamMessageInfo?.content, !content.isEmpty else { return }
                             print("message received: \(content)")
@@ -144,6 +147,14 @@ class MessageService {
 
     func deleteMessage(id: UUID) {
         messageDB.deleteMessage(id: id)
+    }
+
+    func callTools(_ toolCalls: [OpenAI.Message.ToolCall], for conversation: Conversation) {
+        for tool in toolCalls {
+            print("utilizing tool: \(tool)")
+            guard let toolText = useTool(tool) else { continue }
+            messageDB.createToolMessage(for: conversation, content: toolText, toolCallId: tool.id!, name: tool.function.name!)
+        }
     }
 
     func useTool(_ tool: OpenAI.Message.ToolCall) -> String? {

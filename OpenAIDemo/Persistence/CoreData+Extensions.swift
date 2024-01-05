@@ -81,7 +81,7 @@ extension OpenAI.Message.ToolCall {
     func toCoreDataToolCall(in context: NSManagedObjectContext) -> ToolCall {
         let tool = ToolCall(context: context)
         tool.id = id
-        tool.index = Int32(index)
+        tool.index = Int32(index ?? 0)
         tool.typeString = type?.rawValue
         tool.name = function.name
         tool.arguments = function.arguments

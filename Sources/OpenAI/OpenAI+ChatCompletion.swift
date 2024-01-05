@@ -156,7 +156,7 @@ public extension OpenAI {
         }
 
         public struct ToolCall: Codable, CustomStringConvertible {
-            public let index: Int
+            public let index: Int?
             public let id: String?
             public let type: ToolType?
             public let function: Function
@@ -164,7 +164,7 @@ public extension OpenAI {
             public var description: String {
                 return """
                 tool call:
-                  index:    \(index)
+                  index:    \(index != nil ? "\(index!)" : "no index")
                   id:       \(id ?? "no idea")
                   type:     \(type?.rawValue ?? "no type")
                   function: \(function.name ?? "name missing"): \(function.arguments)
