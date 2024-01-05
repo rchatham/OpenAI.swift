@@ -132,14 +132,27 @@ class MessageService {
                         }
                     }
                 }
-            case .failure(let error): print(error.localizedDescription)
+            case .failure(let error):
+                if let error = error as? OpenAIError {
+                    switch error {
+                    case .jsonParsingFailure(let error): print("json parsing error: \(error.localizedDescription)")
+                    case .apiError(let error): print("openai api error: \(error.localizedDescription)")
+                    case .invalidData: print("invalid data")
+                    case .invalidURL: print("invalid url")
+                    case .requestFailed(let error): print("request failed with error: \(error?.localizedDescription ?? "no error")")
+                    case .responseUnsuccessful(statusCode: let code, let error): print("unsuccessful status code: \(code), error: \(error?.localizedDescription ?? "no error")")
+                    case .streamParsingFailure: print("stream parsing failure")
+                    }
+                } else {
+                    print("openai error: " + error.localizedDescription)
+                }
             }
         } streamCompletion: { error in
             DispatchQueue.main.async {
                 if let error = error {
                     print("error: \(error)")
                 } else {
-                    print(error ?? streamMessageInfo?.content ?? "No output")
+                    print("content: \(streamMessageInfo?.content ?? "No output")")
                 }
             }
         }

@@ -40,7 +40,7 @@ public class OpenAI {
     private func perform<Response: Decodable>(request: URLRequest, completion: @escaping (Result<Response, OpenAIError>) -> Void) {
         session.dataTask(with: request) { data, response, error in
             guard let httpResponse = response as? HTTPURLResponse else { return completion(.failure(.requestFailed(error))) }
-            guard httpResponse.statusCode == 200 else { return completion(.failure(.responseUnsuccessful(statusCode: httpResponse.statusCode))) }
+            guard httpResponse.statusCode == 200 else { return completion(.failure(.responseUnsuccessful(statusCode: httpResponse.statusCode, data.flatMap { OpenAI.decodeError(data: $0) }))) }
             guard let data = data else { return completion(.failure(.invalidData)) }
             OpenAI.decode(completion: completion)(data)
         }.resume()
@@ -100,7 +100,7 @@ public enum OpenAIError: Error {
     case invalidData, streamParsingFailure, invalidURL
     case requestFailed(Error?)
     case jsonParsingFailure(Error)
-    case responseUnsuccessful(statusCode: Int)
+    case responseUnsuccessful(statusCode: Int, Error?)
     case apiError(ErrorResponse)
 
     public struct ErrorResponse: Error, Codable {
