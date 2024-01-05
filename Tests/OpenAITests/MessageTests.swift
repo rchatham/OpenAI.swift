@@ -48,6 +48,16 @@ final class MessageTests: XCTestCase {
             }
         }(try getData(filename: "assistant_message")!)
     }
+
+    func testAssistantMessageWithToolCallDecodable() throws {
+        OpenAI.decode { (result: Result<OpenAI.Message, OpenAIError>) in
+            switch result {
+            case .success(_): break
+            case .failure(let error):
+                XCTFail("failed to decode data \(error.localizedDescription)")
+            }
+        }(try getData(filename: "assistant_message_with_tool_call")!)
+    }
     
     func testSystemMessageEncodable() throws {
         let userMessage = OpenAI.Message(role: .system, content: "You are a helpful assistant.")

@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B128B18F2B47D4A9009F139F /* assistant_tool_call.json in Resources */ = {isa = PBXBuildFile; fileRef = B128B18E2B47D4A9009F139F /* assistant_tool_call.json */; };
+		B128B18F2B47D4A9009F139F /* chat_completion_response_tool_call.json in Resources */ = {isa = PBXBuildFile; fileRef = B128B18E2B47D4A9009F139F /* chat_completion_response_tool_call.json */; };
+		B128B1912B481747009F139F /* assistant_message_with_tool_call.json in Resources */ = {isa = PBXBuildFile; fileRef = B128B1902B481747009F139F /* assistant_message_with_tool_call.json */; };
 		B12D6ED52B2E2463003810E5 /* JSONSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12D6ED42B2E2463003810E5 /* JSONSchema.swift */; };
 		B12D6EDA2B2F9174003810E5 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12D6ED92B2F9174003810E5 /* Utilities.swift */; };
 		B1373966299FE12B00DF4BB9 /* OpenAI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B1373964299FE12B00DF4BB9 /* OpenAI.xcdatamodeld */; };
@@ -129,7 +130,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B128B18E2B47D4A9009F139F /* assistant_tool_call.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = assistant_tool_call.json; sourceTree = "<group>"; };
+		B128B18E2B47D4A9009F139F /* chat_completion_response_tool_call.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = chat_completion_response_tool_call.json; sourceTree = "<group>"; };
+		B128B1902B481747009F139F /* assistant_message_with_tool_call.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = assistant_message_with_tool_call.json; sourceTree = "<group>"; };
 		B12D6EB92B26F6B5003810E5 /* OpenAIv1.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OpenAIv1.1.xcdatamodel; sourceTree = "<group>"; };
 		B12D6EBA2B26F71E003810E5 /* OpenAIv1.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = OpenAIv1.2.xcdatamodel; sourceTree = "<group>"; };
 		B12D6EBB2B2CC7BD003810E5 /* MessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTests.swift; sourceTree = "<group>"; };
@@ -344,11 +346,12 @@
 				B12D6EBD2B2CC852003810E5 /* chat_completion_request.json */,
 				B12D6ED72B2F8A67003810E5 /* chat_completion_request_with_functions.json */,
 				B12D6EBF2B2CC92E003810E5 /* chat_completion_response.json */,
+				B128B18E2B47D4A9009F139F /* chat_completion_response_tool_call.json */,
 				B12D6EC52B2CC9B2003810E5 /* system_message.json */,
 				B12D6EC72B2CC9C7003810E5 /* user_message.json */,
-				B12D6ED02B2D998B003810E5 /* assistant_message.json */,
 				B12D6ED22B2D99EF003810E5 /* user_message_with_image.json */,
-				B128B18E2B47D4A9009F139F /* assistant_tool_call.json */,
+				B12D6ED02B2D998B003810E5 /* assistant_message.json */,
+				B128B1902B481747009F139F /* assistant_message_with_tool_call.json */,
 				B15798722B33BED300C4CF1D /* stream_error.txt */,
 				B12D6EDC2B32922A003810E5 /* assistant_response_stream.txt */,
 				B12D6EDE2B32932A003810E5 /* tool_call_stream.txt */,
@@ -644,8 +647,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B128B18F2B47D4A9009F139F /* assistant_tool_call.json in Resources */,
+				B128B18F2B47D4A9009F139F /* chat_completion_response_tool_call.json in Resources */,
 				B1FB64C52B4649750082BB76 /* system_message.json in Resources */,
+				B128B1912B481747009F139F /* assistant_message_with_tool_call.json in Resources */,
 				B1FB64C42B4649750082BB76 /* tool_call_stream.txt in Resources */,
 				B1FB64C72B4649750082BB76 /* user_message.json in Resources */,
 				B1FB64C82B4649750082BB76 /* user_message_with_image.json in Resources */,

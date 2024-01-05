@@ -1,0 +1,14 @@
+{
+  "role": "assistant",
+  "content": null,
+  "tool_calls": [
+    {
+      "id": "call_Ux6kaMc2GCyAOL8nijzKeOYN",
+      "type": "function",
+      "function": {
+        "name": "getCurrentWeather",
+        "arguments": "{\n  \"location\": \"Jackson City\",\n  \"format\": \"fahrenheit\"\n}"
+      }
+    }
+  ]
+}
