@@ -36,8 +36,8 @@ class MessageDB {
     }
 
     @discardableResult
-    func createMessage(from networkMessage: OpenAI.Message) -> Message {
-        let message = networkMessage.toCoreDataMessage(in: persistence.container.viewContext)
+    func createMessage(for conversation: Conversation, from networkMessage: OpenAI.Message) -> Message {
+        let message = networkMessage.toCoreDataMessage(in: persistence.container.viewContext, for: conversation)
         do { try persistence.container.viewContext.save() }
         catch { print("Failed to insert message: \(error)") }
         return message

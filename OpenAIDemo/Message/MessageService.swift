@@ -83,7 +83,7 @@ class MessageService {
                 if let message = response.choices.first?.message {
                     DispatchQueue.main.async { [weak self] in
                         print("message received: \(message)")
-                        self?.messageDB.createMessage(from: message)
+                        self?.messageDB.createMessage(for: conversation, from: message)
                     }
                 }
                 if let delta = response.choices.first?.delta {
