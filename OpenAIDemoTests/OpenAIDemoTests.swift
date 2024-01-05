@@ -9,7 +9,9 @@ import XCTest
 @testable import OpenAIDemo
 import OpenAI
 
-class OpenAIDemoTests: XCTestCase {
+class OpenAIDemoTests: XCTestCase {}
+
+extension XCTestCase {
     func getData(filename: String) throws -> Data? {
         return try Data.getJsonData(filename: filename, bundle: Bundle(for: type(of: self)))
     }

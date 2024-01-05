@@ -10,11 +10,12 @@ import XCTest
 import OpenAI
 import SwiftyJSON
 
-final class CoreDataModelTests: OpenAIDemoTests {
+final class CoreDataModelTests: XCTestCase {
 
     func testConvertMessageToOpenAIAndBack() throws {
+        let exampleConversation = Conversation.example(context: PersistenceController.preview.testManagedObjectContext)
         if let exampleMessage = Message.example(context: PersistenceController.preview.testManagedObjectContext).toOpenAIMessage(),
-           let testMessage = exampleMessage.toCoreDataMessage(in: PersistenceController.preview.testManagedObjectContext).toOpenAIMessage() {
+           let testMessage = exampleMessage.toCoreDataMessage(in: PersistenceController.preview.testManagedObjectContext, for: exampleConversation).toOpenAIMessage() {
             XCTAssert(JSON(try Data.encode(exampleMessage)) == JSON(try Data.encode(testMessage)), "Data consistency not maintained.\n1):\(exampleMessage)\n2):\(testMessage)")
         } else {
             XCTFail("Got nil when converting between core data and OpenAI-Swift models.")
