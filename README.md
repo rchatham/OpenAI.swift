@@ -132,3 +132,9 @@ Contributions are welcome. Please open an issue or submit a pull request with yo
 ## License
 
 This project is free to use under the [MIT LICENSE](LICENSE).
+
+The other guys:
+- https://github.com/MacPaw/OpenAI
+- https://github.com/adamrushy/OpenAISwift
+- https://github.com/OpenDive/OpenAIKit
+- https://github.com/dylanshine/openai-kit
