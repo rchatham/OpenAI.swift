@@ -138,3 +138,4 @@ The other guys:
 - https://github.com/adamrushy/OpenAISwift
 - https://github.com/OpenDive/OpenAIKit
 - https://github.com/dylanshine/openai-kit
+- https://github.com/SwiftBeta/SwiftOpenAI
