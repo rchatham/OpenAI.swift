@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@testable import OpenAI
 
 class MockURLProtocol: URLProtocol {
     typealias MockNetworkHandler = (URLRequest) throws -> (
@@ -53,4 +54,15 @@ extension URLRequest {
 
 extension URLSessionTask {
     var endpoint: String { currentRequest!.endpoint }
+}
+
+struct MockRequest: OpenAIRequest, StreamableRequest, Encodable {
+    typealias Response = MockResponse
+    static var path = "test"
+    var stream: Bool?
+    init(stream: Bool? = nil) { self.stream = stream }
+}
+
+struct MockResponse: Codable, StreamableResponse {
+    var status: String
 }

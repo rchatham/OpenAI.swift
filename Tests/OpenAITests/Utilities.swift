@@ -5,8 +5,21 @@
 //  Created by Reid Chatham on 1/1/24.
 //
 
-import Foundation
+import XCTest
 
+protocol StreamableResponse: Encodable {}
+extension StreamableResponse {
+    func streamData() throws -> Data {
+        let jsonString = try data().string
+        return ("data: " + jsonString).data(using: .utf8)!
+    }
+}
+
+extension XCTestCase {
+    func getData(filename: String, fileExtension: String = "json") throws -> Data? {
+        return try Data.getData(filename: filename, bundle: Bundle(for: type(of: self)), fileExtension: fileExtension)
+    }
+}
 
 extension Data {
     var string: String {

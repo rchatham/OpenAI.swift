@@ -41,12 +41,12 @@ class OpenAITests: XCTestCase {
     }
 
     func testStream() throws {
-        MockURLProtocol.mockNetworkHandlers[MockStreamRequest.path] = { request in
-            return (.success(try MockStreamResponse(status: "success").streamData()), 200)
+        MockURLProtocol.mockNetworkHandlers[MockRequest.path] = { request in
+            return (.success(try MockResponse(status: "success").streamData()), 200)
         }
         let resultReturned = XCTestExpectation(description: "result returned")
         let didCompleteStreaming = XCTestExpectation(description: "did complete streaming")
-        api.perform(request: MockStreamRequest()) { result in
+        api.perform(request: MockRequest(stream: true)) { result in
             if case .success(let success) = result {
                 XCTAssertEqual(success.status, "success")
             } else {
@@ -95,38 +95,5 @@ class OpenAITests: XCTestCase {
     }
 }
 
-extension XCTestCase {
-    func getData(filename: String) throws -> Data? {
-        return try Data.getData(filename: filename, bundle: Bundle(for: type(of: self)))
-    }
-}
-
-struct MockRequest: OpenAIRequest, Encodable {
-    typealias Response = MockResponse
-    static var path = "test"
-}
-
-struct MockResponse: Codable {
-    var status: String
-}
-
-struct MockStreamRequest: OpenAIRequest, StreamableRequest, Encodable {
-    typealias Response = MockStreamResponse
-    static var path = "test"
-    var stream: Bool? = true
-}
-
-struct MockStreamResponse: Codable, StreamableResponse {
-    var status: String
-}
-
 extension OpenAI.ChatCompletionResponse: StreamableResponse {}
-
-protocol StreamableResponse: Encodable {}
-extension StreamableResponse {
-    func streamData() throws -> Data {
-        let jsonString = try data().string
-        return ("data: " + jsonString).data(using: .utf8)!
-    }
-}
 
