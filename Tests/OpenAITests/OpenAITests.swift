@@ -93,6 +93,31 @@ class OpenAITests: XCTestCase {
         }
         wait(for: [resultReturned, didCompleteStreaming], timeout: 10)
     }
+
+    func testChatStreamResponse() throws {
+        MockURLProtocol.mockNetworkHandlers[OpenAI.ChatCompletionRequest.path] = { request in
+            return (.success(try self.getData(filename: "assistant_response_stream", fileExtension: "txt")!), 200)
+        }
+        let resultReturned = XCTestExpectation(description: "result returned")
+        let didCompleteStreaming = XCTestExpectation(description: "did complete streaming")
+        var results: [OpenAI.ChatCompletionResponse] = []
+        api.perform(request: OpenAI.ChatCompletionRequest(model: .gpt35Turbo, messages: [.init(role: .user, content: "Hi")], stream: true)) { result in
+            if case .success(let response) = result {
+                results.append(response)
+            } else {
+                XCTFail("failed to return result")
+            }
+            resultReturned.fulfill()
+        } didCompleteStreaming: { error in
+            XCTAssertNil(error)
+            let content = results.reduce("") { $0 + ($1.choices[0].delta?.content ?? "") }
+            XCTAssertEqual(results[0].choices[0].delta?.role, .assistant)
+            XCTAssertEqual(content, "Sure, I can help with that. Could you please specify the location?")
+            XCTAssertEqual(results[16].choices[0].finish_reason, .stop)
+            didCompleteStreaming.fulfill()
+        }
+        wait(for: [resultReturned, didCompleteStreaming], timeout: 10)
+    }
 }
 
 extension OpenAI.ChatCompletionResponse: StreamableResponse {}
