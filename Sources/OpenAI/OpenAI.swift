@@ -29,21 +29,44 @@ public class OpenAI {
         session = URLSession(configuration: testURLSessionConfiguration, delegate: streamManager, delegateQueue: nil)
     }
     
-    public func perform<Request: OpenAIRequest>(request: Request, completion: @escaping (Result<Request.Response, OpenAIError>) -> Void, didCompleteStreaming: ((Error?) -> Void)? = nil) {
-        var httpRequest = prepareRequest(path: Request.path)
-        do { httpRequest.httpBody = try JSONEncoder().encode(request) }
-        catch { return completion(.failure(.invalidData)) }
-        if request.stream { streamManager.stream(task: session.dataTask(with: httpRequest), eventHandler: completion, didCompleteStream: didCompleteStreaming) }
-        else { perform(request: httpRequest, completion: completion) }
+    public func perform<Request: OpenAIRequest>(request: Request, completion: @escaping (Result<Request.Response, Error>) -> Void, didCompleteStreaming: ((Error?) -> Void)? = nil) {
+        Task {
+            if request.stream { do { for try await response in perform(request: request) { completion(.success(response)) }; didCompleteStreaming?(nil) } catch { didCompleteStreaming?(error) } }
+            else { do { completion(.success(try await perform(request: request))) } catch { completion(.failure(error))}}
+        }
     }
 
-    private func perform<Response: Decodable>(request: URLRequest, completion: @escaping (Result<Response, OpenAIError>) -> Void) {
+    private func perform<Request: OpenAIRequest>(request: Request) async throws -> Request.Response {
+        var httpRequest = prepareRequest(path: Request.path)
+        do { httpRequest.httpBody = try JSONEncoder().encode(request) } catch { throw OpenAIError.invalidData }
+//        if request.stream { for try await chunk in streamManager.stream(task: session.dataTask(with: httpRequest))/* reduce into single result */ }
+        return try await perform(request: httpRequest)
+    }
+
+    private func perform<Request: OpenAIRequest>(request: Request) -> AsyncThrowingStream<Request.Response, Error> {
+        var httpRequest = prepareRequest(path: Request.path)
+        do { httpRequest.httpBody = try JSONEncoder().encode(request) }
+        catch { return AsyncThrowingStream { $0.finish(throwing: OpenAIError.invalidData) } }
+        if request.stream { return streamManager.stream(task: session.dataTask(with: httpRequest)) }
+        else { return AsyncThrowingStream { cont in perform(request: httpRequest) { cont.yield(with: $0) }}}
+    }
+
+    // gets called when streaming call is passed a non-stream configuration
+    private func perform<Response: Decodable>(request: URLRequest, completion: @escaping (Result<Response, Error>) -> Void) {
         session.dataTask(with: request) { data, response, error in
-            guard let httpResponse = response as? HTTPURLResponse else { return completion(.failure(.requestFailed(error))) }
-            guard httpResponse.statusCode == 200 else { return completion(.failure(.responseUnsuccessful(statusCode: httpResponse.statusCode, data.flatMap { OpenAI.decodeError(data: $0) }))) }
-            guard let data = data else { return completion(.failure(.invalidData)) }
+            guard let httpResponse = response as? HTTPURLResponse else { return completion(.failure(OpenAIError.requestFailed(error))) }
+            guard httpResponse.statusCode == 200 else { return completion(.failure(OpenAIError.responseUnsuccessful(statusCode: httpResponse.statusCode, data.flatMap { OpenAI.decodeError(data: $0) }))) }
+            guard let data = data else { return completion(.failure(OpenAIError.invalidData)) }
             OpenAI.decode(completion: completion)(data)
         }.resume()
+    }
+
+    // Should fail when request is configured to be a stream but passed to non-stream method.
+    private func perform<Response: Decodable>(request: URLRequest) async throws -> Response {
+        let (data, response) = try await session.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse else { throw OpenAIError.requestFailed(nil) }
+        guard httpResponse.statusCode == 200 else { throw OpenAIError.responseUnsuccessful(statusCode: httpResponse.statusCode, OpenAI.decodeError(data: data)) }
+        return try OpenAI.decodeResponse(data: data)
     }
 
     private func prepareRequest(path: String) -> URLRequest {
@@ -59,12 +82,23 @@ public class OpenAI {
         private var didCompleteStream: ((Error?) -> Void)?
         private var task: URLSessionDataTask?
         
-        func stream<Response: Decodable>(task: URLSessionDataTask, eventHandler: @escaping (Result<Response, OpenAIError>) -> Void, didCompleteStream: ((Error?) -> Void)? = nil) {
+        func stream<Response: Decodable>(task: URLSessionDataTask, eventHandler: @escaping (Result<Response, Error>) -> Void, didCompleteStream: ((Error?) -> Void)? = nil) {
             didReceiveEvent = decode(completion: eventHandler)
             self.didCompleteStream = { [unowned self] error in
-                didCompleteStream?(error); (self.task, self.didReceiveEvent, self.didCompleteStream) = (nil, nil, nil)
+                didCompleteStream?(error)
+                (self.task, self.didReceiveEvent, self.didCompleteStream) = (nil, nil, nil)
             }
             self.task = task; task.resume()
+        }
+
+
+        func stream<Response: Decodable>(task: URLSessionDataTask) -> AsyncThrowingStream<Response, Error> {
+            return AsyncThrowingStream { continuation in
+                didReceiveEvent = { continuation.yield(with: OpenAI.decode(data: $0)) }
+                didCompleteStream = { continuation.finish(throwing: $0) }
+                continuation.onTermination = { @Sendable _ in (self.task, self.didReceiveEvent, self.didCompleteStream) = (nil, nil, nil) }
+                self.task = task; task.resume()
+            }
         }
         
         internal func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
@@ -133,13 +167,16 @@ public extension OpenAI {
 
 // Helpers
 public extension OpenAI {
-    static func decode<Response: Decodable>(completion: @escaping (Result<Response, OpenAIError>) -> Void) -> (Data) -> Void {
+    static func decode<Response: Decodable>(completion: @escaping (Result<Response, Error>) -> Void) -> (Data) -> Void {
         return { completion(decode(data: $0)) }
     }
 
-    static func decode<Response: Decodable>(data: Data) -> Result<Response, OpenAIError> {
-        let d = JSONDecoder(); do { return .success(try d.decode(Response.self, from: data)) }
-        catch { return .failure(decodeError(data: data, decoder: d) ?? .jsonParsingFailure(error)) }
+    static func decode<Response: Decodable>(data: Data) -> Result<Response, Error> {
+        let d = JSONDecoder(); do { return .success(try decodeResponse(data: data, decoder: d)) } catch { return .failure(error as! OpenAIError) }
+    }
+
+    static func decodeResponse<Response: Decodable>(data: Data, decoder: JSONDecoder = JSONDecoder()) throws -> Response {
+        do { return try decoder.decode(Response.self, from: data) } catch { throw decodeError(data: data, decoder: decoder) ?? .jsonParsingFailure(error) }
     }
 
     static func decodeError(data: Data, decoder: JSONDecoder = JSONDecoder()) -> OpenAIError? {
