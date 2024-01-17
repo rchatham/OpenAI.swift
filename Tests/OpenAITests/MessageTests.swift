@@ -10,7 +10,7 @@ import XCTest
 
 final class MessageTests: XCTestCase {
     func testSystemMessageDecodable() throws {
-        OpenAI.decode { (result: Result<OpenAI.Message, OpenAIError>) in
+        OpenAI.decode { (result: Result<OpenAI.Message, Error>) in
             switch result {
             case .success(_): break
             case .failure(let error):
@@ -20,7 +20,7 @@ final class MessageTests: XCTestCase {
     }
 
     func testUserMessageDecodable() throws {
-        OpenAI.decode { (result: Result<OpenAI.Message, OpenAIError>) in
+        OpenAI.decode { (result: Result<OpenAI.Message, Error>) in
             switch result {
             case .success(_): break
             case .failure(let error):
@@ -30,7 +30,7 @@ final class MessageTests: XCTestCase {
     }
 
     func testUserMessageWithImageDecodable() throws {
-        OpenAI.decode { (result: Result<OpenAI.Message, OpenAIError>) in
+        OpenAI.decode { (result: Result<OpenAI.Message, Error>) in
             switch result {
             case .success(_): break
             case .failure(let error):
@@ -40,7 +40,7 @@ final class MessageTests: XCTestCase {
     }
     
     func testAssistantMessageDecodable() throws {
-        OpenAI.decode { (result: Result<OpenAI.Message, OpenAIError>) in
+        OpenAI.decode { (result: Result<OpenAI.Message, Error>) in
             switch result {
             case .success(_): break
             case .failure(let error):
@@ -50,7 +50,7 @@ final class MessageTests: XCTestCase {
     }
 
     func testAssistantMessageWithToolCallDecodable() throws {
-        OpenAI.decode { (result: Result<OpenAI.Message, OpenAIError>) in
+        OpenAI.decode { (result: Result<OpenAI.Message, Error>) in
             switch result {
             case .success(_): break
             case .failure(let error):
