@@ -28,7 +28,7 @@ public class OpenAI {
         self.apiKey = ""
         session = URLSession(configuration: testURLSessionConfiguration, delegate: streamManager, delegateQueue: nil)
     }
-    
+
     public func perform<Request: OpenAIRequest>(request: Request, completion: @escaping (Result<Request.Response, Error>) -> Void, didCompleteStreaming: ((Error?) -> Void)? = nil) {
         Task {
             if request.stream { do { for try await response in perform(request: request) { completion(.success(response)) }; didCompleteStreaming?(nil) } catch { didCompleteStreaming?(error) } }
@@ -37,31 +37,21 @@ public class OpenAI {
     }
 
     private func perform<Request: OpenAIRequest>(request: Request) async throws -> Request.Response {
-        var httpRequest = prepareRequest(path: Request.path)
-        do { httpRequest.httpBody = try JSONEncoder().encode(request) } catch { throw OpenAIError.invalidData }
-//        if request.stream { for try await chunk in streamManager.stream(task: session.dataTask(with: httpRequest))/* reduce into single result */ }
-        return try await perform(request: httpRequest)
+        return try await perform(request: try configure(request: request, stream: false))
     }
 
     private func perform<Request: OpenAIRequest>(request: Request) -> AsyncThrowingStream<Request.Response, Error> {
-        var httpRequest = prepareRequest(path: Request.path)
-        do { httpRequest.httpBody = try JSONEncoder().encode(request) }
-        catch { return AsyncThrowingStream { $0.finish(throwing: OpenAIError.invalidData) } }
-        if request.stream { return streamManager.stream(task: session.dataTask(with: httpRequest)) }
-        else { return AsyncThrowingStream { cont in perform(request: httpRequest) { cont.yield(with: $0) }}}
+        do {
+            let httpRequest = try configure(request: request)
+            if request.stream { return streamManager.stream(task: session.dataTask(with: httpRequest)) }
+            else { return AsyncThrowingStream { cont in Task { cont.yield(with: await perform(request: httpRequest)) }}}
+        } catch { return AsyncThrowingStream { $0.finish(throwing: error) } }
     }
 
-    // gets called when streaming call is passed a non-stream configuration
-    private func perform<Response: Decodable>(request: URLRequest, completion: @escaping (Result<Response, Error>) -> Void) {
-        session.dataTask(with: request) { data, response, error in
-            guard let httpResponse = response as? HTTPURLResponse else { return completion(.failure(OpenAIError.requestFailed(error))) }
-            guard httpResponse.statusCode == 200 else { return completion(.failure(OpenAIError.responseUnsuccessful(statusCode: httpResponse.statusCode, data.flatMap { OpenAI.decodeError(data: $0) }))) }
-            guard let data = data else { return completion(.failure(OpenAIError.invalidData)) }
-            OpenAI.decode(completion: completion)(data)
-        }.resume()
+    private func perform<Response: Decodable>(request: URLRequest) async -> Result<Response, Error> {
+        do { return .success(try await perform(request: request)) } catch { return .failure(error) }
     }
 
-    // Should fail when request is configured to be a stream but passed to non-stream method.
     private func perform<Response: Decodable>(request: URLRequest) async throws -> Response {
         let (data, response) = try await session.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse else { throw OpenAIError.requestFailed(nil) }
@@ -77,20 +67,16 @@ public class OpenAI {
         return request
     }
 
+    private func configure<Request: OpenAIRequest>(request: Request, stream: Bool? = nil) throws -> URLRequest {
+        var httpRequest = prepareRequest(path: Request.path)
+        do { httpRequest.httpBody = try JSONEncoder().encode(request.updating(stream: stream ?? request.stream)) } catch { throw OpenAIError.invalidData }
+        return httpRequest
+    }
+
     internal class StreamSessionManager: NSObject, URLSessionDataDelegate {
         private var didReceiveEvent: ((Data) -> Void)?
         private var didCompleteStream: ((Error?) -> Void)?
         private var task: URLSessionDataTask?
-        
-        func stream<Response: Decodable>(task: URLSessionDataTask, eventHandler: @escaping (Result<Response, Error>) -> Void, didCompleteStream: ((Error?) -> Void)? = nil) {
-            didReceiveEvent = decode(completion: eventHandler)
-            self.didCompleteStream = { [unowned self] error in
-                didCompleteStream?(error)
-                (self.task, self.didReceiveEvent, self.didCompleteStream) = (nil, nil, nil)
-            }
-            self.task = task; task.resume()
-        }
-
 
         func stream<Response: Decodable>(task: URLSessionDataTask) -> AsyncThrowingStream<Response, Error> {
             return AsyncThrowingStream { continuation in
@@ -100,7 +86,7 @@ public class OpenAI {
                 self.task = task; task.resume()
             }
         }
-        
+
         internal func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
             if let error = decodeError(data: data) { return didCompleteStream?(error) ?? () }
             guard let lines = String(data: data, encoding: .utf8)?.split(separator: "\n") else { return }
@@ -122,12 +108,20 @@ public protocol OpenAIRequest: Encodable {
 
 extension OpenAIRequest {
     var stream: Bool {
-        return (self as? StreamableRequest)?.stream ?? false
+        return (self as? (any StreamableRequest))?.stream ?? false
+    }
+
+    func updating(stream: Bool) -> Self {
+        if var streamReq = (self as? (any StreamableRequest)) {
+            streamReq.stream = stream
+            return (streamReq as! Self)
+        }
+        return self
     }
 }
 
 internal protocol StreamableRequest: Encodable {
-    var stream: Bool? { get }
+    var stream: Bool? { get set }
 }
 
 public enum OpenAIError: Error {

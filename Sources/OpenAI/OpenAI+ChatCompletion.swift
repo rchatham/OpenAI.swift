@@ -213,7 +213,7 @@ public extension OpenAI {
         let temperature: Double?
         let top_p: Double?
         let n: Int? // how many chat completions to generate for each request
-        let stream: Bool?
+        var stream: Bool?
         let stop: Stop?
         let max_tokens: Int?
         let presence_penalty: Double?
