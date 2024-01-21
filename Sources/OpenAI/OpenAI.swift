@@ -36,11 +36,11 @@ public class OpenAI {
         }
     }
 
-    private func perform<Request: OpenAIRequest>(request: Request) async throws -> Request.Response {
+    public func perform<Request: OpenAIRequest>(request: Request) async throws -> Request.Response {
         return try await perform(request: try configure(request: request, stream: false))
     }
 
-    private func perform<Request: OpenAIRequest>(request: Request) -> AsyncThrowingStream<Request.Response, Error> {
+    public func perform<Request: OpenAIRequest>(request: Request) -> AsyncThrowingStream<Request.Response, Error> {
         do {
             let httpRequest = try configure(request: request)
             if request.stream { return streamManager.stream(task: session.dataTask(with: httpRequest)) }
