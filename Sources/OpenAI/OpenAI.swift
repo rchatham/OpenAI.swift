@@ -31,7 +31,7 @@ public class OpenAI {
 
     public func perform<Request: OpenAIRequest>(request: Request, completion: @escaping (Result<Request.Response, Error>) -> Void, didCompleteStreaming: ((Error?) -> Void)? = nil) {
         Task {
-            if request.stream { do { for try await response in perform(request: request) { completion(.success(response)) }; didCompleteStreaming?(nil) } catch { didCompleteStreaming?(error) } }
+            if request.stream { do { for try await response in stream(request: request) { completion(.success(response)) }; didCompleteStreaming?(nil) } catch { didCompleteStreaming?(error) } }
             else { do { completion(.success(try await perform(request: request))) } catch { completion(.failure(error))}}
         }
     }
@@ -40,7 +40,7 @@ public class OpenAI {
         return try await perform(request: try configure(request: request, stream: false))
     }
 
-    public func perform<Request: OpenAIRequest>(request: Request) -> AsyncThrowingStream<Request.Response, Error> {
+    public func stream<Request: OpenAIRequest>(request: Request) -> AsyncThrowingStream<Request.Response, Error> {
         do {
             let httpRequest = try configure(request: request)
             if request.stream { return streamManager.stream(task: session.dataTask(with: httpRequest)) }
