@@ -115,6 +115,33 @@ openAI.perform(request: chatRequest) { result in
 }
 ```
 
+### Handling Image Content in Array Messages
+When dealing with messages that contain arrays of content, including image content, follow these steps to handle them appropriately in your OpenAI.swift client implementation.
+
+#### Step 1: Create Messages with Image Content
+```swift
+let imageMessage = OpenAI.Message(
+    role: .user, 
+    content: .array([
+        .image(.init(
+            image_url: .init(
+                url: "https://example.com/image.jpg",
+                detail: .high
+            )
+        ))
+    ])
+)
+```
+
+#### Step 2: Include Image Messages in the Chat Request
+```swift
+let chatRequest = OpenAI.ChatCompletionRequest(
+    model: .gpt4,
+    messages: [imageMessage, /* other messages here */],
+    /* Other optional parameters */
+)
+```
+
 ---
 
 ## Contributing
