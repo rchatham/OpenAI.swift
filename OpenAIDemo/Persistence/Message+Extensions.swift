@@ -38,9 +38,7 @@ extension Message {
         self.id ?= id
         self.createdAt ?= createdAt
         self.toolCallId ?= toolCallId
-        self.conversation ?= conversation
-        self.toolCalls ?= toolCalls.flatMap { NSSet(array: $0) }
-        toolCalls?.forEach {self.addToToolCalls($0) }
+        toolCalls?.forEach { self.addToToolCalls($0) }
         conversation?.addToMessages(self)
         return self
     }

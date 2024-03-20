@@ -153,13 +153,17 @@ actor StreamMessageInfo {
         if case .string(let str) = chunk {
             print("chunk received: " + str)
             content += str
-            messageDB.updateMessage(id: id, content: content)
+            Task {
+                await messageDB.updateMessage(id: id, content: content)
+            }
         } else {
             print("handle other cases")
         }
     }
     func add(toolCalls: [OpenAI.Message.ToolCall]) {
-        messageDB.updateMessage(id: id, toolCalls: toolCalls)
+        Task {
+            await messageDB.updateMessage(id: id, toolCalls: toolCalls)
+        }
     }
 }
 
