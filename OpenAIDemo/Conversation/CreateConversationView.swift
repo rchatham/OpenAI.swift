@@ -44,7 +44,8 @@ struct CreateConversationView: View {
     }
     
     func createConversationTapped() {
-        viewModel.createConversationTapped  { conversation in
+        Task() {
+            guard let conversation = await viewModel.createConversationTapped() else { return }
             onConversationCreated(conversation)
             presentationMode.wrappedValue.dismiss()
         }
@@ -66,37 +67,26 @@ extension CreateConversationView {
             self.conversationService = conversationService
         }
 
-        func createConversationTapped(completion: @escaping (Conversation) -> Void) {
+        func createConversationTapped() async -> Conversation? {
             guard !systemMessage.isEmpty else {
-                self.showAlert = true
                 self.errorMessage = "System message cannot be empty."
-                return
+                self.showAlert = true
+                return nil
             }
             isGeneratingTitle = true
             do {
-                try conversationService.getTitleForConversation(withSystemMessage: systemMessage) { result in
-                    switch result {
-                    case .success(let response):
-                        if case .string(let title) = response.choices.first?.message?.content {
-                            let conversation = self.conversationService.createConversation(title: title, systemMessage: self.systemMessage)
-                            completion(conversation)
-                        } else {
-                            self.errorMessage = "Failed to generate a title."
-                            self.showAlert = true
-                        }
-                    case .failure(let error):
-                        self.errorMessage = error.localizedDescription
-                        self.showAlert = true
-                    }
-                    self.isGeneratingTitle = false
-                }
+                return try await conversationService.getTitleForConversation(withSystemMessage: systemMessage)
             } catch {
-                self.errorMessage = "Failed to send a chat completion request."
-                self.showAlert = true
+                self.errorMessage = error.localizedDescription
                 self.isGeneratingTitle = false
                 // Show pop-up to enter API key
-                self.enterApiKey = true
+                if case NetworkClient.NetworkError.missingApiKey = error {
+                    self.enterApiKey = true
+                } else {
+                    self.showAlert = true
+                }
             }
+            return nil
         }
     }
 }
