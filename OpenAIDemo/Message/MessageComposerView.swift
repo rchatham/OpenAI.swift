@@ -53,8 +53,10 @@ extension MessageComposerView {
         func sendMessage() {
             guard !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
             // Send the message completion request
-            do { try messageService.sendMessageCompletionRequest(message: input, for: conversation, stream: true) }
-            catch { print("Error sending message completion request: \(error)") }
+            Task { [input] in
+                do { try await messageService.performMessageCompletionRequest(message: input, for: conversation, stream: true) }
+                catch { print("Error sending message completion request: \(error)") }
+            }
             // Clear the input field
             input = ""
         }

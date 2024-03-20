@@ -11,7 +11,7 @@ import SwiftyJSON
 
 final class ChatCompletionRequestTests: XCTestCase {
     func testChatCompletionRequestDecodable() throws {
-        OpenAI.decode { (result: Result<OpenAI.ChatCompletionRequest, OpenAIError>) in
+        OpenAI.decode { (result: Result<OpenAI.ChatCompletionRequest, Error>) in
             switch result {
             case .success(_): break
             case .failure(let error):
@@ -21,7 +21,7 @@ final class ChatCompletionRequestTests: XCTestCase {
     }
 
     func testChatCompletionRequestWithFunctionsDecodable() throws {
-        OpenAI.decode { (result: Result<OpenAI.ChatCompletionRequest, OpenAIError>) in
+        OpenAI.decode { (result: Result<OpenAI.ChatCompletionRequest, Error>) in
             switch result {
             case .success(_): break
             case .failure(let error):

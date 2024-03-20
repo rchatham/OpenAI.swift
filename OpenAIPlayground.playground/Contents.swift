@@ -43,8 +43,14 @@ let chatRequest = OpenAI.ChatCompletionRequest(
 
 openAI.perform(request: chatRequest) { result in
     switch result {
-    case .success(let response):
-        print(response)
+    case .success(let response): print(response.choices[0].message?.content.description ?? response.choices[0].delta?.content ?? "no text")
     case .failure(let err): print(err.localizedDescription)
     }
+}
+
+let response = try await openAI.perform(request: chatRequest)
+print(response.choices[0].message?.content.description ?? "no text")
+
+for try await chunk in openAI.stream(request: chatRequest) {
+    print(chunk.choices[0].delta?.content ?? response.choices[0].message?.content.description ?? "no text")
 }

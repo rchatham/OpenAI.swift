@@ -38,13 +38,20 @@ class ConversationService {
         return conversationDB.fetchConversation(by: id)
     }
     
-    func getTitleForConversation(withSystemMessage systemMessage: String, completion: @escaping (Result<OpenAI.ChatCompletionResponse, Error>) -> Void) throws {
+    func getTitleForConversation(withSystemMessage systemMessage: String) async throws -> Conversation {
         let messages = [
             OpenAI.Message(role: .system, content: "You are a bot that will take a system message for another bot from the user and generate a short title for the conversation that the user will have with the bot that this system message is for. Make the title short, less that 100 characters, and don't add any additional response before or after the title. Do not include quotation marks."),
             OpenAI.Message(role: .user, content: systemMessage)
         ]
-        try networkClient.sendChatCompletionRequest(messages: messages, model: .gpt35Turbo) { result in
-            DispatchQueue.main.async { completion(result) }
+        let response = try await networkClient.performChatCompletionRequest(messages: messages, model: .gpt35Turbo)
+        if case .string(let title) = response.choices.first?.message?.content {
+            return createConversation(title: title, systemMessage: systemMessage)
+        } else {
+            throw ConversationError.failedToGenerateTitle
         }
     }
+}
+
+enum ConversationError: Error {
+    case failedToGenerateTitle
 }

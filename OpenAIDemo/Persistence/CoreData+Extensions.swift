@@ -50,8 +50,9 @@ import CoreData
 
 // Conversion functions for OpenAIChatAPI.ChatCompletionRequest and OpenAIChatAPI.ChatCompletionResponse models
 extension OpenAI.Message {
-    func toCoreDataMessage(in context: NSManagedObjectContext, for conversation: Conversation) -> Message { // should only be needed to decode server messages
-        return Message(context: context).update(contentText: content.text, contentType: contentType, imageURL: imageURL, createdAt: Date(), id: UUID(), imageDetail: imageDetail, name: name, role: role, toolCallId: tool_call_id, conversation: conversation, toolCalls: tool_calls?.map({ $0.toCoreDataToolCall(in: context) }))
+    @discardableResult
+    func toCoreDataMessage(in context: NSManagedObjectContext, for conversation: Conversation, with uuid: UUID = UUID()) -> Message { // should only be needed to decode server messages
+        return Message(context: context).update(contentText: content.text, contentType: contentType, imageURL: imageURL, createdAt: Date(), id: uuid, imageDetail: imageDetail, name: name, role: role, toolCallId: tool_call_id, conversation: conversation, toolCalls: tool_calls?.map({ $0.toCoreDataToolCall(in: context) }))
     }
 
     private var contentType: ContentType {

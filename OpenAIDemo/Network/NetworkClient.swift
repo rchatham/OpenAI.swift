@@ -25,6 +25,18 @@ class NetworkClient: NSObject, URLSessionWebSocketDelegate {
         if let apiKey = keychainService.getApiKey() { openAIClient = OpenAI(apiKey: apiKey) }
     }
 
+    func performChatCompletionRequest(messages: [OpenAI.Message], model: Model = .gpt4, stream: Bool = false, tools: [OpenAI.ChatCompletionRequest.Tool]? = nil, toolChoice: OpenAI.ChatCompletionRequest.ToolChoice? = nil) async throws -> OpenAI.ChatCompletionResponse {
+        guard let openAIClient = openAIClient else { throw NetworkError.missingApiKey }
+        let request = OpenAI.ChatCompletionRequest(model: model, messages: messages, stream: stream, tools: tools, tool_choice: toolChoice)
+        return try await openAIClient.perform(request: request)
+    }
+
+    func streamChatCompletionRequest(messages: [OpenAI.Message], model: Model = .gpt4, stream: Bool = false, tools: [OpenAI.ChatCompletionRequest.Tool]? = nil, toolChoice: OpenAI.ChatCompletionRequest.ToolChoice? = nil) throws -> AsyncThrowingStream<OpenAI.ChatCompletionResponse, Error> {
+        guard let openAIClient = openAIClient else { throw NetworkError.missingApiKey }
+        let request = OpenAI.ChatCompletionRequest(model: model, messages: messages, stream: stream, tools: tools, tool_choice: toolChoice)
+        return openAIClient.stream(request: request)
+    }
+
     func sendChatCompletionRequest(messages: [OpenAI.Message], model: Model = .gpt4, stream: Bool = false, tools: [OpenAI.ChatCompletionRequest.Tool]? = nil, toolChoice: OpenAI.ChatCompletionRequest.ToolChoice? = nil, completion: @escaping (Result<OpenAI.ChatCompletionResponse, Error>) -> Void, streamCompletion: @escaping (Error?) -> Void = {_ in}) throws {
 //        print("messages: \(messages)")
         guard let openAIClient = openAIClient else { throw NetworkError.missingApiKey }

@@ -19,54 +19,69 @@ class MessageDB {
     }
     
     @discardableResult
-    func createMessage(for conversation: Conversation, content: String, role: Role = .user, name: String? = nil) -> Message {
-        let context = persistence.container.viewContext
-        let message = Message(context: context).update(contentText: content, contentType: .string, createdAt: Date(), id: UUID(), name: name, role: role, conversation: conversation)
-        do { try context.save()} catch { print("Failed to insert message: \(error)")}
-        return message
+    func createMessage(for conversation: Conversation, content: String, role: Role = .user, name: String? = nil) -> UUID {
+        let context = conversation.managedObjectContext ?? persistence.container.viewContext
+        let id = UUID()
+        context.perform {
+            Message(context: context).update(contentText: content, contentType: .string, createdAt: Date(), id: id, name: name, role: role, conversation: conversation)
+            do { try context.save()} catch { print("Failed to insert message: \(error)")}
+        }
+        return id
     }
 
     @discardableResult
-    func createToolMessage(for conversation: Conversation, content: String, toolCallId: String, name: String) -> Message {
-        let context = persistence.container.viewContext
-        let message = Message(context: context).update(contentText: content, contentType: .string, createdAt: Date(), id: UUID(), name: name, role: .tool, toolCallId: toolCallId, conversation: conversation)
-        do { try context.save()}
-        catch { print("Failed to insert message: \(error)")}
-        return message
+    func createToolMessage(for conversation: Conversation, content: String, toolCallId: String, name: String) -> UUID {
+        let context = conversation.managedObjectContext ?? persistence.container.viewContext
+        let id = UUID()
+        context.perform {
+            Message(context: context).update(contentText: content, contentType: .string, createdAt: Date(), id: id, name: name, role: .tool, toolCallId: toolCallId, conversation: conversation)
+            do { try context.save()} catch { print("Failed to insert message: \(error)")}
+        }
+        return id
     }
 
     @discardableResult
-    func createMessage(for conversation: Conversation, from networkMessage: OpenAI.Message) -> Message {
-        let message = networkMessage.toCoreDataMessage(in: persistence.container.viewContext, for: conversation)
-        do { try persistence.container.viewContext.save() }
-        catch { print("Failed to insert message: \(error)") }
-        return message
+    func createMessage(for conversation: Conversation, from networkMessage: OpenAI.Message) -> UUID {
+        let context = conversation.managedObjectContext ?? persistence.container.viewContext
+        let id = UUID()
+        context.perform {
+            networkMessage.toCoreDataMessage(in: context, for: conversation, with: id)
+            do { try context.save() } catch { print("Failed to insert message: \(error)") }
+        }
+        return id
     }
     
-    func updateMessage(id: UUID, content: String) {
+    func updateMessage(id: UUID, content: String) async {
+        let request = fetchMessage(id)
         let context = persistence.container.viewContext
-        do { try context.fetch(fetchMessage(id)).first?.contentText = content; try context.save() }
-        catch { print("Failed to update message: \(error)")}
+        await context.perform {
+            do {
+                try context.fetch(request).first?.contentText = content
+                try context.save()
+            } catch { print("Failed to update message: \(error)")}
+        }
     }
 
-    @discardableResult
-    func createToolCall(from networkToolCall: OpenAI.Message.ToolCall) -> ToolCall {
-        let message = networkToolCall.toCoreDataToolCall(in: persistence.container.viewContext)
-        do { try persistence.container.viewContext.save() }
-        catch { print("Failed to insert message: \(error)") }
-        return message
-    }
-
-    func updateMessage(id: UUID, toolCalls: [ToolCall]) {
+    func updateMessage(id: UUID, toolCalls: [OpenAI.Message.ToolCall]) async {
+        let request = fetchMessage(id)
         let context = persistence.container.viewContext
-        do { try toolCalls.forEach { try context.fetch(fetchMessage(id)).first?.addToToolCalls($0) }; try context.save() }
-        catch { print("Failed to update message: \(error)")}
+        await context.perform {
+            do {
+                try toolCalls
+                    .map { $0.toCoreDataToolCall(in: context) }
+                    .forEach { try context.fetch(request).first?.addToToolCalls($0) }
+                try context.save()
+            } catch { print("Failed to update message: \(error)")}
+        }
     }
 
     func deleteMessage(id: UUID) {
         let context = persistence.container.newBackgroundContext()
-        do { try context.fetch(fetchMessage(id)).first.flatMap { context.delete($0); try context.save()}}
-        catch { print("Failed to delete message: \(error)")}
+        let request = fetchMessage(id)
+        context.perform {
+            do { try context.fetch(request).first.flatMap { context.delete($0); try context.save()}}
+            catch { print("Failed to delete message: \(error)")}
+        }
     }
 
     private func fetchMessage(_ id: UUID) -> NSFetchRequest<Message> {

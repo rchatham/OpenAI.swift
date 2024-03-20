@@ -83,14 +83,6 @@ extension ConversationView {
             self.conversationStore = conversationStore
         }
         
-        func submitButtonTapped() throws {
-            guard let conversation = conversationStore.conversation, !input.isEmpty else {
-                showAlert = true
-                return
-            }
-            try messageService.sendMessageCompletionRequest(message: input, for: conversation)
-            input = ""
-        }
         
         func delete(id: UUID) {
             messageService.deleteMessage(id: id)
