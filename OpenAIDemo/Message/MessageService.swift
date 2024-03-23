@@ -41,7 +41,7 @@ class MessageService {
     }
     
     func performMessageCompletionRequest(message: String, for conversation: Conversation, stream: Bool = false) async throws {
-        messageDB.createMessage(for: conversation, content: message)
+        await messageDB.createMessage(for: conversation, content: message)
         do {
             try await getChatCompletion(for: conversation, stream: stream)
         } catch let error as OpenAIError {
@@ -60,45 +60,50 @@ class MessageService {
     }
 
     func getChatCompletion(for conversation: Conversation, stream: Bool) async throws {
-        var streamMessageInfo: StreamMessageInfo?
+        var id: UUID!
+        var content = ""
+
         var streamToolInfo: StreamToolInfo?
         let toolChoice = (tools?.isEmpty ?? true) ? nil : OpenAI.ChatCompletionRequest.ToolChoice.auto
 
         for try await response in try networkClient.streamChatCompletionRequest(messages: conversation.toOpenAIMessages(), stream: stream, tools: tools, toolChoice: toolChoice) {
 
+            // handle non-streamed messages
             if let message = response.choices.first?.message {
                 print("message received: \(message)")
-                messageDB.createMessage(for: conversation, from: message)
+                id = await messageDB.createMessage(for: conversation, from: message)
 
                 if let toolCalls = message.tool_calls {
-                    callTools(toolCalls, for: conversation)
+                    await messageDB.updateMessage(id: id, toolCalls: toolCalls)
+                    await callTools(toolCalls, for: conversation)
                 }
             }
 
+            // handle stream messages
             if let delta = response.choices.first?.delta {
-                if delta.role == .assistant { streamMessageInfo = StreamMessageInfo(for: conversation, using: messageDB)}
-                if let chunk = delta.content { await streamMessageInfo?.append(chunk: .string(chunk))}
-            }
-
-            if let toolCalls = response.choices.first?.delta?.tool_calls {
-                if streamToolInfo == nil { streamToolInfo = StreamToolInfo(toolCallCount: toolCalls.count) }
-                for tool in toolCalls {
-                    guard let index = tool.index else { continue }
-                    await streamToolInfo?.update(index: index, toolCall: tool)
+                if id == nil { id = await messageDB.createMessage(for: conversation, content: "", role: delta.role!) }
+                if let chunk = delta.content {
+                    content += chunk
+                    await messageDB.updateMessage(id: id!, content: content)
+                }
+                if let toolCalls = delta.tool_calls {
+                    if streamToolInfo == nil { streamToolInfo = StreamToolInfo(toolCallCount: toolCalls.count) }
+                    await streamToolInfo?.update(toolCalls: toolCalls)
                 }
             }
 
+            // handle finish reason
             if let finishReason = response.choices.first?.finish_reason {
                 switch finishReason {
                 case .tool_calls:
                     if let toolCalls = await streamToolInfo?.tools {
-                        await streamMessageInfo?.add(toolCalls: toolCalls)
-                        callTools(toolCalls, for: conversation)
+                        await messageDB.updateMessage(id: id, toolCalls: toolCalls)
+                        await callTools(toolCalls, for: conversation)
                     }
                     do { try await getChatCompletion(for: conversation, stream: stream) }
                     catch { print("error calling chat completion: \(error.localizedDescription)") }
                 case .stop:
-                    guard let content = await streamMessageInfo?.content, !content.isEmpty else { return }
+                    guard !content.isEmpty else { return }
                     print("message received: \(content)")
                 case .length, .content_filter: break
                 }
@@ -111,11 +116,11 @@ class MessageService {
         messageDB.deleteMessage(id: id)
     }
 
-    func callTools(_ toolCalls: [OpenAI.Message.ToolCall], for conversation: Conversation) {
+    func callTools(_ toolCalls: [OpenAI.Message.ToolCall], for conversation: Conversation) async {
         for tool in toolCalls {
             print("utilizing tool: \(tool)")
             guard let toolText = useTool(tool) else { continue }
-            messageDB.createToolMessage(for: conversation, content: toolText, toolCallId: tool.id!, name: tool.function.name!)
+            await messageDB.createToolMessage(for: conversation, content: toolText, toolCallId: tool.id!, name: tool.function.name!)
         }
     }
 
@@ -141,36 +146,16 @@ class MessageService {
     }
 }
 
-actor StreamMessageInfo {
-    var id: UUID
-    var content = "" // Update to accept OpenAI.Message.Content
-    private let messageDB: MessageDB
-    init(for conversation: Conversation, using messageDB: MessageDB) {
-        id = messageDB.createMessage(for: conversation, content: "", role: .assistant)
-        self.messageDB = messageDB
-    }
-    func append(chunk: OpenAI.Message.Content) {
-        if case .string(let str) = chunk {
-            print("chunk received: " + str)
-            content += str
-            Task {
-                await messageDB.updateMessage(id: id, content: content)
-            }
-        } else {
-            print("handle other cases")
-        }
-    }
-    func add(toolCalls: [OpenAI.Message.ToolCall]) {
-        Task {
-            await messageDB.updateMessage(id: id, toolCalls: toolCalls)
-        }
-    }
-}
-
 actor StreamToolInfo {
     var tools: [OpenAI.Message.ToolCall]
     init(toolCallCount: Int) {
         tools = Array(repeating: .init(index: 0, id: "", type: .function, function: .init(name: "", arguments: "")), count: toolCallCount)
+    }
+    func update(toolCalls: [OpenAI.Message.ToolCall]) {
+        for tool in toolCalls {
+            guard let index = tool.index else { continue }
+            update(index: index, toolCall: tool)
+        }
     }
     func update(index: Int, toolCall: OpenAI.Message.ToolCall) {
         tools[index] = OpenAI.Message.ToolCall(
@@ -180,6 +165,5 @@ actor StreamToolInfo {
             function: OpenAI.Message.ToolCall.Function(
                 name: toolCall.function.name ?? tools[index].function.name ?? "",
                 arguments: tools[index].function.arguments + toolCall.function.arguments))
-        print((tools[index].function.name ?? "") + ": " + tools[index].function.arguments)
     }
 }

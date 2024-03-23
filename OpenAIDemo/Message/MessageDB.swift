@@ -19,10 +19,10 @@ class MessageDB {
     }
     
     @discardableResult
-    func createMessage(for conversation: Conversation, content: String, role: Role = .user, name: String? = nil) -> UUID {
+    func createMessage(for conversation: Conversation, content: String, role: Role = .user, name: String? = nil) async -> UUID {
         let context = conversation.managedObjectContext ?? persistence.container.viewContext
         let id = UUID()
-        context.perform {
+        await context.perform {
             Message(context: context).update(contentText: content, contentType: .string, createdAt: Date(), id: id, name: name, role: role, conversation: conversation)
             do { try context.save()} catch { print("Failed to insert message: \(error)")}
         }
@@ -30,10 +30,10 @@ class MessageDB {
     }
 
     @discardableResult
-    func createToolMessage(for conversation: Conversation, content: String, toolCallId: String, name: String) -> UUID {
+    func createToolMessage(for conversation: Conversation, content: String, toolCallId: String, name: String) async -> UUID {
         let context = conversation.managedObjectContext ?? persistence.container.viewContext
         let id = UUID()
-        context.perform {
+        await context.perform {
             Message(context: context).update(contentText: content, contentType: .string, createdAt: Date(), id: id, name: name, role: .tool, toolCallId: toolCallId, conversation: conversation)
             do { try context.save()} catch { print("Failed to insert message: \(error)")}
         }
@@ -41,10 +41,10 @@ class MessageDB {
     }
 
     @discardableResult
-    func createMessage(for conversation: Conversation, from networkMessage: OpenAI.Message) -> UUID {
+    func createMessage(for conversation: Conversation, from networkMessage: OpenAI.Message) async -> UUID {
         let context = conversation.managedObjectContext ?? persistence.container.viewContext
         let id = UUID()
-        context.perform {
+        await context.perform {
             networkMessage.toCoreDataMessage(in: context, for: conversation, with: id)
             do { try context.save() } catch { print("Failed to insert message: \(error)") }
         }
