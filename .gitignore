@@ -7,5 +7,3 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
 *.xcworkspace
-.nvim/
-buildServer.json
