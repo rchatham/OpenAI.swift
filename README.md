@@ -150,7 +150,7 @@ Contributions are welcome. Please open an issue or submit a pull request with yo
 
 ## TODO
 
-- [ ] Use async/await/actor
+- [x] Use async/await/actor
 - [ ] Pass closures to functions api
 - [ ] Optionally call OpenAI functions without returning intermediate tool message to dev
 - [ ] Implement Assistants endpoint
