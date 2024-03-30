@@ -86,6 +86,21 @@ class OpenAITests: XCTestCase {
         XCTAssertEqual(content, "Sure, I can help with that. Could you please specify the location?")
         XCTAssertEqual(results[16].choices[0].finish_reason, .stop)
     }
+
+    func testToolCallStreamResponse() async throws {
+        MockURLProtocol.mockNetworkHandlers[OpenAI.ChatCompletionRequest.path] = { request in
+            return (.success(try self.getData(filename: "tool_call_stream", fileExtension: "txt")!), 200)
+        }
+        var results: [OpenAI.ChatCompletionResponse] = []
+        for try await response in api.stream(request: OpenAI.ChatCompletionRequest(model: .gpt35Turbo, messages: [.init(role: .user, content: "Hi")], stream: true)) {
+            results.append(response)
+        }
+        XCTAssertEqual(results[0].choices[0].delta?.role, .assistant)
+        XCTAssertEqual(results[0].choices[0].delta?.tool_calls?[0].function.name, "getCurrentWeather")
+        let arguments = results.reduce("") { $0 + ($1.choices[0].delta?.tool_calls?[0].function.arguments ?? "") }
+        XCTAssertEqual(arguments, "{\n  \"format\": \"fahrenheit\",\n  \"location\": \"Bangkok\"\n}")
+        XCTAssertEqual(results[19].choices[0].finish_reason, .tool_calls)
+    }
 }
 
 extension OpenAI.ChatCompletionResponse: StreamableResponse {}
