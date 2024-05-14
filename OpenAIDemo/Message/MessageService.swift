@@ -65,16 +65,21 @@ class MessageService {
             try await getChatCompletion(for: conversation, stream: stream)
         } catch let error as OpenAIError {
             switch error {
-            case .jsonParsingFailure(let error): print("json parsing error: \(error.localizedDescription)")
-            case .apiError(let error): print("openai api error: \(error.error)")
-            case .invalidData: print("invalid data")
-            case .invalidURL: print("invalid url")
-            case .requestFailed(let error): print("request failed with error: \(error?.localizedDescription ?? "no error")")
-            case .responseUnsuccessful(statusCode: let code, let error): print("unsuccessful status code: \(code), error: \(error?.localizedDescription ?? "no error")")
-            case .streamParsingFailure: print("stream parsing failure")
+            case .jsonParsingFailure(let error): print("error: json parsing error: \(error.localizedDescription)")
+            case .apiError(let error): print("error: openai api error: \(error.error)")
+            case .invalidData: print("error: invalid data")
+            case .invalidURL: print("error: invalid url")
+            case .requestFailed(let error): print("error: request failed with error: \(error?.localizedDescription ?? "no error")")
+            case .responseUnsuccessful(statusCode: let code, let error): print("error: unsuccessful status code: \(code), error: \(error?.localizedDescription ?? "no error")")
+            case .streamParsingFailure: print("error: stream parsing failure")
+            }
+        } catch let error as OpenAI.ChatCompletionError {
+            switch error {
+            case .failedToDecodeFunctionArguments: print("error: failed to decode function args")
+            case .missingRequiredFunctionArguments: print("error: missing args")
             }
         } catch {
-            print("error: " + error.localizedDescription)
+            fatalError("error: " + error.localizedDescription)
         }
     }
 
