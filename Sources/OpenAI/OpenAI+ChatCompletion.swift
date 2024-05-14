@@ -479,7 +479,13 @@ public extension OpenAI {
 
             func combining(_ toolCalls: [Message.ToolCall]?, with next: [Message.ToolCall]?) -> [Message.ToolCall]? {
                 guard let toolCalls = toolCalls, let next = next else { return toolCalls ?? next }
-                return zip(toolCalls.sorted(), next.sorted()).map { combining($0, with: $1) }
+                return next.sorted().reduce(into: toolCalls.sorted()) { partialResult, toolCall in
+                    if (toolCall.index ?? .max < partialResult.count) {
+                        partialResult[toolCall.index!] = combining(partialResult[toolCall.index!], with: toolCall)
+                    } else {
+                        partialResult.append(toolCall)
+                    }
+                }
             }
 
             func combining(_ toolCall: Message.ToolCall, with next: Message.ToolCall) -> Message.ToolCall {
