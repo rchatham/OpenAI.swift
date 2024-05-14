@@ -119,10 +119,11 @@ Contributions are welcome. Please open an issue or submit a pull request with yo
 
 ## TODO
 
-- [x] Use async/await/actor
+- [x] Use async/await
 - [x] Pass closures to functions api
     - [ ] Return dictionary with [String:Any]
     - [ ] Verfiy parameters using JsonSchema
+    - [ ] Codable paramters
     - [ ] Allow generic typed parameters - not sure if this is possible in Swift
     - [ ] Allow configuration of subsequent requests after a function call
 - [x] Call OpenAI functions without returning intermediate tool message to dev
