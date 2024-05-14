@@ -42,6 +42,19 @@ class MessageService {
                 parameters: .init(),
                 callback: { _ in
                     "42"
+                })),
+            .function(.init(
+                name: "getTopMichelinStarredRestaurants",
+                description: "Get the top Michelin starred restaurants near a location",
+                parameters: .init(
+                    properties: [
+                        "location": .init(
+                            type: "string",
+                            description: "The city and state, e.g. San Francisco, CA")
+                    ],
+                    required: ["location"]),
+                callback: { [weak self] in
+                    self?.getTopMichelinStarredRestaurants(location: $0["location"]!)
                 }))
         ]
     }
@@ -109,4 +122,9 @@ class MessageService {
     @objc func getCurrentWeather(location: String, format: String) -> String {
         return "27"
     }
+
+    func getTopMichelinStarredRestaurants(location: String) -> String {
+        return "The French Laundry"
+    }
+
 }
