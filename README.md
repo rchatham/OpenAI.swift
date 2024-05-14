@@ -125,7 +125,7 @@ Contributions are welcome. Please open an issue or submit a pull request with yo
     - [ ] Verfiy parameters using JsonSchema
     - [ ] Allow generic typed parameters - not sure if this is possible in Swift
     - [ ] Allow configuration of subsequent requests after a function call
-- [x] Optionally call OpenAI functions without returning intermediate tool message to dev
+- [x] Call OpenAI functions without returning intermediate tool message to dev
     - [ ] Optionally return intermediate tool message to devs
 - [ ] Implement Assistants endpoint
 - [ ] Implement other api endpoints
