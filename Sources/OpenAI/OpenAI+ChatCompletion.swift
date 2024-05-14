@@ -4,11 +4,11 @@
 //
 //  Created by Reid Chatham on 12/7/23.
 //
+// TODO:
+//   - add logprobs, top_logprobs
 
 import Foundation
 
-// TODO:
-//   - add logprobs, top_logprobs
 public extension OpenAI {
     func performChatCompletionRequest(messages: [Message], model: Model = .gpt35Turbo, stream: Bool = false, completion: @escaping (Result<OpenAI.ChatCompletionResponse, Error>) -> Void, didCompleteStreaming: ((Error?) -> Void)? = nil) {
         perform(request: OpenAI.ChatCompletionRequest(model: model, messages: messages, stream: stream), completion: completion, didCompleteStreaming: didCompleteStreaming)
@@ -52,14 +52,14 @@ public extension OpenAI {
             case .tool: guard tool_call_id != nil else { throw MessageError.missingContent }; fallthrough
             case .system, .assistant: guard content.description == "null" || content.description.hasPrefix("string: ") else { throw MessageError.invalidContent }
             }
-            
+
             if role != .assistant, let tool_calls = tool_calls {
                 print("\(role.rawValue.capitalized) is not able to use tool calls: \(tool_calls.description). Please check your configuration, only assistant messages are allowed to contain tool calls")
             }
             if role != .tool, let tool_call_id = tool_call_id {
                 print("\(role.rawValue.capitalized) can not have tool_call_id: \(tool_call_id). Please check your configuration, only tool meesages may have a tool_call_id.")
             }
-            
+
             self.role = role
             self.content = content
             self.name = name
@@ -171,17 +171,18 @@ public extension OpenAI {
                   function: \(function.name ?? "name missing"): \(function.arguments)
                 """
             }
+
             public init(index: Int, id: String, type: ToolType, function: Function) {
                 self.index = index
                 self.id = id
                 self.type = type
                 self.function = function
             }
-            
+
             public enum ToolType: String, Codable {
                 case function
             }
-            
+
             public struct Function: Codable {
                 public let name: String?
                 public let arguments: String
@@ -191,18 +192,16 @@ public extension OpenAI {
                 }
             }
         }
-        
+
         public struct Delta: Codable {
             public let role: Role?
             public let content: String?
             public let tool_calls: [ToolCall]?
         }
     }
-    
+
     enum MessageError: Error {
-        case invalidRole
-        case missingContent
-        case invalidContent
+        case invalidRole, missingContent, invalidContent
     }
 
     struct ChatCompletionRequest: Codable, OpenAIRequest, StreamableRequest {
@@ -244,17 +243,69 @@ public extension OpenAI {
             self.tool_choice = tool_choice
         }
 
+        public func completion(response: OpenAI.ChatCompletionResponse) throws -> ChatCompletionRequest? { // This needs tests badly
+            for choice in response.choices {
+                guard let tool_calls = choice.message?.tool_calls ?? choice.delta?.tool_calls, !tool_calls.isEmpty else { return nil }
+                // if wanting to use names for assistant message, need to insert here
+                let assistant = try Message(role: .assistant, content: .null, name: nil, tool_calls: tool_calls)
+                var toolMessages: [Message] = []
+                for tool_call in tool_calls {
+                    if case .function(let function) = tools?.first(where: { $0.name == tool_call.function.name }) {
+                        // verify arguments
+                        guard let args = tool_call.function.arguments.data(using: .utf8).flatMap({ try? JSONSerialization.jsonObject(with: $0, options: []) as? [String:String] }) else { throw ChatCompletionError.failedToDecodeFunctionArguments }
+                        guard function.parameters.required?.filter({ !args.keys.contains($0) }).isEmpty ?? true else { throw ChatCompletionError.missingRequiredFunctionArguments }
+                        guard let str = function.callback?(args) else { continue }
+                        toolMessages.append(try Message(role: .tool, content: .string(str), name: nil, tool_call_id: tool_call.id))
+                    }
+                }
+                return ChatCompletionRequest(model: model, messages: messages + [assistant] + toolMessages, temperature: temperature, top_p: top_p, n: n, stream: stream, stop: stop, max_tokens: max_tokens, presence_penalty: presence_penalty, frequency_penalty: frequency_penalty, logit_bias: logit_bias, user: user, response_type: response_format?.type, seed: seed, tools: tools, tool_choice: tool_choice)
+            }
+            return nil
+        }
+
         public enum Tool: Codable {
             case function(FunctionSchema)
+
+            var name: String {
+                switch self {
+                case .function(let schema): return schema.name
+                }
+            }
+
+            var description: String? {
+                switch self {
+                case .function(let schema): return schema.description
+                }
+            }
 
             public struct FunctionSchema: Codable {
                 var name: String
                 var description: String?
                 var parameters: Parameters // JSON Schema object
-                public init(name: String, description: String, parameters: Parameters = Parameters(properties: [:])) {
+                internal var callback: (([String:String]) -> String?)? = nil
+                public init(name: String, description: String, parameters: Parameters = Parameters(properties: [:]), callback: (([String:String]) -> String?)? = nil) {
                     self.name = name
                     self.description = description
                     self.parameters = parameters
+                    self.callback = callback
+                }
+
+                public init(from decoder: Decoder) throws {
+                    let container = try decoder.container(keyedBy: CodingKeys.self)
+                    name = try container.decode(String.self, forKey: .name)
+                    description = try container.decodeIfPresent(String.self, forKey: .description)
+                    parameters = try container.decode(Parameters.self, forKey: .parameters)
+                }
+
+                public func encode(to encoder: Encoder) throws {
+                    var container = encoder.container(keyedBy: CodingKeys.self)
+                    try container.encode(name, forKey: .name)
+                    try container.encode(description, forKey: .description)
+                    try container.encode(parameters, forKey: .parameters)
+                }
+
+                enum CodingKeys: String, CodingKey {
+                    case name, description, parameters
                 }
 
                 public struct Parameters: Codable {
@@ -394,12 +445,11 @@ public extension OpenAI {
         }
 
         public enum ResponseType: String, Codable {
-            case text
-            case json_object
+            case text, json_object
         }
     }
 
-    struct ChatCompletionResponse: Codable {
+    struct ChatCompletionResponse: StreamableResponse, Codable {
         public let id: String
         public let object: String // chat.completion or chat.completion.chunk
         public let created: Int
@@ -417,6 +467,28 @@ public extension OpenAI {
             public enum FinishReason: String, Codable {
                 case stop, length, content_filter, tool_calls
             }
+
+            func combining(with next: Choice) -> Choice {
+                return Choice(index: index, message: message, finish_reason: finish_reason ?? next.finish_reason, delta: combining(delta, with: next.delta))
+            }
+
+            func combining(_ delta: Message.Delta?, with next: Message.Delta?) -> Message.Delta? {
+                guard let delta = delta, let next = next else { return delta ?? next }
+                return Message.Delta(role: delta.role ?? next.role, content: delta.content ?? "" + (next.content ?? ""), tool_calls: combining(delta.tool_calls, with: next.tool_calls))
+            }
+
+            func combining(_ toolCalls: [Message.ToolCall]?, with next: [Message.ToolCall]?) -> [Message.ToolCall]? {
+                guard let toolCalls = toolCalls, let next = next else { return toolCalls ?? next }
+                return zip(toolCalls.sorted(), next.sorted()).map { combining($0, with: $1) }
+            }
+
+            func combining(_ toolCall: Message.ToolCall, with next: Message.ToolCall) -> Message.ToolCall {
+                return Message.ToolCall(index: next.index ?? toolCall.index ?? 0, id:  next.id ?? toolCall.id ?? "", type: toolCall.type ?? next.type ?? .function, function: combining(toolCall.function, with: next.function))
+            }
+
+            func combining(_ function: Message.ToolCall.Function, with next: Message.ToolCall.Function) -> Message.ToolCall.Function {
+                return Message.ToolCall.Function(name: next.name ?? function.name ?? "", arguments: function.arguments + next.arguments)
+            }
         }
 
         public struct Usage: Codable {
@@ -424,5 +496,34 @@ public extension OpenAI {
             public let completion_tokens: Int
             public let total_tokens: Int
         }
+
+        public func combining(with next: ChatCompletionResponse) -> ChatCompletionResponse {
+            return ChatCompletionResponse(id: next.id, object: next.object, created: next.created, model: next.model, system_fingerprint: next.system_fingerprint, choices: combining(choices, with: next.choices), usage: next.usage)
+        }
+
+        func combining(_ choices: [Choice], with next: [Choice]) -> [Choice] {
+            if choices.isEmpty { return next }
+            return zip(choices.sorted(), next.sorted()).map { $0.combining(with: $1) }
+        }
+
+        static var empty: ChatCompletionResponse { ChatCompletionResponse(id: "", object: "", created: -1, model: nil, system_fingerprint: nil, choices: [], usage: nil) }
+    }
+
+    enum ChatCompletionError: Error {
+        case failedToDecodeFunctionArguments
+        case missingRequiredFunctionArguments
+    }
+}
+
+extension Array where Element == OpenAI.ChatCompletionResponse.Choice {
+    func sorted() -> [Element] {
+        return self.sorted(by: { $0.index < $1.index })
+    }
+}
+
+extension Array where Element == OpenAI.Message.ToolCall {
+    func sorted() -> [Element] {
+        guard first?.index != nil else { return self }
+        return self.sorted(by: { $0.index! < $1.index! }) // assume that if an index exists it exists for all tool calls
     }
 }
