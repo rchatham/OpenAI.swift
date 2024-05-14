@@ -55,7 +55,7 @@ openAI.perform(request: chatRequest) { result in
 
 ### Implementation Steps for Using Functions
 
-#### Step 1: Define the Function Schema
+#### Define the Function Schema
 
 Before using a function in a chat completion request, define its schema. This includes the function name, description, and parameters. Here's an example for a hypothetical `getCurrentWeather` function:
 
@@ -75,45 +75,14 @@ let getCurrentWeatherFunction = OpenAI.ChatCompletionRequest.Tool.FunctionSchema
                 description: "The temperature unit to use."
             )
         ],
-        required: ["location", "format"]
-    )
+        required: ["location", "format"]),
+    callback: { [weak self] in
+        self?.getCurrentWeather(location: $0["location"]!, format: $0["format"]!)
+    })
 )
 ```
 
-#### Step 2: Include the Function in the Chat Request
-
-Incorporate the function schema into your chat completion request. You can specify one or more functions that the chat model can use during the conversation.
-
-```swift
-let chatRequest = OpenAI.ChatCompletionRequest(
-    model: .gpt4,
-    messages: [ /* Your messages here */ ],
-    tools: [
-        .function(getCurrentWeatherFunction)
-    ],
-    tool_choice: .auto
-)
-```
-
-#### Step 3: Handle the Chat Completion Response
-
-Process the response from the OpenAI API to utilize the output of your function call. Ensure your implementation can handle different types of responses, including those involving your custom function.
-
-```swift
-openAI.perform(request: chatRequest) { result in
-    switch result {
-    case .success(let response):
-        // Process the response, including any function outputs
-        if let toolCalls = response.choices.first?.message?.tool_calls ?? response.choices.first?.delta?.tool_calls {
-            // handle function calls
-            print(toolCalls)
-        }
-        print(response)
-    case .failure(let err):
-        print(err.localizedDescription)
-    }
-}
-```
+That's it! This works for streaming, and even works with multiple functions.
 
 ### Handling Image Content in Array Messages
 When dealing with messages that contain arrays of content, including image content, follow these steps to handle them appropriately in your OpenAI.swift client implementation.
@@ -151,8 +120,13 @@ Contributions are welcome. Please open an issue or submit a pull request with yo
 ## TODO
 
 - [x] Use async/await/actor
-- [ ] Pass closures to functions api
-- [ ] Optionally call OpenAI functions without returning intermediate tool message to dev
+- [x] Pass closures to functions api
+    - [ ] Return dictionary with [String:Any]
+    - [ ] Verfiy parameters using JsonSchema
+    - [ ] Allow generic typed parameters - not sure if this is possible in Swift
+    - [ ] Allow configuration of subsequent requests after a function call
+- [x] Optionally call OpenAI functions without returning intermediate tool message to dev
+    - [ ] Optionally return intermediate tool message to devs
 - [ ] Implement Assistants endpoint
 - [ ] Implement other api endpoints
 
