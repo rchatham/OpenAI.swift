@@ -28,6 +28,8 @@ dependencies: [
 
 ## Usage
 
+The best way to learn how it works is to run the OpenAIDemo in XCode! Take a look at the implementation in [MessageService.swift](https://github.com/rchatham/OpenAI.swift/blob/main/OpenAIDemo/Message/MessageService.swift).
+
 ### Initializing the Client
 
 ```swift
