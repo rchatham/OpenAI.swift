@@ -50,7 +50,7 @@ let chatRequest = OpenAI.ChatCompletionRequest(
 let response = try await openAIClient.perform(request: request)
 
 // Streaming - returns message as streamed or not depending on request config
-for try await response in openAIClient.stream(request: request) {
+for try await response in try openAIClient.stream(request: request) {
     
     // handle non-streaming messages
     if let message = response.choices.first?.message {
