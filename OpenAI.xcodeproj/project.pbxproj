@@ -30,10 +30,9 @@
 		B1D30D7B297A921500B6D330 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1D30D7A297A921500B6D330 /* Preview Assets.xcassets */; };
 		B1D30D7D297A921500B6D330 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D30D7C297A921500B6D330 /* Persistence.swift */; };
 		B1D30D8B297A921500B6D330 /* OpenAIDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D30D8A297A921500B6D330 /* OpenAIDemoTests.swift */; };
-		B1D30D95297A921500B6D330 /* OpenAIDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D30D94297A921500B6D330 /* OpenAIDemoUITests.swift */; };
-		B1D30D97297A921500B6D330 /* OpenAIDemoUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D30D96297A921500B6D330 /* OpenAIDemoUITestsLaunchTests.swift */; };
 		B1D30DA6297B58CE00B6D330 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D30DA5297B58CE00B6D330 /* NetworkClient.swift */; };
 		B1D30DA8297B590400B6D330 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D30DA7297B590400B6D330 /* KeychainService.swift */; };
+		B1E014902BF9BED800ECA7DF /* chat_completion_request_with_image.json in Resources */ = {isa = PBXBuildFile; fileRef = B1E0148E2BF9BDF300ECA7DF /* chat_completion_request_with_image.json */; };
 		B1EC643629D66A7C00CD4FBB /* Conversation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC643529D66A7C00CD4FBB /* Conversation+Extensions.swift */; };
 		B1EC643829D672C200CD4FBB /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC643729D672C200CD4FBB /* ConversationView.swift */; };
 		B1EC644429D7FAAD00CD4FBB /* Message+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC644329D7FAAD00CD4FBB /* Message+Extensions.swift */; };
@@ -75,13 +74,6 @@
 			remoteInfo = "openai-swift";
 		};
 		B1D30D87297A921500B6D330 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B1D30D68297A921200B6D330 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B1D30D6F297A921200B6D330;
-			remoteInfo = ChatGPT;
-		};
-		B1D30D91297A921500B6D330 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B1D30D68297A921200B6D330 /* Project object */;
 			proxyType = 1;
@@ -173,11 +165,9 @@
 		B1D30D81297A921500B6D330 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1D30D86297A921500B6D330 /* OpenAIDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenAIDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1D30D8A297A921500B6D330 /* OpenAIDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIDemoTests.swift; sourceTree = "<group>"; };
-		B1D30D90297A921500B6D330 /* OpenAIDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OpenAIDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B1D30D94297A921500B6D330 /* OpenAIDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIDemoUITests.swift; sourceTree = "<group>"; };
-		B1D30D96297A921500B6D330 /* OpenAIDemoUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIDemoUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B1D30DA5297B58CE00B6D330 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		B1D30DA7297B590400B6D330 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		B1E0148E2BF9BDF300ECA7DF /* chat_completion_request_with_image.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = chat_completion_request_with_image.json; sourceTree = "<group>"; };
 		B1EC2C7B2B400C3600F16DA8 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		B1EC643529D66A7C00CD4FBB /* Conversation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Conversation+Extensions.swift"; sourceTree = "<group>"; };
 		B1EC643729D672C200CD4FBB /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
@@ -213,13 +203,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B1D30D83297A921500B6D330 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B1D30D8D297A921500B6D330 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -264,7 +247,6 @@
 				B12D6EDB2B3251A7003810E5 /* OpenAIPlayground.playground */,
 				B1D30D72297A921300B6D330 /* OpenAIDemo */,
 				B1D30D89297A921500B6D330 /* OpenAIDemoTests */,
-				B1D30D93297A921500B6D330 /* OpenAIDemoUITests */,
 				B184E86D2B21887E009AF69D /* OpenAI */,
 				B1FB64AC2B4649160082BB76 /* OpenAITests */,
 				B1D30D71297A921300B6D330 /* Products */,
@@ -277,7 +259,6 @@
 			children = (
 				B1D30D70297A921300B6D330 /* OpenAIDemo.app */,
 				B1D30D86297A921500B6D330 /* OpenAIDemoTests.xctest */,
-				B1D30D90297A921500B6D330 /* OpenAIDemoUITests.xctest */,
 				B184E86C2B21887E009AF69D /* OpenAI.framework */,
 				B1FB64AB2B4649150082BB76 /* OpenAITests.xctest */,
 			);
@@ -321,15 +302,6 @@
 			path = OpenAIDemoTests;
 			sourceTree = "<group>";
 		};
-		B1D30D93297A921500B6D330 /* OpenAIDemoUITests */ = {
-			isa = PBXGroup;
-			children = (
-				B1D30D94297A921500B6D330 /* OpenAIDemoUITests.swift */,
-				B1D30D96297A921500B6D330 /* OpenAIDemoUITestsLaunchTests.swift */,
-			);
-			path = OpenAIDemoUITests;
-			sourceTree = "<group>";
-		};
 		B1D30DBC297FC11F00B6D330 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,6 +313,7 @@
 			isa = PBXGroup;
 			children = (
 				B12D6EBD2B2CC852003810E5 /* chat_completion_request.json */,
+				B1E0148E2BF9BDF300ECA7DF /* chat_completion_request_with_image.json */,
 				B12D6ED72B2F8A67003810E5 /* chat_completion_request_with_functions.json */,
 				B12D6EBF2B2CC92E003810E5 /* chat_completion_response.json */,
 				B128B18E2B47D4A9009F139F /* chat_completion_response_tool_call.json */,
@@ -516,24 +489,6 @@
 			productReference = B1D30D86297A921500B6D330 /* OpenAIDemoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B1D30D8F297A921500B6D330 /* OpenAIDemoUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B1D30DA0297A921500B6D330 /* Build configuration list for PBXNativeTarget "OpenAIDemoUITests" */;
-			buildPhases = (
-				B1D30D8C297A921500B6D330 /* Sources */,
-				B1D30D8D297A921500B6D330 /* Frameworks */,
-				B1D30D8E297A921500B6D330 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				B1D30D92297A921500B6D330 /* PBXTargetDependency */,
-			);
-			name = OpenAIDemoUITests;
-			productName = ChatGPTUITests;
-			productReference = B1D30D90297A921500B6D330 /* OpenAIDemoUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		B1FB64AA2B4649150082BB76 /* OpenAITests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B1FB64B22B4649160082BB76 /* Build configuration list for PBXNativeTarget "OpenAITests" */;
@@ -573,10 +528,6 @@
 						CreatedOnToolsVersion = 14.1;
 						TestTargetID = B1D30D6F297A921200B6D330;
 					};
-					B1D30D8F297A921500B6D330 = {
-						CreatedOnToolsVersion = 14.1;
-						TestTargetID = B1D30D6F297A921200B6D330;
-					};
 					B1FB64AA2B4649150082BB76 = {
 						CreatedOnToolsVersion = 14.3;
 						TestTargetID = B1D30D6F297A921200B6D330;
@@ -602,7 +553,6 @@
 			targets = (
 				B1D30D6F297A921200B6D330 /* OpenAIDemo */,
 				B1D30D85297A921500B6D330 /* OpenAIDemoTests */,
-				B1D30D8F297A921500B6D330 /* OpenAIDemoUITests */,
 				B184E86B2B21887E009AF69D /* OpenAI */,
 				B1FB64AA2B4649150082BB76 /* OpenAITests */,
 			);
@@ -633,13 +583,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B1D30D8E297A921500B6D330 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B1FB64A92B4649150082BB76 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -649,6 +592,7 @@
 				B128B1912B481747009F139F /* assistant_message_with_tool_call.json in Resources */,
 				B1FB64C42B4649750082BB76 /* tool_call_stream.txt in Resources */,
 				B1FB64C72B4649750082BB76 /* user_message.json in Resources */,
+				B1E014902BF9BED800ECA7DF /* chat_completion_request_with_image.json in Resources */,
 				B1FB64C82B4649750082BB76 /* user_message_with_image.json in Resources */,
 				B1FB64CB2B4649750082BB76 /* assistant_message.json in Resources */,
 				B1FB64C62B4649750082BB76 /* stream_error.txt in Resources */,
@@ -712,15 +656,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B1D30D8C297A921500B6D330 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B1D30D97297A921500B6D330 /* OpenAIDemoUITestsLaunchTests.swift in Sources */,
-				B1D30D95297A921500B6D330 /* OpenAIDemoUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B1FB64A72B4649150082BB76 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -750,11 +685,6 @@
 			isa = PBXTargetDependency;
 			target = B1D30D6F297A921200B6D330 /* OpenAIDemo */;
 			targetProxy = B1D30D87297A921500B6D330 /* PBXContainerItemProxy */;
-		};
-		B1D30D92297A921500B6D330 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B1D30D6F297A921200B6D330 /* OpenAIDemo */;
-			targetProxy = B1D30D91297A921500B6D330 /* PBXContainerItemProxy */;
 		};
 		B1FB64B12B4649160082BB76 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -900,6 +830,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -954,6 +885,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -982,6 +914,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1018,6 +951,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1072,42 +1006,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OpenAIDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OpenAIDemo";
-			};
-			name = Release;
-		};
-		B1D30DA1297A921500B6D330 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 82W93M4H92;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.reidchatham.OpenAIUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = OpenAIDemo;
-			};
-			name = Debug;
-		};
-		B1D30DA2297A921500B6D330 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 82W93M4H92;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.reidchatham.OpenAIUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = OpenAIDemo;
 			};
 			name = Release;
 		};
@@ -1190,15 +1088,6 @@
 			buildConfigurations = (
 				B1D30D9E297A921500B6D330 /* Debug */,
 				B1D30D9F297A921500B6D330 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B1D30DA0297A921500B6D330 /* Build configuration list for PBXNativeTarget "OpenAIDemoUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B1D30DA1297A921500B6D330 /* Debug */,
-				B1D30DA2297A921500B6D330 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
