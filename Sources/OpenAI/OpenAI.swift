@@ -43,14 +43,11 @@ public class OpenAI {
     }
 
     public func stream<Request: OpenAIRequest>(request: Request) -> AsyncThrowingStream<Request.Response, Error> {
-        if request.stream, var chatReq = request as? ChatCompletionRequest { // Cannot type erase to (any StreamableRequest & Request)
+        if request.stream, request is ChatCompletionRequest, var chatReq: ChatCompletionRequest? = request as? ChatCompletionRequest { // Cannot type erase to (any StreamableRequest & Request)
             let httpRequest: URLRequest; do { httpRequest = try configure(request: request) } catch { return AsyncThrowingStream { $0.finish(throwing: error) }}
             return streamManager.stream(task: session.dataTask(with: httpRequest)) {
-                if let req = try chatReq.completion(response: $0) {
-                    chatReq = req
-                    return self.session.dataTask(with: try self.configure(request: req))
-                }
-                return nil
+                chatReq = try chatReq?.completion(response: $0)
+                return try chatReq.flatMap { self.session.dataTask(with: try self.configure(request: $0)) }
             }
         }
         else { return AsyncThrowingStream { cont in Task { cont.yield(try await perform(request: request)); cont.finish() }}}
@@ -113,8 +110,7 @@ public class OpenAI {
         internal func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
             var error = error; if error == nil { do {
                 if !data.isEmpty, let task = try completion?(data) {
-                    data = []
-                    self.task = task; task.resume()
+                    data = []; self.task = task; task.resume()
                     return // if new task is returned do not call didCompleteStream
                 }
             } catch let err { error = err } }
