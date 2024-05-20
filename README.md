@@ -33,7 +33,7 @@ The best way to learn how it works is to run the OpenAIDemo in XCode! Take a loo
 ### Initializing the Client
 
 ```swift
-let openAI = OpenAI(apiKey: "your-api-key")
+let openAIClient = OpenAI(apiKey: "your-api-key")
 ```
 
 ### Performing a Chat Completion Request
@@ -45,7 +45,38 @@ let chatRequest = OpenAI.ChatCompletionRequest(
     /* Other optional parameters */
 )
 
-openAI.perform(request: chatRequest) { result in
+// Using async/await
+// Non-streaming - stream is set to false regardless of request config
+let response = try await openAIClient.perform(request: request)
+
+// Streaming - returns message as streamed or not depending on request config
+for try await response in openAIClient.stream(request: request) {
+    
+    // handle non-streaming messages
+    if let message = response.choices.first?.message {
+        print("message received: \(message)")
+    }
+
+    // handle stream messages
+    if let delta = response.choices.first?.delta {
+        if let chunk = delta.content {
+            content += chunk
+        }
+    }
+
+    // handle finish reason
+    if let finishReason = response.choices.first?.finish_reason {
+        switch finishReason {
+        case .stop:
+            guard !content.isEmpty else { return }
+            print("message received: \(content)")
+        case .tool_calls, .length, .content_filter: break
+        }
+    }
+}
+
+// Using completion handler
+openAIClient.perform(request: chatRequest) { result in
     switch result {
     case .success(let response):
         print(response)
