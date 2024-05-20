@@ -108,6 +108,14 @@ public extension OpenAI {
                     else if let img = try? container.decode(ImageContent.self) { self = .image(img) }
                     else { throw DecodingError.typeMismatch(ContentType.self, DecodingError.Context(codingPath: decoder.codingPath, debugDescription: "Unknown content type")) }
                 }
+
+                public func encode(to encoder: Encoder) throws {
+                    var container = encoder.singleValueContainer()
+                    switch self {
+                    case .text(let txt): try container.encode(txt)
+                    case .image(let img): try container.encode(img)
+                    }
+                }
             }
             
             public struct TextContent: Codable {
@@ -119,7 +127,7 @@ public extension OpenAI {
             }
 
             public struct ImageContent: Codable {
-                var type: String = "image"
+                var type: String = "image_url"
                 public let image_url: ImageURL
                 public init(image_url: ImageURL) {
                     self.image_url = image_url
@@ -128,7 +136,7 @@ public extension OpenAI {
                 public struct ImageURL: Codable {
                     public let url: String
                     public let detail: Detail?
-                    public init(url: String, detail: Detail?) {
+                    public init(url: String, detail: Detail? = nil) {
                         self.url = url
                         self.detail = detail
                     }

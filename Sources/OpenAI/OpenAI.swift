@@ -184,6 +184,7 @@ public extension OpenAI {
         case gpt35Turbo_16k = "gpt-3.5-turbo-16k"
         case gpt35Turbo_Instruct = "gpt-3.5-turbo-instruct"
         case gpt4 = "gpt-4"
+        case gpt4Turbo = "gpt-4-turbo"
         case gpt4_0613 = "gpt-4-0613"
         case gpt4Turbo_1106Preview = "gpt-4-1106-preview"
         case gpt4_VisionPreview = "gpt-4-vision-preview"

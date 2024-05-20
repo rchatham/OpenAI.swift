@@ -44,6 +44,22 @@ final class ChatCompletionRequestTests: XCTestCase {
         XCTAssert(json == testJson, "failed to correctly encode the data")
     }
 
+    func testChatCompletionRequestWithImageEncodable() throws {
+        let request = OpenAI.ChatCompletionRequest(
+            model: .gpt4Turbo,
+            messages: [
+                try .init(role: .user, content: OpenAI.Message.Content.array([
+                    .text(.init(text: "What's in this image?")),
+                    .image(.init(image_url: .init(url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg")))
+                ]))
+            ])
+        let data = try request.data()
+        let json = JSON(data)
+        let testData = try getData(filename: "chat_completion_request_with_image")!
+        let testJson = JSON(testData)
+        XCTAssert(json == testJson, "failed to correctly encode the data")
+    }
+
     func testChatCompletionRequestWithFunctionsEncodable() throws {
         let request = OpenAI.ChatCompletionRequest(
             model: .gpt35Turbo,
