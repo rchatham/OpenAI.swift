@@ -103,5 +103,3 @@ class OpenAITests: XCTestCase {
     }
 }
 
-extension OpenAI.ChatCompletionResponse: StreamableResponse {}
-

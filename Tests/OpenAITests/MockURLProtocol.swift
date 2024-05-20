@@ -61,8 +61,12 @@ struct MockRequest: OpenAIRequest, StreamableRequest, Encodable {
     static var path = "test"
     var stream: Bool?
     init(stream: Bool? = nil) { self.stream = stream }
+    func completion(response: MockResponse) throws -> MockRequest? { return nil }
 }
 
 struct MockResponse: Codable, StreamableResponse {
     var status: String
+    func combining(with next: MockResponse) -> MockResponse { return next }
+    static var empty: MockResponse { MockResponse(status: "") }
+    static var success: MockResponse { MockResponse(status: "success") }
 }
