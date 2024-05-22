@@ -8,11 +8,6 @@
 import Foundation
 
 
-// TODO:
-//  - Use async/await/actor
-//  - Pass closures to functions api
-//  - Optionally call OpenAI api for functions without returning intermediate messages
-
 public class OpenAI {
     let baseURL: URL = URL(string: "https://api.openai.com/v1/")!
     let apiKey: String
