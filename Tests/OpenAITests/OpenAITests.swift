@@ -89,6 +89,9 @@ class OpenAITests: XCTestCase {
 
     func testToolCallStreamResponse() async throws {
         MockURLProtocol.mockNetworkHandlers[OpenAI.ChatCompletionRequest.path] = { request in
+            MockURLProtocol.mockNetworkHandlers[OpenAI.ChatCompletionRequest.path] = { request in
+                return (.success(try self.getData(filename: "tool_call_stream_response", fileExtension: "txt")!), 200)
+            }
             return (.success(try self.getData(filename: "tool_call_stream", fileExtension: "txt")!), 200)
         }
         var results: [OpenAI.ChatCompletionResponse] = []
@@ -96,10 +99,12 @@ class OpenAITests: XCTestCase {
             results.append(response)
         }
         XCTAssertEqual(results[0].choices[0].delta?.role, .assistant)
-        XCTAssertEqual(results[0].choices[0].delta?.tool_calls?[0].function.name, "getCurrentWeather")
+        XCTAssertEqual(results[0].choices[0].delta?.tool_calls?[0].function.name, "get_current_weather")
         let arguments = results.reduce("") { $0 + ($1.choices[0].delta?.tool_calls?[0].function.arguments ?? "") }
-        XCTAssertEqual(arguments, "{\n  \"format\": \"fahrenheit\",\n  \"location\": \"Bangkok\"\n}")
-        XCTAssertEqual(results[19].choices[0].finish_reason, .tool_calls)
+        XCTAssertEqual(arguments, "{\"location\":\"Copenhagen\",\"format\":\"celsius\"}")
+        XCTAssertEqual(results[12].choices[0].finish_reason, .tool_calls)
+        let content = results.reduce("") { $0 + ($1.choices[0].delta?.content ?? "") }
+        XCTAssertEqual(content, "The current weather in Copenhagen, Denmark is 32°C.")
     }
 }
 
