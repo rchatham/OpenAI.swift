@@ -212,7 +212,7 @@ public extension OpenAI {
         case invalidRole, missingContent, invalidContent
     }
 
-    struct ChatCompletionRequest: Codable, OpenAIRequest, StreamableRequest {
+    struct ChatCompletionRequest: Codable, OpenAIRequest, StreamableRequest, CompletableRequest {
         public typealias Response = ChatCompletionResponse
         public static var path: String { "chat/completions" }
         let model: Model
@@ -266,6 +266,7 @@ public extension OpenAI {
                         toolMessages.append(try Message(role: .tool, content: .string(str), name: nil, tool_call_id: tool_call.id))
                     }
                 }
+                if toolMessages.isEmpty { continue }
                 return ChatCompletionRequest(model: model, messages: messages + [assistant] + toolMessages, temperature: temperature, top_p: top_p, n: n, stream: stream, stop: stop, max_tokens: max_tokens, presence_penalty: presence_penalty, frequency_penalty: frequency_penalty, logit_bias: logit_bias, user: user, response_type: response_format?.type, seed: seed, tools: tools, tool_choice: tool_choice)
             }
             return nil

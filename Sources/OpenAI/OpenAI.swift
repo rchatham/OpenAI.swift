@@ -34,7 +34,7 @@ public class OpenAI {
     // In order to call the function completion in non-streaming calls, we are unable to return the intermediate call and thus you can not mix responding to functions in your code AND using function closures. If this functionality is needed use streaming. This functionality may be able to be added via a configuration callback on the function or request in the future.
     public func perform<Request: OpenAIRequest>(request: Request) async throws -> Request.Response {
         let response: Request.Response = try await perform(request: try configure(request: request, stream: false))
-        return try await request.completion(response: response).flatMap { try await perform(request: $0) } ?? response
+        return try await (request as? ChatCompletionRequest)?.completion(response: response as! OpenAI.ChatCompletionResponse).flatMap { try await perform(request: $0) as? Request.Response } ?? response
     }
 
     public func stream<Request: OpenAIRequest>(request: Request) -> AsyncThrowingStream<Request.Response, Error> {
@@ -121,7 +121,6 @@ public class OpenAI {
 public protocol OpenAIRequest: Encodable {
     associatedtype Response: Decodable
     static var path: String { get }
-    func completion(response: Response) throws -> Self?
 }
 
 extension OpenAIRequest {
@@ -146,6 +145,11 @@ internal protocol StreamableRequest: Encodable {
 internal protocol StreamableResponse: Decodable {
     static var empty: Self { get }
     func combining(with: Self) -> Self
+}
+
+internal protocol CompletableRequest: Encodable {
+    associatedtype Response: Decodable
+    func completion(response: Response) throws -> Self?
 }
 
 public enum OpenAIError: Error {
