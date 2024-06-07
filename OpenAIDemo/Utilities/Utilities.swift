@@ -34,6 +34,4 @@ extension Data {
 }
 
 infix operator ?= : AssignmentPrecedence
-func ?=<T>(_ lhs: inout T, rhs: T?) {
-    if let rhs = rhs { lhs = rhs }
-}
+func ?=<T>(lhs: inout T?, rhs: T?) { lhs = rhs ?? lhs }
