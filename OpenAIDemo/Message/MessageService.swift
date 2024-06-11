@@ -17,7 +17,7 @@ class MessageService {
         self.messageDB = messageDB
     }
 
-    var tools: [OpenAI.ChatCompletionRequest.Tool]? {
+    var tools: [OpenAI.Tool]? {
         return [
             .function(.init(
                 name: "getCurrentWeather",

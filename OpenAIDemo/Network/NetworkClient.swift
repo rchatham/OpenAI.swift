@@ -25,13 +25,13 @@ class NetworkClient: NSObject, URLSessionWebSocketDelegate {
         if let apiKey = keychainService.getApiKey() { openAIClient = OpenAI(apiKey: apiKey) }
     }
 
-    func performChatCompletionRequest(messages: [OpenAI.Message], model: Model = UserDefaults.model, stream: Bool = false, tools: [OpenAI.ChatCompletionRequest.Tool]? = nil, toolChoice: OpenAI.ChatCompletionRequest.ToolChoice? = nil) async throws -> OpenAI.ChatCompletionResponse {
+    func performChatCompletionRequest(messages: [OpenAI.Message], model: Model = UserDefaults.model, stream: Bool = false, tools: [OpenAI.Tool]? = nil, toolChoice: OpenAI.ChatCompletionRequest.ToolChoice? = nil) async throws -> OpenAI.ChatCompletionResponse {
         guard let openAIClient = openAIClient else { throw NetworkError.missingApiKey }
         let request = OpenAI.ChatCompletionRequest(model: model, messages: messages, stream: stream, tools: tools, tool_choice: toolChoice)
         return try await openAIClient.perform(request: request)
     }
 
-    func streamChatCompletionRequest(messages: [OpenAI.Message], model: Model = UserDefaults.model, stream: Bool = false, tools: [OpenAI.ChatCompletionRequest.Tool]? = nil, toolChoice: OpenAI.ChatCompletionRequest.ToolChoice? = nil) throws -> AsyncThrowingStream<OpenAI.ChatCompletionResponse, Error> {
+    func streamChatCompletionRequest(messages: [OpenAI.Message], model: Model = UserDefaults.model, stream: Bool = false, tools: [OpenAI.Tool]? = nil, toolChoice: OpenAI.ChatCompletionRequest.ToolChoice? = nil) throws -> AsyncThrowingStream<OpenAI.ChatCompletionResponse, Error> {
         guard let openAIClient = openAIClient else { throw NetworkError.missingApiKey }
         let request = OpenAI.ChatCompletionRequest(model: model, messages: messages, stream: stream, tools: tools, tool_choice: toolChoice)
         return openAIClient.stream(request: request)
