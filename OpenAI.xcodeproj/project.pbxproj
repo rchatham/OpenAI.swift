@@ -34,6 +34,7 @@
 		B1D30DA6297B58CE00B6D330 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D30DA5297B58CE00B6D330 /* NetworkClient.swift */; };
 		B1D30DA8297B590400B6D330 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D30DA7297B590400B6D330 /* KeychainService.swift */; };
 		B1E014902BF9BED800ECA7DF /* chat_completion_request_with_image.json in Resources */ = {isa = PBXBuildFile; fileRef = B1E0148E2BF9BDF300ECA7DF /* chat_completion_request_with_image.json */; };
+		B1E3D1982C1B72E40084F1E9 /* tool_call_stream_response.txt in Resources */ = {isa = PBXBuildFile; fileRef = B1E3D1972C1B72E40084F1E9 /* tool_call_stream_response.txt */; };
 		B1EC643629D66A7C00CD4FBB /* Conversation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC643529D66A7C00CD4FBB /* Conversation+Extensions.swift */; };
 		B1EC643829D672C200CD4FBB /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC643729D672C200CD4FBB /* ConversationView.swift */; };
 		B1EC644429D7FAAD00CD4FBB /* Message+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC644329D7FAAD00CD4FBB /* Message+Extensions.swift */; };
@@ -170,6 +171,7 @@
 		B1D30DA5297B58CE00B6D330 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		B1D30DA7297B590400B6D330 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		B1E0148E2BF9BDF300ECA7DF /* chat_completion_request_with_image.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = chat_completion_request_with_image.json; sourceTree = "<group>"; };
+		B1E3D1972C1B72E40084F1E9 /* tool_call_stream_response.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = tool_call_stream_response.txt; sourceTree = "<group>"; };
 		B1EC2C7B2B400C3600F16DA8 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		B1EC643529D66A7C00CD4FBB /* Conversation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Conversation+Extensions.swift"; sourceTree = "<group>"; };
 		B1EC643729D672C200CD4FBB /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
@@ -328,6 +330,7 @@
 				B15798722B33BED300C4CF1D /* stream_error.txt */,
 				B12D6EDC2B32922A003810E5 /* assistant_response_stream.txt */,
 				B12D6EDE2B32932A003810E5 /* tool_call_stream.txt */,
+				B1E3D1972C1B72E40084F1E9 /* tool_call_stream_response.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -598,6 +601,7 @@
 				B1FB64C82B4649750082BB76 /* user_message_with_image.json in Resources */,
 				B1FB64CB2B4649750082BB76 /* assistant_message.json in Resources */,
 				B1FB64C62B4649750082BB76 /* stream_error.txt in Resources */,
+				B1E3D1982C1B72E40084F1E9 /* tool_call_stream_response.txt in Resources */,
 				B1FB64C92B4649750082BB76 /* chat_completion_request.json in Resources */,
 				B1FB64C32B4649750082BB76 /* assistant_response_stream.txt in Resources */,
 				B1FB64C22B4649750082BB76 /* chat_completion_request_with_functions.json in Resources */,

@@ -91,8 +91,9 @@ class OpenAITests: XCTestCase {
         MockURLProtocol.mockNetworkHandlers[OpenAI.ChatCompletionRequest.path] = { request in
             return (.success(try self.getData(filename: "tool_call_stream", fileExtension: "txt")!), 200)
         }
+        let request = OpenAI.ChatCompletionRequest(model: .gpt35Turbo, messages: [.init(role: .user, content: "Hi")], stream: true)
         var results: [OpenAI.ChatCompletionResponse] = []
-        for try await response in api.stream(request: OpenAI.ChatCompletionRequest(model: .gpt35Turbo, messages: [.init(role: .user, content: "Hi")], stream: true)) {
+        for try await response in api.stream(request: request) {
             results.append(response)
         }
         XCTAssertEqual(results[0].choices[0].delta?.role, .assistant)
@@ -100,6 +101,44 @@ class OpenAITests: XCTestCase {
         let arguments = results.reduce("") { $0 + ($1.choices[0].delta?.tool_calls?[0].function.arguments ?? "") }
         XCTAssertEqual(arguments, "{\n  \"format\": \"fahrenheit\",\n  \"location\": \"Bangkok\"\n}")
         XCTAssertEqual(results[19].choices[0].finish_reason, .tool_calls)
+    }
+
+    func testToolCallWithFunctionCallbackStreamResponse() async throws {
+        MockURLProtocol.mockNetworkHandlers[OpenAI.ChatCompletionRequest.path] = { request in
+            return (.success(try self.getData(filename: "tool_call_stream", fileExtension: "txt")!), 200)
+        }
+        let tools: [OpenAI.Tool] = [.function(.init(
+            name: "getCurrentWeather",
+            description: "Get the current weather",
+            parameters: .init(
+                properties: [
+                    "location": .init(
+                        type: "string",
+                        description: "The city and state, e.g. San Francisco, CA"),
+                    "format": .init(
+                        type: "string",
+                        enumValues: ["celsius", "fahrenheit"],
+                        description: "The temperature unit to use. Infer this from the users location.")
+                ],
+                required: ["location", "format"]),
+            callback: { _ in
+                MockURLProtocol.mockNetworkHandlers[OpenAI.ChatCompletionRequest.path] = { request in
+                    return (.success(try self.getData(filename: "tool_call_stream_response", fileExtension: "txt")!), 200)
+                }
+                return "27"
+            }))]
+        let request = OpenAI.ChatCompletionRequest(model: .gpt35Turbo, messages: [.init(role: .user, content: "Hi")], stream: true, tools: tools)
+        var results: [OpenAI.ChatCompletionResponse] = []
+        for try await response in api.stream(request: request) {
+            results.append(response)
+        }
+        XCTAssertEqual(results[0].choices[0].delta?.role, .assistant)
+        XCTAssertEqual(results[0].choices[0].delta?.tool_calls?[0].function.name, "getCurrentWeather")
+        let arguments = results.reduce("") { $0 + ($1.choices[0].delta?.tool_calls?[0].function.arguments ?? "") }
+        XCTAssertEqual(arguments, "{\n  \"format\": \"fahrenheit\",\n  \"location\": \"Bangkok\"\n}")
+        XCTAssertEqual(results[19].choices[0].finish_reason, .tool_calls)
+        let content = results.reduce("") { $0 + ($1.choices[0].delta?.content ?? "") }
+        XCTAssertEqual(content, "The current weather in Bangkok, Thailand is 27°C.")
     }
 }
 
