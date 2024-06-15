@@ -110,7 +110,8 @@ let getCurrentWeatherFunction = OpenAI.ChatCompletionRequest.Tool.FunctionSchema
         ],
         required: ["location", "format"]),
     callback: { [weak self] in
-        self?.getCurrentWeather(location: $0["location"]!, format: $0["format"]!)
+        // Run your custom function logic here.
+        self?.functionThatReturnsCurrentWeather(location: $0["location"]!, format: $0["format"]!)
     })
 )
 ```
