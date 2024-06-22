@@ -25,34 +25,42 @@ public extension OpenAI {
         let top_p: Double?
         let n: Int? // how many chat completions to generate for each request
         var stream: Bool?
+        let stream_options: StreamOptions?
         let stop: Stop?
         let max_tokens: Int?
         let presence_penalty: Double?
         let frequency_penalty: Double?
         let logit_bias: [String: Double]?
+        let logprobs: Bool?
+        let top_logprobs: Int?
         let user: String?
         let response_format: ResponseFormat?
         let seed: Int?
         let tools: [Tool]?
         let tool_choice: ToolChoice?
+        let parallel_tool_calls: Bool?
 
-        public init(model: Model, messages: [Message], temperature: Double? = nil, top_p: Double? = nil, n: Int? = nil, stream: Bool? = nil, stop: Stop? = nil, max_tokens: Int? = nil, presence_penalty: Double? = nil, frequency_penalty: Double? = nil, logit_bias: [String: Double]? = nil, user: String? = nil, response_type: ResponseType? = nil, seed: Int? = nil, tools: [Tool]? = nil, tool_choice: ToolChoice? = nil) {
+        public init(model: Model, messages: [Message], temperature: Double? = nil, top_p: Double? = nil, n: Int? = nil, stream: Bool? = nil, stream_options: StreamOptions? = nil, stop: Stop? = nil, max_tokens: Int? = nil, presence_penalty: Double? = nil, frequency_penalty: Double? = nil, logit_bias: [String: Double]? = nil, logprobs: Bool? = nil, top_logprobs: Int? = nil, user: String? = nil, response_type: ResponseType? = nil, seed: Int? = nil, tools: [Tool]? = nil, tool_choice: ToolChoice? = nil, parallel_tool_calls: Bool? = nil) {
             self.model = model
             self.messages = messages
             self.temperature = temperature
             self.top_p = top_p
             self.n = n
             self.stream = stream
+            self.stream_options = stream_options
             self.stop = stop
             self.max_tokens = max_tokens
             self.presence_penalty = presence_penalty
             self.frequency_penalty = frequency_penalty
             self.logit_bias = logit_bias
+            self.logprobs = logprobs
+            self.top_logprobs = top_logprobs
             self.user = user
             self.response_format = response_type.flatMap { ResponseFormat(type: $0) }
             self.seed = seed
             self.tools = tools
             self.tool_choice = tool_choice
+            self.parallel_tool_calls = parallel_tool_calls
         }
 
         public func completion(response: OpenAI.ChatCompletionResponse) throws -> ChatCompletionRequest? { // This needs tests badly
@@ -71,10 +79,14 @@ public extension OpenAI {
                     }
                 }
                 if toolMessages.isEmpty { continue }
-                // add ability to configure the final request
+                // might be worth checking if toolMessages.count == tool_calls.count. OpenAI will return an error for this already and is a developer configuration issue.
                 return ChatCompletionRequest(model: model, messages: messages + [assistant] + toolMessages, temperature: temperature, top_p: top_p, n: n, stream: stream, stop: stop, max_tokens: max_tokens, presence_penalty: presence_penalty, frequency_penalty: frequency_penalty, logit_bias: logit_bias, user: user, response_type: response_format?.type, seed: seed, tools: tools, tool_choice: tool_choice)
             }
             return nil
+        }
+
+        public struct StreamOptions: Codable {
+            let include_usage: Bool
         }
 
         public enum ToolChoice: Codable {
