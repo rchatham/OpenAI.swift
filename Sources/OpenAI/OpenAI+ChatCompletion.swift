@@ -65,7 +65,7 @@ public extension OpenAI {
 
         public func completion(response: OpenAI.ChatCompletionResponse) throws -> ChatCompletionRequest? { // This needs tests badly
             for choice in response.choices { // This only returns requests for the first choice - TODO: Add handling of multiple choices
-                guard let tool_calls = choice.message?.tool_calls ?? choice.delta?.tool_calls, !tool_calls.isEmpty else { return nil }
+                guard let tool_calls = choice.message?.tool_calls ?? choice.delta?.tool_calls, !tool_calls.isEmpty else { continue }
                 // if wanting to use names for assistant message, need to insert here
                 let assistant = try Message(role: .assistant, content: .null, name: nil, tool_calls: tool_calls)
                 var toolMessages: [Message] = []
