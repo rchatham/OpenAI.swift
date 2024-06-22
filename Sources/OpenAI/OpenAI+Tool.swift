@@ -2,7 +2,7 @@ import Foundation
 
 
 public extension OpenAI {
-    public enum Tool: Codable {
+    enum Tool: Codable {
         case function(FunctionSchema)
 
         var name: String {

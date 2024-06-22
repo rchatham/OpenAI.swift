@@ -105,8 +105,7 @@ public class OpenAI {
         internal func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
             var error = error; if error == nil { do {
                 if !data.isEmpty, let task = try completion?(data) {
-                    data = []; self.task = task; task.resume()
-                    return // if new task is returned do not call didCompleteStream
+                    data = []; self.task = task; task.resume(); return /* if new task is returned do not call didCompleteStream */
                 }
             } catch let err { error = err } }
             didCompleteStream?(error)
