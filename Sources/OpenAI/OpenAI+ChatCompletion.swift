@@ -63,22 +63,25 @@ public extension OpenAI {
             self.parallel_tool_calls = parallel_tool_calls
         }
 
-        public func completion(response: OpenAI.ChatCompletionResponse) throws -> ChatCompletionRequest? { // This needs tests badly
+        public func completion(response: OpenAI.ChatCompletionResponse, toolCallHandler: @escaping ([OpenAI.Message.ToolCall]) -> [String]) throws -> ChatCompletionRequest? { // This needs tests badly
             for choice in response.choices { // This only returns requests for the first choice - TODO: Add handling of multiple choices
                 guard let tool_calls = choice.message?.tool_calls ?? choice.delta?.tool_calls, !tool_calls.isEmpty else { continue }
                 // if wanting to use names for assistant message, need to insert here
                 let assistant = try Message(role: .assistant, content: .null, name: nil, tool_calls: tool_calls)
                 var toolMessages: [Message] = []
+                var unhandledToolCalls: [Message.ToolCall] = []
                 for tool_call in tool_calls {
                     if case .function(let function) = tools?.first(where: { $0.name == tool_call.function.name }) {
                         // verify arguments
                         guard let args = tool_call.function.arguments.data(using: .utf8).flatMap({ try? JSONSerialization.jsonObject(with: $0, options: []) as? [String:String] }) else { throw ChatCompletionError.failedToDecodeFunctionArguments }
                         guard function.parameters.required?.filter({ !args.keys.contains($0) }).isEmpty ?? true else { throw ChatCompletionError.missingRequiredFunctionArguments }
-                        guard let str = function.callback?(args) else { continue }
+                        guard let str = function.callback?(args) else { unhandledToolCalls.append(tool_call); continue }
                         toolMessages.append(try Message(role: .tool, content: .string(str), name: nil, tool_call_id: tool_call.id))
                     }
                 }
-                if toolMessages.isEmpty { continue }
+                toolMessages.append(contentsOf: try zip(unhandledToolCalls,toolCallHandler(unhandledToolCalls)).map { try Message(role: .tool, content: .string($0.1), name: nil, tool_call_id: $0.0.id) })
+                guard toolMessages.count == tool_calls.count else { throw ChatCompletionError.missingToolCallResponse }
+                if toolMessages.isEmpty { continue } // user did not use the framework to handle their function calls
                 // might be worth checking if toolMessages.count == tool_calls.count. OpenAI will return an error for this already and is a developer configuration issue.
                 return ChatCompletionRequest(model: model, messages: messages + [assistant] + toolMessages, temperature: temperature, top_p: top_p, n: n, stream: stream, stop: stop, max_tokens: max_tokens, presence_penalty: presence_penalty, frequency_penalty: frequency_penalty, logit_bias: logit_bias, user: user, response_type: response_format?.type, seed: seed, tools: tools, tool_choice: tool_choice)
             }
@@ -245,9 +248,10 @@ public extension OpenAI {
         static var empty: ChatCompletionResponse { ChatCompletionResponse(id: "", object: "", created: -1, model: nil, system_fingerprint: nil, choices: [], usage: nil) }
     }
 
-    enum ChatCompletionError: Error {
+    enum ChatCompletionError: String, Error {
         case failedToDecodeFunctionArguments
         case missingRequiredFunctionArguments
+        case missingToolCallResponse
     }
 }
 
