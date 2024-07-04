@@ -77,7 +77,7 @@ public extension OpenAI {
                         guard function.parameters.required?.filter({ !args.keys.contains($0) }).isEmpty ?? true else { throw ChatCompletionError.missingRequiredFunctionArguments }
                         guard let str = function.callback?(args) else { unhandledToolCalls.append(tool_call); continue }
                         toolMessages.append(try Message(role: .tool, content: .string(str), name: nil, tool_call_id: tool_call.id))
-                    }
+                    } else { unhandledToolCalls.append(tool_call) }
                 }
                 toolMessages.append(contentsOf: try zip(unhandledToolCalls,toolCallHandler(unhandledToolCalls)).map { try Message(role: .tool, content: .string($0.1), name: nil, tool_call_id: $0.0.id) })
                 guard toolMessages.count == tool_calls.count else { throw ChatCompletionError.missingToolCallResponse }
