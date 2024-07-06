@@ -32,16 +32,16 @@ public class OpenAI {
     }
 
     // In order to call the function completion in non-streaming calls, we are unable to return the intermediate call and thus you can not mix responding to functions in your code AND using function closures. If this functionality is needed use streaming. This functionality may be able to be added via a configuration callback on the function or request in the future.
-    public func perform<Request: OpenAIRequest>(request: Request, toolCallHandler: @escaping ([OpenAI.Message.ToolCall]) -> [String] = { _ in [] }) async throws -> Request.Response {
+    public func perform<Request: OpenAIRequest>(request: Request) async throws -> Request.Response {
         let response: Request.Response = try await perform(request: try configure(request: request, stream: false))
-        return try await (request as? ChatCompletionRequest)?.completion(response: response as! OpenAI.ChatCompletionResponse, toolCallHandler: toolCallHandler).flatMap { try await perform(request: $0) as? Request.Response } ?? response
+        return try await (request as? ChatCompletionRequest)?.completion(response: response as! OpenAI.ChatCompletionResponse).flatMap { try await perform(request: $0) as? Request.Response } ?? response
     }
 
-    public func stream<Request: OpenAIRequest>(request: Request, toolCallHandler: @escaping ([OpenAI.Message.ToolCall]) -> [String] = { _ in [] }) -> AsyncThrowingStream<Request.Response, Error> {
+    public func stream<Request: OpenAIRequest>(request: Request) -> AsyncThrowingStream<Request.Response, Error> {
         if request.stream, request is ChatCompletionRequest, var chatReq: ChatCompletionRequest? = request as? ChatCompletionRequest { // Not allowed when type 'Request' constrained to non-protocol, non-class type 'any OpenAIRequest & StreamableRequest'
             let httpRequest: URLRequest; do { httpRequest = try configure(request: request) } catch { return AsyncThrowingStream { $0.finish(throwing: error) }}
             return streamManager.stream(task: session.dataTask(with: httpRequest)) {
-                chatReq = try chatReq?.completion(response: $0, toolCallHandler: toolCallHandler)
+                chatReq = try chatReq?.completion(response: $0)
                 return try chatReq.flatMap { self.session.dataTask(with: try self.configure(request: $0)) }
             }
         }
@@ -148,7 +148,7 @@ internal protocol StreamableResponse: Decodable {
 
 internal protocol CompletableRequest: Encodable {
     associatedtype Response: Decodable
-    func completion(response: Response, toolCallHandler: @escaping ([OpenAI.Message.ToolCall]) -> [String]) throws -> Self?
+    func completion(response: Response) throws -> Self?
 }
 
 public enum OpenAIError: Error {
@@ -204,3 +204,18 @@ extension String {
 
 extension Optional { func flatMap<U>(_ a: (Wrapped) async throws -> U?) async throws -> U? { switch self { case .some(let wrapped): return try await a(wrapped); case .none: return nil }}}
 
+@propertyWrapper
+public struct CodableIgnored<T>: Codable {
+    public var wrappedValue: T?
+    public init(wrappedValue: T?) { self.wrappedValue = wrappedValue }
+    public init(from decoder: Decoder) throws { self.wrappedValue = nil }
+    public func encode(to encoder: Encoder) throws {} // Do nothing
+}
+
+extension KeyedDecodingContainer {
+    public func decode<T>(_ type: CodableIgnored<T>.Type, forKey key: Self.Key) throws -> CodableIgnored<T> { return CodableIgnored(wrappedValue: nil) }
+}
+
+extension KeyedEncodingContainer {
+    public mutating func encode<T>(_ value: CodableIgnored<T>, forKey key: KeyedEncodingContainer<K>.Key) throws {} // Do nothing
+}

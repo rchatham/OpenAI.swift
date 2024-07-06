@@ -39,8 +39,9 @@ public extension OpenAI {
         let tools: [Tool]?
         let tool_choice: ToolChoice?
         let parallel_tool_calls: Bool?
+        @CodableIgnored var toolCallHandler: (([OpenAI.Message.ToolCall]) -> [String])?
 
-        public init(model: Model, messages: [Message], temperature: Double? = nil, top_p: Double? = nil, n: Int? = nil, stream: Bool? = nil, stream_options: StreamOptions? = nil, stop: Stop? = nil, max_tokens: Int? = nil, presence_penalty: Double? = nil, frequency_penalty: Double? = nil, logit_bias: [String: Double]? = nil, logprobs: Bool? = nil, top_logprobs: Int? = nil, user: String? = nil, response_type: ResponseType? = nil, seed: Int? = nil, tools: [Tool]? = nil, tool_choice: ToolChoice? = nil, parallel_tool_calls: Bool? = nil) {
+        public init(model: Model, messages: [Message], temperature: Double? = nil, top_p: Double? = nil, n: Int? = nil, stream: Bool? = nil, stream_options: StreamOptions? = nil, stop: Stop? = nil, max_tokens: Int? = nil, presence_penalty: Double? = nil, frequency_penalty: Double? = nil, logit_bias: [String: Double]? = nil, logprobs: Bool? = nil, top_logprobs: Int? = nil, user: String? = nil, response_type: ResponseType? = nil, seed: Int? = nil, tools: [Tool]? = nil, tool_choice: ToolChoice? = nil, parallel_tool_calls: Bool? = nil, toolCallHandler: @escaping ([OpenAI.Message.ToolCall]) -> [String] = { _ in [] }) {
             self.model = model
             self.messages = messages
             self.temperature = temperature
@@ -61,13 +62,12 @@ public extension OpenAI {
             self.tools = tools
             self.tool_choice = tool_choice
             self.parallel_tool_calls = parallel_tool_calls
+            self.toolCallHandler = toolCallHandler
         }
 
-        public func completion(response: OpenAI.ChatCompletionResponse, toolCallHandler: @escaping ([OpenAI.Message.ToolCall]) -> [String]) throws -> ChatCompletionRequest? { // This needs tests badly
+        public func completion(response: OpenAI.ChatCompletionResponse) throws -> ChatCompletionRequest? { // This needs tests badly
             for choice in response.choices { // This only returns requests for the first choice - TODO: Add handling of multiple choices
                 guard let tool_calls = choice.message?.tool_calls ?? choice.delta?.tool_calls, !tool_calls.isEmpty else { continue }
-                // if wanting to use names for assistant message, need to insert here
-                let assistant = try Message(role: .assistant, content: .null, name: nil, tool_calls: tool_calls)
                 var toolMessages: [Message] = []
                 var unhandledToolCalls: [Message.ToolCall] = []
                 for tool_call in tool_calls {
@@ -79,10 +79,10 @@ public extension OpenAI {
                         toolMessages.append(try Message(role: .tool, content: .string(str), name: nil, tool_call_id: tool_call.id))
                     } else { unhandledToolCalls.append(tool_call) }
                 }
-                toolMessages.append(contentsOf: try zip(unhandledToolCalls,toolCallHandler(unhandledToolCalls)).map { try Message(role: .tool, content: .string($0.1), name: nil, tool_call_id: $0.0.id) })
-                guard toolMessages.count == tool_calls.count else { throw ChatCompletionError.missingToolCallResponse }
+                toolMessages.append(contentsOf: try zip(unhandledToolCalls,toolCallHandler?(unhandledToolCalls) ?? []).map { try Message(role: .tool, content: .string($0.1), name: nil, tool_call_id: $0.0.id) })
                 if toolMessages.isEmpty { continue } // user did not use the framework to handle their function calls
-                // might be worth checking if toolMessages.count == tool_calls.count. OpenAI will return an error for this already and is a developer configuration issue.
+                guard toolMessages.count == tool_calls.count else { throw ChatCompletionError.missingToolCallResponse } // OpenAI will return an error for this already and is a developer configuration issue.
+                let assistant = try Message(role: .assistant, content: .null, name: nil, tool_calls: tool_calls) // if wanting to use names for assistant message, need to insert here
                 return ChatCompletionRequest(model: model, messages: messages + [assistant] + toolMessages, temperature: temperature, top_p: top_p, n: n, stream: stream, stop: stop, max_tokens: max_tokens, presence_penalty: presence_penalty, frequency_penalty: frequency_penalty, logit_bias: logit_bias, user: user, response_type: response_format?.type, seed: seed, tools: tools, tool_choice: tool_choice)
             }
             return nil
