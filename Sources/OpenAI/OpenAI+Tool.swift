@@ -21,8 +21,8 @@ public extension OpenAI {
             var name: String
             var description: String?
             var parameters: Parameters // JSON Schema object
-            internal var callback: (([String:String]) -> String?)? = nil
-            public init(name: String, description: String, parameters: Parameters = Parameters(properties: [:]), callback: (([String:String]) -> String?)? = nil) {
+            internal var callback: (([String:Any]) -> String?)? = nil
+            public init(name: String, description: String, parameters: Parameters = Parameters(properties: [:]), callback: (([String:Any]) -> String?)? = nil) {
                 self.name = name
                 self.description = description
                 self.parameters = parameters

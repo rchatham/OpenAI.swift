@@ -34,7 +34,7 @@ class MessageService {
                     ],
                     required: ["location", "format"]),
                 callback: { [weak self] in
-                    self?.getCurrentWeather(location: $0["location"]!, format: $0["format"]!)
+                    self?.getCurrentWeather(location: $0["location"] as! String, format: $0["format"] as! String)
                 })),
             .function(.init(
                 name: "getAnswerToUniverse",
@@ -54,7 +54,7 @@ class MessageService {
                     ],
                     required: ["location"]),
                 callback: { [weak self] in
-                    self?.getTopMichelinStarredRestaurants(location: $0["location"]!)
+                    self?.getTopMichelinStarredRestaurants(location: $0["location"] as! String)
                 }))
         ]
     }
