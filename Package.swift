@@ -26,6 +26,9 @@ let package = Package(
             name: "OpenAI"),
         .testTarget(
             name: "OpenAITests",
-            dependencies: ["OpenAI", "SwiftyJSON"]),
+            dependencies: ["OpenAI", "SwiftyJSON"],
+            resources: [
+                .process("Resources/"),
+            ])
     ]
 )
