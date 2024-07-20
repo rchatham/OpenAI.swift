@@ -17,7 +17,7 @@
                BlueprintIdentifier = "B1D30D6F297A921200B6D330"
                BuildableName = "OpenAIDemo.app"
                BlueprintName = "OpenAIDemo"
-               ReferencedContainer = "container:OpenAI.xcodeproj">
+               ReferencedContainer = "container:OpenAIDemo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
                BlueprintIdentifier = "B1D30D85297A921500B6D330"
                BuildableName = "OpenAIDemoTests.xctest"
                BlueprintName = "OpenAIDemoTests"
-               ReferencedContainer = "container:OpenAI.xcodeproj">
+               ReferencedContainer = "container:OpenAIDemo.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -45,7 +45,7 @@
                BlueprintIdentifier = "B1D30D8F297A921500B6D330"
                BuildableName = "OpenAIDemoUITests.xctest"
                BlueprintName = "OpenAIDemoUITests"
-               ReferencedContainer = "container:OpenAI.xcodeproj">
+               ReferencedContainer = "container:OpenAIDemo.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -67,7 +67,7 @@
             BlueprintIdentifier = "B1D30D6F297A921200B6D330"
             BuildableName = "OpenAIDemo.app"
             BlueprintName = "OpenAIDemo"
-            ReferencedContainer = "container:OpenAI.xcodeproj">
+            ReferencedContainer = "container:OpenAIDemo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -84,7 +84,7 @@
             BlueprintIdentifier = "B1D30D6F297A921200B6D330"
             BuildableName = "OpenAIDemo.app"
             BlueprintName = "OpenAIDemo"
-            ReferencedContainer = "container:OpenAI.xcodeproj">
+            ReferencedContainer = "container:OpenAIDemo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

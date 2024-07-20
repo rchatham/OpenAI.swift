@@ -17,7 +17,7 @@
                BlueprintIdentifier = "B184E86B2B21887E009AF69D"
                BuildableName = "OpenAI.framework"
                BlueprintName = "OpenAI"
-               ReferencedContainer = "container:OpenAI.xcodeproj">
+               ReferencedContainer = "container:OpenAIDemo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -52,7 +52,7 @@
             BlueprintIdentifier = "B184E86B2B21887E009AF69D"
             BuildableName = "OpenAI.framework"
             BlueprintName = "OpenAI"
-            ReferencedContainer = "container:OpenAI.xcodeproj">
+            ReferencedContainer = "container:OpenAIDemo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
