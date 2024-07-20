@@ -4,6 +4,8 @@ The smallest OpenAI API implementation written in Swift.
 
 This package provides a simple Swift interface for interacting with OpenAI's Chat API, with full support for functions.
 
+WARNING!!! I make no guarantees about the stability of the api, there are tests, and I will try not to make breaking api changes. If you want a stable api fork the repo, not sorry 🤷🏻‍♂️.
+
 ## Features
 
 - Support for various OpenAI models including GPT-3.5 and GPT-4.
