@@ -17,7 +17,7 @@ extension StreamableResponse where Self: Encodable {
 
 extension XCTestCase {
     func getData(filename: String, fileExtension: String = "json") throws -> Data? {
-        return try Data.getData(filename: filename, bundle: Bundle(for: type(of: self)), fileExtension: fileExtension)
+        return try Data.getData(filename: filename, bundle: Bundle.module, fileExtension: fileExtension)
     }
 }
 

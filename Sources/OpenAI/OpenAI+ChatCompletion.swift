@@ -72,8 +72,7 @@ public extension OpenAI {
                 var unhandledToolCalls: [Message.ToolCall] = []
                 for tool_call in tool_calls {
                     if case .function(let function) = tools?.first(where: { $0.name == tool_call.function.name }) {
-                        // verify arguments
-                        guard let args = tool_call.function.arguments.data(using: .utf8).flatMap({ try? JSONSerialization.jsonObject(with: $0, options: []) as? [String:String] }) else { throw ChatCompletionError.failedToDecodeFunctionArguments }
+                        guard let args = tool_call.function.arguments.dictionary else { throw ChatCompletionError.failedToDecodeFunctionArguments }
                         guard function.parameters.required?.filter({ !args.keys.contains($0) }).isEmpty ?? true else { throw ChatCompletionError.missingRequiredFunctionArguments }
                         guard let str = function.callback?(args) else { unhandledToolCalls.append(tool_call); continue }
                         toolMessages.append(try Message(role: .tool, content: .string(str), name: nil, tool_call_id: tool_call.id))
