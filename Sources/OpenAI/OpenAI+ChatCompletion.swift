@@ -90,7 +90,7 @@ public extension OpenAI {
         }
 
         public enum ToolChoice: Codable {
-            case none, auto
+            case none, auto, required
             case tool(ToolWrapper)
 
             public enum ToolWrapper: Codable {
@@ -132,6 +132,7 @@ public extension OpenAI {
                     switch stringValue {
                     case "none": self = .none
                     case "auto": self = .auto
+                    case "required": self = .required
                     default: throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid string value")
                     }
                 } else { self = .tool(try ToolWrapper(from: decoder)) }
@@ -142,6 +143,7 @@ public extension OpenAI {
                 switch self {
                 case .none: try container.encode("none")
                 case .auto: try container.encode("auto")
+                case .required: try container.encode("required")
                 case .tool(let toolWrapper): try container.encode(toolWrapper)
                 }
             }
