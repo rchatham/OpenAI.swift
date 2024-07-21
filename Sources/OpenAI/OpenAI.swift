@@ -186,6 +186,8 @@ public extension OpenAI {
         case gpt4_32k_0613 = "gpt-4-32k-0613"
         case gpt4o = "gpt-4o"
         case gpt4o_2024_05_13 = "gpt-4o-2024-05-13"
+        case gpt4o_mini = "gpt-4o-mini"
+        case gpt4o_mini_2024_07_18 = "gpt-4o-mini-2024-07-18"
     }
 }
 
