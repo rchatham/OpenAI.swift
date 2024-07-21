@@ -10,6 +10,8 @@ This package provides a simple Swift interface for interacting with OpenAI's Cha
 - Handling both regular and streaming API requests.
 - Built-in error handling and response parsing.
 - Support for functions.
+    - Streaming functions.
+    - Multiple/Parrellel functions.
 
 ## Requirements
 
@@ -93,7 +95,7 @@ openAIClient.perform(request: chatRequest) { result in
 Before using a function in a chat completion request, define its schema. This includes the function name, description, and parameters. Here's an example for a hypothetical `getCurrentWeather` function:
 
 ```swift
-let getCurrentWeatherFunction = OpenAI.ChatCompletionRequest.Tool.FunctionSchema(
+let getCurrentWeatherFunction = OpenAI.Tool.FunctionSchema(
     name: "getCurrentWeather",
     description: "Get the current weather for a specified location.",
     parameters: .init(
@@ -111,7 +113,7 @@ let getCurrentWeatherFunction = OpenAI.ChatCompletionRequest.Tool.FunctionSchema
         required: ["location", "format"]),
     callback: { [weak self] in
         // Run your custom function logic here.
-        self?.functionThatReturnsCurrentWeather(location: $0["location"]!, format: $0["format"]!)
+        self?.functionThatReturnsCurrentWeather(location: $0["location"] as! String, format: $0["format"] as! String)
     })
 )
 ```
@@ -154,8 +156,7 @@ Contributions are welcome. Please open an issue or submit a pull request with yo
 ## TODO
 
 - [x] Use async/await
-- [x] Pass closures to functions api
-    - [ ] Return dictionary with [String:Any]
+- [x] Pass closures for function calling
     - [ ] Verfiy parameters using JsonSchema
     - [ ] Codable paramter objects
     - [ ] Allow typed parameters?

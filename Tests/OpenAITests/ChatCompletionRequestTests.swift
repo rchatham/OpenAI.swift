@@ -20,6 +20,16 @@ final class ChatCompletionRequestTests: XCTestCase {
         }(try getData(filename: "chat_completion_request")!)
     }
 
+    func testChatCompletionRequestWithImageDecodable() throws {
+        OpenAI.decode { (result: Result<OpenAI.ChatCompletionRequest, Error>) in
+            switch result {
+            case .success(_): break
+            case .failure(let error):
+                XCTFail("failed to decode data \(error.localizedDescription)")
+            }
+        }(try getData(filename: "chat_completion_request_with_image")!)
+    }
+
     func testChatCompletionRequestWithFunctionsDecodable() throws {
         OpenAI.decode { (result: Result<OpenAI.ChatCompletionRequest, Error>) in
             switch result {
