@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import LangTools
 @testable import OpenAI
 
 class MockURLProtocol: URLProtocol {
@@ -48,23 +49,28 @@ class MockURLProtocol: URLProtocol {
 
 }
 
+extension URL {
+    var endpoint: String { pathComponents[2...].joined(separator: "/") }
+}
+
 extension URLRequest {
-    var endpoint: String { url!.pathComponents[2...].joined(separator: "/") }
+    var endpoint: String { url!.endpoint }
 }
 
 extension URLSessionTask {
     var endpoint: String { currentRequest!.endpoint }
 }
 
-struct MockRequest: OpenAIRequest, StreamableRequest, Encodable {
+struct MockRequest: LangToolRequest, StreamableLangToolRequest, Encodable {
+    static var url: URL { URL(filePath: "test") }
+    static var path: String { url.endpoint }
     typealias Response = MockResponse
-    static var path = "test"
     var stream: Bool?
     init(stream: Bool? = nil) { self.stream = stream }
     func completion(response: MockResponse) throws -> MockRequest? { return nil }
 }
 
-struct MockResponse: Codable, StreamableResponse {
+struct MockResponse: Codable, StreamableLangToolResponse {
     var status: String
     func combining(with next: MockResponse) -> MockResponse { return next }
     static var empty: MockResponse { MockResponse(status: "") }
