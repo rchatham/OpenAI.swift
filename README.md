@@ -11,7 +11,7 @@ WARNING!!! I make no guarantees about the stability of the api, there are tests,
 - Support for various OpenAI models including GPT-3.5 and GPT-4.
 - Handling both regular and streaming API requests.
 - Built-in error handling and response parsing.
-- Support for functions.
+- Accepts closures for functions.
     - Streaming functions.
     - Multiple/Parrellel functions.
 
@@ -120,7 +120,7 @@ let getCurrentWeatherFunction = OpenAI.Tool.FunctionSchema(
 )
 ```
 
-That's it! This works for streaming, and even works with multiple functions.
+Now add your functions to the tools array on the ChatCompletionRequest. That's it! This works for streaming, and even works with multiple functions. Don't bother parsing the function parameters, it is handled for you.
 
 ### Handling Image Content in Array Messages
 When dealing with messages that contain arrays of content, including image content, follow these steps to handle them appropriately in your OpenAI.swift client implementation.
