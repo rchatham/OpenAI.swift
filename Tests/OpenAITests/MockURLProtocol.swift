@@ -10,9 +10,7 @@ import LangTools
 @testable import OpenAI
 
 class MockURLProtocol: URLProtocol {
-    typealias MockNetworkHandler = (URLRequest) throws -> (
-        result: Result<Data, Error>, statusCode: Int?
-    )
+    typealias MockNetworkHandler = (URLRequest) throws -> (result: Result<Data, Error>, statusCode: Int?)
     public static var mockNetworkHandlers: [String: MockNetworkHandler] = [:]
 
     override class func canInit(with request: URLRequest) -> Bool { mockNetworkHandlers[request.endpoint] != nil }
