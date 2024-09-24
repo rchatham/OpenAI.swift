@@ -4,8 +4,6 @@
 //
 //  Created by Reid Chatham on 12/7/23.
 //
-// TODO:
-//   - add logprobs, top_logprobs
 
 import Foundation
 
