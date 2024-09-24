@@ -42,7 +42,7 @@ final class ChatCompletionRequestTests: XCTestCase {
 
     func testChatCompletionRequestEncodable() throws {
         let request = OpenAI.ChatCompletionRequest(
-            model: .gpt4_turbo,
+            model: .gpt35_turbo,
             messages: [
                 .init(role: .system, content: "You are a helpful assistant."),
                 .init(role: .user, content: "Hello!")
@@ -72,7 +72,7 @@ final class ChatCompletionRequestTests: XCTestCase {
 
     func testChatCompletionRequestWithFunctionsEncodable() throws {
         let request = OpenAI.ChatCompletionRequest(
-            model: .gpt4_turbo,
+            model: .gpt35_turbo,
             messages: [
                 .init(role: .system, content: "You are a helpful assistant."),
                 .init(role: .user, content: "Hello!")
