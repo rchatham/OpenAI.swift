@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "langtools.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rchatham/LangTools.swift.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "be85365661d5150ad00f7631d42d221c4f4c841a"
+      }
+    },
+    {
       "identity" : "swiftyjson",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SwiftyJSON/SwiftyJSON.git",
