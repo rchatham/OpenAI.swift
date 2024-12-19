@@ -1,5 +1,7 @@
 # OpenAI.swift
 
+Check out [LangTools.swift](https://github.com/rchatham/LangTools.swift) for updated implementations for OpenAI and Anthropic SDKs. 
+
 The smallest OpenAI API implementation written in Swift. 
 
 This package provides a simple Swift interface for interacting with OpenAI's Chat API, with full support for functions.
